@@ -1,0 +1,386 @@
+.catalog-page {
+  min-height: 100vh;
+  background: #f8f9fa;
+  padding: 20px;
+}
+
+/* Header */
+.catalog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  background: white;
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #667eea;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.back-btn:hover {
+  background: #f8f9fa;
+}
+
+.back-icon {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.page-title {
+  margin: 0;
+  color: #2f3542;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.search-container {
+  position: relative;
+}
+
+.search-input {
+  padding: 12px 16px;
+  border: 2px solid #e1e5e9;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #2f3542;
+  font-weight: 500;
+  width: 300px;
+  transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.search-input::placeholder {
+  color: #adb5bd;
+  font-weight: 400;
+}
+
+/* Category Tabs */
+.category-tabs {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tabs-container {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.tab-button {
+  background: #f8f9fa;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 15px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  min-width: 120px;
+  justify-content: center;
+}
+
+.tab-button:hover {
+  background: #e8ecff;
+  border-color: #667eea;
+}
+
+.tab-button.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.tab-icon {
+  font-size: 20px;
+}
+
+.tab-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.tab-count {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* Products Section */
+.products-section {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.category-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e1e5e9;
+}
+
+.category-title {
+  margin: 0 0 10px 0;
+  color: #2f3542;
+  font-size: 32px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.category-icon {
+  font-size: 36px;
+}
+
+.category-description {
+  margin: 0;
+  color: #6c757d;
+  font-size: 16px;
+}
+
+.no-products {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6c757d;
+  font-size: 16px;
+}
+
+/* Restaurant Menu Style Grid */
+.catalog-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 30px;
+}
+
+.catalog-menu-item {
+  background: #f8f9fa;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e1e5e9;
+}
+
+.catalog-menu-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.catalog-menu-item-image {
+  width: 100%;
+  height: 200px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.catalog-product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  font-size: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.catalog-menu-item:hover .catalog-product-image {
+  transform: scale(1.05);
+}
+
+.catalog-menu-item-content {
+  padding: 25px;
+}
+
+.catalog-menu-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.catalog-menu-item-title {
+  margin: 0;
+  color: #2f3542;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  flex: 1;
+  margin-right: 15px;
+}
+
+.catalog-menu-item-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+}
+
+.catalog-current-price {
+  color: #28a745;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.catalog-before-price {
+  color: #6c757d;
+  font-size: 14px;
+  text-decoration: line-through;
+}
+
+.catalog-menu-item-description {
+  margin: 0 0 20px 0;
+  color: #6c757d;
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 44px;
+}
+
+.catalog-menu-item-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.catalog-menu-item-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.catalog-stock-info {
+  color: #28a745;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.catalog-variants-info {
+  color: #667eea;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.catalog-view-product-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: transform 0.2s ease;
+  white-space: nowrap;
+}
+
+.catalog-view-product-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .catalog-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  .tabs-container {
+    justify-content: flex-start;
+  }
+
+  .tab-button {
+    min-width: 100px;
+    padding: 12px 15px;
+  }
+
+  .catalog-menu-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .catalog-menu-item-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .catalog-menu-item-price {
+    align-items: flex-start;
+  }
+
+  .catalog-menu-item-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .catalog-view-product-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .category-title {
+    font-size: 24px;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .tab-button {
+    min-width: 80px;
+    padding: 10px 12px;
+  }
+
+  .tab-name {
+    font-size: 12px;
+  }
+}

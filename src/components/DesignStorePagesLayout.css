@@ -1,0 +1,246 @@
+/**
+ * DESIGN STORE PAGES LAYOUT CSS DOCUMENTATION
+ * ===========================================
+ * 
+ * This file contains all styles for the DesignStorePagesLayout component, which serves as
+ * a reusable layout wrapper for all store design pages.
+ * 
+ * COMPONENT STRUCTURE:
+ * ├── PlatformBar (Top navigation bar - separate component)
+ * ├── EditorBarDrawer (Editor toolbar and sidebar - separate component)
+ * ├── StoreBar (Store branding and actions - separate component)
+ * ├── MainContent (Central content area with children)
+ * └── Footer (Bottom footer - separate component)
+ * 
+ * Z-INDEX HIERARCHY:
+ * ├── StoreBar Components: 20000 (cart, wishlist, search, auth modals)
+ * ├── MobileSimulator: 9999
+ * ├── EditorBar Modals: 2000 (logo settings, language settings)
+ * ├── PlatformBar: 2 (top app bar)
+ * ├── EditorBar: 1000
+ * ├── Sidebar: 999
+ * └── StoreBar: 998
+ * 
+ * RESPONSIVE BREAKPOINTS:
+ * ├── Desktop: > 768px
+ * ├── Tablet: 768px - 1024px
+ * └── Mobile: < 768px
+ */
+
+/* ==========================================================================
+   MAIN LAYOUT CONTAINER
+   ========================================================================== */
+
+/**
+ * Main layout container that wraps the entire design store interface
+ * Provides full viewport height and light gray background
+ * Uses flexbox layout to ensure footer stays at bottom
+ */
+.design-store-pages-layout {
+  min-height: 100vh;
+  background: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   MAIN CONTENT AREA
+   ========================================================================== */
+
+/**
+ * Main Content Container
+ * Central content area below the fixed bars
+ * Flex: 1 to take remaining space after fixed bars
+ * Margin-top: 180px to account for fixed bars above
+ * Smooth transitions for sidebar open/close states
+ * Light gray background for content separation
+ */
+.main-content {
+  flex: 1;
+  margin-top: 180px;
+  margin-left: 0;
+  transition: margin-left 0.3s ease, margin-top 0.3s ease;
+  background: #ecf0f1;
+  position: relative;
+}
+
+/**
+ * Sidebar Open State
+ * When sidebar is open, main content shifts right by 280px
+ * Smooth transition animation for better UX
+ */
+.main-content.sidebar-open {
+  margin-left: 280px;
+}
+
+/**
+ * Content Area
+ * Flexbox container for main content layout
+ * Full height with column direction for vertical stacking
+ */
+.content-area {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/**
+ * Content Body
+ * Main content area with centered layout
+ * Flex: 1 to take remaining space after other elements
+ * Centered alignment for design content
+ */
+.content-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+
+/**
+ * Mobile Responsive Styles
+ * Adjusts layout for smaller screens
+ * Reduces margins and padding for better mobile experience
+ */
+@media (max-width: 768px) {
+  .main-content {
+    margin-top: 140px; /* Reduced margin for mobile */
+  }
+  
+  .main-content.sidebar-open {
+    margin-left: 0; /* No sidebar margin on mobile */
+  }
+  
+  .content-body {
+    padding: 20px; /* Reduced padding for mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    margin-top: 120px; /* Further reduced margin for small mobile */
+  }
+  
+  .content-body {
+    padding: 16px; /* Minimal padding for small mobile */
+  }
+}
+
+/* ==========================================================================
+   UTILITY CLASSES
+   ========================================================================== */
+
+/**
+ * Content Wrapper
+ * Utility class for wrapping page content
+ * Provides consistent spacing and layout
+ */
+.content-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/**
+ * Page Header
+ * Utility class for page headers
+ * Consistent styling across all pages
+ */
+.page-header {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.page-header h1 {
+  font-size: 32px;
+  color: #333;
+  margin: 0 0 10px 0;
+  font-weight: 600;
+}
+
+.page-header p {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/**
+ * Page Content
+ * Utility class for main page content
+ * Provides consistent styling and spacing
+ */
+.page-content {
+  background: white;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+/* ==========================================================================
+   ANIMATIONS
+   ========================================================================== */
+
+/**
+ * Fade In Animation
+ * Smooth fade-in effect for content
+ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/**
+ * Slide In Animation
+ * Smooth slide-in effect from left
+ */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.4s ease-out;
+}
+
+/**
+ * Scale In Animation
+ * Smooth scale-in effect for elements
+ */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.scale-in {
+  animation: scaleIn 0.3s ease-out;
+}

@@ -140,6 +140,18 @@ const CollectionsPage: React.FC = () => {
     setCollections(mockCollections);
   }, []);
 
+  // Handle URL query parameter to show Create Collection form
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const showCreateCollection = urlParams.get('showCreateCollection');
+    if (showCreateCollection === 'true') {
+      setShowCreateForm(true);
+      // Clean up the URL by removing the query parameter
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, '', newUrl);
+    }
+  }, []);
+
   const handleCreateCollection = () => {
     setShowCreateForm(true);
   };

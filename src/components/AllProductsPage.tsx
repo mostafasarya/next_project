@@ -141,6 +141,18 @@ const AllProductsPage: React.FC = () => {
     setProducts(mockProducts);
   }, []);
 
+  // Handle URL query parameter to show Add Product form
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const showAddProduct = urlParams.get('showAddProduct');
+    if (showAddProduct === 'true') {
+      setShowAddForm(true);
+      // Clean up the URL by removing the query parameter
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, '', newUrl);
+    }
+  }, []);
+
   const handleEditCount = (productId: string, variantId?: string, value: number) => {
     setProducts(prevProducts => 
       prevProducts.map(product => {

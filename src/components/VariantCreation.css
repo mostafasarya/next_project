@@ -1,0 +1,493 @@
+/* VariantCreation Component Styles */
+.variant-creation {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 24px;
+  margin: 16px 0;
+  border: 1px solid #e5e7eb;
+}
+
+.variant-creation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.variant-creation-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.variant-tabs {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.variant-tab {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.variant-tab:first-child {
+  border-radius: 8px 0 0 8px;
+}
+
+.variant-tab:last-child {
+  background: #16a34a;
+  border-radius: 0 8px 8px 0;
+}
+
+.variant-tab:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.variant-tab.active {
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(1px);
+}
+
+.variant-creation-content h4 {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.parameters-label {
+  margin: 0 0 16px 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.parameters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.parameter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.parameter-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #f9fafb;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.parameter-group label::before {
+  content: '▼';
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.parameter-group select {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+  color: #374151;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.parameter-group select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.parameter-dropdown {
+  background: #f8f9fa;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 12px;
+  margin-top: 8px;
+}
+
+.dropdown-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dropdown-header span:first-child {
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+.dropdown-header span:last-child {
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.add-parameter-btn,
+.close-btn {
+  padding: 10px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-parameter-btn {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.add-parameter-btn:hover {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+.close-btn {
+  background: #fee2e2;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+.close-btn:hover {
+  background: #fecaca;
+  border-color: #f87171;
+}
+
+.count-section {
+  margin: 24px 0;
+}
+
+.count-section label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.count-section input {
+  width: 200px;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.variant-actions {
+  margin-top: 24px;
+}
+
+.create-variant-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.create-variant-btn:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* Custom Variant Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.custom-variant-modal {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.modal-header .close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.modal-header .close-btn:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.value-input-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.value-input-group input {
+  flex: 1;
+}
+
+.remove-value-btn {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.remove-value-btn:hover {
+  background: #fecaca;
+  border-color: #f87171;
+}
+
+.add-value-btn {
+  background: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}
+
+.add-value-btn:hover {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding: 20px 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.modal-footer .create-btn {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal-footer .create-btn:hover {
+  background: #b91c1c;
+}
+
+.modal-footer .close-btn {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal-footer .close-btn:hover {
+  background: #e5e7eb;
+}
+
+/* Created Variants */
+.created-variants {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.created-variants h4 {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.variants-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.variant-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: #f8f9fa;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.variant-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.variant-name {
+  font-weight: 500;
+  color: #111827;
+}
+
+.variant-details {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.remove-variant-btn {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.remove-variant-btn:hover {
+  background: #fecaca;
+  border-color: #f87171;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .variant-creation {
+    padding: 16px;
+    margin: 12px 0;
+  }
+  
+  .variant-creation-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+  
+  .variant-tabs {
+    justify-content: stretch;
+  }
+  
+  .variant-tab {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .parameters-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .custom-variant-modal {
+    width: 95%;
+    margin: 20px;
+  }
+  
+  .modal-footer {
+    flex-direction: column-reverse;
+  }
+  
+  .modal-footer button {
+    width: 100%;
+  }
+}

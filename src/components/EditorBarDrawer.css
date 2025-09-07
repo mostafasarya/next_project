@@ -1,3 +1,40 @@
+/* ==========================================================================
+   EDITOR BAR DRAWER - MAIN EDITOR INTERFACE
+   ========================================================================== */
+
+/* Apply Global Typography Variables while keeping white theme */
+.editor-bar *, .editor-drawer * {
+  font-family: var(--font-family-base, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif) !important;
+}
+
+.editor-bar h1, .editor-bar h2, .editor-bar h3, .editor-bar h4, .editor-bar h5, .editor-bar h6,
+.editor-drawer h1, .editor-drawer h2, .editor-drawer h3, .editor-drawer h4, .editor-drawer h5, .editor-drawer h6 {
+  font-weight: var(--font-weight-heading, 600) !important;
+  letter-spacing: var(--letter-spacing-base, 0px) !important;
+  line-height: 1.2 !important;
+  color: #ffffff !important; /* Keep white text */
+}
+
+.editor-bar h3, .editor-drawer h3 { font-size: calc(var(--font-size-heading, 24px) * 0.75) !important; }
+.editor-bar h4, .editor-drawer h4 { font-size: calc(var(--font-size-heading, 24px) * 0.65) !important; }
+
+.editor-bar p, .editor-bar span, .editor-bar div, .editor-bar label,
+.editor-drawer p, .editor-drawer span, .editor-drawer div, .editor-drawer label {
+  font-size: var(--font-size-base, 14px) !important;
+  font-weight: var(--font-weight-base, 400) !important;
+  line-height: var(--line-height-base, 1.5) !important;
+  letter-spacing: var(--letter-spacing-base, 0px) !important;
+  color: #ffffff !important; /* Keep white text */
+}
+
+.editor-bar input, .editor-bar button, .editor-bar select,
+.editor-drawer input, .editor-drawer button, .editor-drawer select {
+  font-size: var(--font-size-base, 14px) !important;
+  font-weight: var(--font-weight-base, 400) !important;
+  line-height: var(--line-height-base, 1.5) !important;
+  letter-spacing: var(--letter-spacing-base, 0px) !important;
+}
+
 /* Editor Bar Styles */
 .editor-bar {
   background: #2c3e50;
@@ -270,10 +307,13 @@
 
 .settings-content {
   padding: 24px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .setting-section {
   margin-bottom: 24px;
+  width: 100%;
 }
 
 .setting-section:last-child {
@@ -331,7 +371,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
+  width: 100%;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+/* Ensure slider takes maximum available space */
+.slider-container .slider {
+  flex: 1;
+  min-width: 120px;
 }
 
 .slider-value {
@@ -344,11 +393,15 @@
 
 .slider {
   flex: 1;
-  height: 6px;
-  border-radius: 3px;
-  background: #ddd;
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: #f1f5f9;
   outline: none;
   -webkit-appearance: none;
+  margin: 0;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .slider::-webkit-slider-thumb {

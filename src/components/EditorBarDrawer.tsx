@@ -67,35 +67,35 @@ const EditorBarDrawer: React.FC<EditorBarDrawerProps> = ({
           <div className="editor-left">
             <button className={`editor-btn ${sidebarOpen ? 'active' : ''}`} onClick={onToggleSidebar}>
               <span className="editor-icon">☰</span>
-              <span className="editor-text">Store Pages</span>
+              <span className="editor-text">{t('store_pages')}</span>
             </button>
           </div>
           <div className="editor-center">
-            <button className="editor-btn" onClick={() => router.push('/all-products?showAddProduct=true')}>
+            <button className="editor-btn" onClick={() => router.push('/products-management?showAddProduct=true')}>
               <span className="editor-icon">+</span>
-              <span className="editor-text">Product</span>
+              <span className="editor-text">{t('add_product')}</span>
             </button>
-            <button className="editor-btn" onClick={() => router.push('/collections?showCreateCollection=true')}>
+            <button className="editor-btn" onClick={() => router.push('/collections-management?showCreateCollection=true')}>
               <span className="editor-icon">⭕</span>
-              <span className="editor-text">Collection</span>
+              <span className="editor-text">{t('add_collection')}</span>
             </button>
-            <button className="editor-btn">
+            <button className="editor-btn" onClick={() => router.push('/catalog-management?showCreateModal=true')}>
               <span className="editor-icon">📋</span>
-              <span className="editor-text">Create Catalog</span>
+              <span className="editor-text">{t('create_catalog')}</span>
             </button>
             <button className="editor-btn">
               <span className="editor-icon">📄</span>
-              <span className="editor-text">Create Page</span>
+              <span className="editor-text">{t('create_page')}</span>
             </button>
             <button className="editor-btn" onClick={onOpenMobileSimulator}>
               <span className="editor-icon">📱</span>
-              <span className="editor-text">Mobile</span>
+              <span className="editor-text">{t('mobile')}</span>
             </button>
           </div>
           <div className="editor-right">
             <button className="editor-btn publish-btn">
               <span className="editor-icon">⬆️</span>
-              <span className="editor-text">Publish</span>
+              <span className="editor-text">{t('publish')}</span>
             </button>
           </div>
         </div>
@@ -122,15 +122,15 @@ const EditorBarDrawer: React.FC<EditorBarDrawerProps> = ({
             <span className="menu-icon">🏠</span>
             <span className="menu-text">{t('home')}</span>
           </div>
-          <div className="menu-item" onClick={() => router.push('/all-products')}>
+          <div className="menu-item" onClick={() => router.push('/products-management')}>
             <span className="menu-icon">📦</span>
             <span className="menu-text">{t('product_page')}</span>
           </div>
-          <div className="menu-item" onClick={() => router.push('/collections')}>
+          <div className="menu-item" onClick={() => router.push('/collections-management')}>
             <span className="menu-icon">🔴</span>
             <span className="menu-text">{t('collections')}</span>
           </div>
-          <div className="menu-item" onClick={() => router.push('/catalog')}>
+          <div className="menu-item" onClick={() => router.push('/catalog-management')}>
             <span className="menu-icon">📋</span>
             <span className="menu-text">{t('catalog')}</span>
           </div>
@@ -145,6 +145,10 @@ const EditorBarDrawer: React.FC<EditorBarDrawerProps> = ({
           <div className="menu-item">
             <span className="menu-icon">📄</span>
             <span className="menu-text">{t('general_pages')}</span>
+          </div>
+          <div className="menu-item" onClick={() => router.push('/system-control-assets')}>
+            <span className="menu-icon">🎛️</span>
+            <span className="menu-text">System Controls</span>
           </div>
           <div className="menu-item" onClick={onOpenLanguageSettings}>
             <span className="menu-icon">🌐</span>
@@ -326,17 +330,18 @@ const EditorBarDrawer: React.FC<EditorBarDrawerProps> = ({
               <div className="language-grid">
                 {[
                   { code: 'en', name: 'English', flag: '🇺🇸' },
-                  { code: 'es', name: 'Spanish', flag: '🇪🇸' },
-                  { code: 'fr', name: 'French', flag: '🇫🇷' },
-                  { code: 'de', name: 'German', flag: '🇩🇪' },
-                  { code: 'it', name: 'Italian', flag: '🇮🇹' },
-                  { code: 'pt', name: 'Portuguese', flag: '🇵🇹' },
-                  { code: 'ru', name: 'Russian', flag: '🇷🇺' },
-                  { code: 'zh', name: 'Chinese', flag: '🇨🇳' },
-                  { code: 'ja', name: 'Japanese', flag: '🇯🇵' },
-                  { code: 'ko', name: 'Korean', flag: '🇰🇷' },
-                  { code: 'ar', name: 'Arabic', flag: '🇸🇦' },
-                  { code: 'hi', name: 'Hindi', flag: '🇮🇳' }
+                  { code: 'ar', name: 'العربية', flag: '🇸🇦' },
+                  { code: 'es', name: 'Español', flag: '🇪🇸' },
+                  { code: 'fr', name: 'Français', flag: '🇫🇷' },
+                  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+                  { code: 'pt', name: 'Português', flag: '🇵🇹' },
+                  { code: 'tr', name: 'Türkçe', flag: '🇹🇷' },
+                  { code: 'hi', name: 'हिन्दी', flag: '🇮🇳' },
+                  { code: 'it', name: 'Italiano', flag: '🇮🇹' },
+                  { code: 'ru', name: 'Русский', flag: '🇷🇺' },
+                  { code: 'ja', name: '日本語', flag: '🇯🇵' },
+                  { code: 'zh', name: '中文', flag: '🇨🇳' },
+                  { code: 'ko', name: '한국어', flag: '🇰🇷' }
                 ].map((language) => (
                   <div 
                     key={language.code}
@@ -362,6 +367,15 @@ const EditorBarDrawer: React.FC<EditorBarDrawerProps> = ({
               <button className="close-action-btn" onClick={onCloseLanguageSettings}>{t('cancel')}</button>
               <button className="update-btn" onClick={() => {
                 localStorage.setItem('storeLanguages', JSON.stringify(selectedLanguages));
+                // Dispatch language change event to affect design pages
+                if (selectedLanguages.length > 0) {
+                  const primaryLanguage = selectedLanguages[0];
+                  localStorage.setItem('currentLanguage', primaryLanguage);
+                  localStorage.setItem('websiteLanguage', primaryLanguage);
+                  window.dispatchEvent(new CustomEvent('languageChanged', { 
+                    detail: { language: primaryLanguage } 
+                  }));
+                }
                 onCloseLanguageSettings();
               }}>{t('save_languages')}</button>
             </div>

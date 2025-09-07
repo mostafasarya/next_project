@@ -1,0 +1,418 @@
+/* ==========================================================================
+   SYSTEM CONTROL ICONS - REUSABLE CLASSES
+   ========================================================================== */
+
+/* Initialize dynamic icon size variable */
+:root {
+  --icon-size-dynamic: 24px;
+}
+
+/* Base System Control Icon Class */
+.system-control-icon {
+  background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
+  color: #ef4444;
+  border: 2px solid #fecaca;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  position: relative;
+  overflow: hidden;
+  width: var(--icon-size-dynamic, 48px);
+  height: var(--icon-size-dynamic, 48px);
+}
+
+.system-control-icon:hover {
+  border-color: #fca5a5;
+  color: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.system-control-icon:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.system-control-icon:disabled {
+  background: #f9fafb;
+  color: #9ca3af;
+  border-color: #e5e7eb;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 4px rgba(156, 163, 175, 0.2);
+}
+
+.system-control-icon svg {
+  width: calc(var(--icon-size-dynamic, 48px) * 0.65);
+  height: calc(var(--icon-size-dynamic, 48px) * 0.65);
+  transition: all 0.3s ease;
+}
+
+.system-control-icon:hover svg {
+  transform: scale(1.05);
+}
+
+/* Size Variants - Now use dynamic sizing as base */
+.system-control-icon.small {
+  width: calc(var(--icon-size-dynamic, 48px) * 0.75);
+  height: calc(var(--icon-size-dynamic, 48px) * 0.75);
+}
+
+.system-control-icon.small svg {
+  width: calc(var(--icon-size-dynamic, 48px) * 0.5);
+  height: calc(var(--icon-size-dynamic, 48px) * 0.5);
+}
+
+.system-control-icon.medium {
+  width: calc(var(--icon-size-dynamic, 48px) * 1.2);
+  height: calc(var(--icon-size-dynamic, 48px) * 1.2);
+}
+
+.system-control-icon.medium svg {
+  width: calc(var(--icon-size-dynamic, 48px) * 0.75);
+  height: calc(var(--icon-size-dynamic, 48px) * 0.75);
+}
+
+.system-control-icon.large {
+  width: calc(var(--icon-size-dynamic, 48px) * 1.5);
+  height: calc(var(--icon-size-dynamic, 48px) * 1.5);
+}
+
+.system-control-icon.large svg {
+  width: calc(var(--icon-size-dynamic, 48px) * 0.9);
+  height: calc(var(--icon-size-dynamic, 48px) * 0.9);
+}
+
+.system-control-icon.extra-large {
+  width: calc(var(--icon-size-dynamic, 48px) * 2);
+  height: calc(var(--icon-size-dynamic, 48px) * 2);
+}
+
+.system-control-icon.extra-large svg {
+  width: calc(var(--icon-size-dynamic, 48px) * 1.2);
+  height: calc(var(--icon-size-dynamic, 48px) * 1.2);
+}
+
+/* ==========================================================================
+   UNIFIED ICON THEME
+   ========================================================================== */
+
+/* All icons use unified red theme */
+.system-control-icon.camera,
+.system-control-icon.add,
+.system-control-icon.delete,
+.system-control-icon.settings,
+.system-control-icon.edit,
+.system-control-icon.layout,
+.system-control-icon.add-text,
+.system-control-icon.add-button,
+.system-control-icon.drag-drop,
+.system-control-icon.link,
+.system-control-icon.trash,
+.system-control-icon.flip,
+.system-control-icon.dimensions,
+.system-control-icon.color-control {
+  background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
+  color: #ef4444;
+  border-color: #fecaca;
+}
+
+.system-control-icon.add:hover,
+.system-control-icon.delete:hover,
+.system-control-icon.settings:hover,
+.system-control-icon.edit:hover,
+.system-control-icon.layout:hover,
+.system-control-icon.add-text:hover,
+.system-control-icon.add-button:hover,
+.system-control-icon.drag-drop:hover,
+.system-control-icon.link:hover,
+.system-control-icon.trash:hover,
+.system-control-icon.flip:hover,
+.system-control-icon.dimensions:hover,
+.system-control-icon.color-control:hover {
+  border-color: #fca5a5;
+  color: #dc2626;
+}
+
+/* ==========================================================================
+   SYSTEM CONTROL INPUTS
+   ========================================================================== */
+
+/* Range Input */
+.system-control-range {
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: #fee2e2;
+  outline: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.system-control-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #dc2626;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+  transition: all 0.2s ease;
+}
+
+.system-control-range::-webkit-slider-thumb:hover {
+  background: #b91c1c;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+}
+
+.system-control-range::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #dc2626;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+  transition: all 0.2s ease;
+}
+
+/* Toggle Switch */
+.system-control-toggle {
+  width: 56px;
+  height: 28px;
+  background: #e5e7eb;
+  border-radius: 14px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.system-control-toggle.active {
+  background: #dc2626;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+}
+
+.system-control-toggle .toggle-slider {
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.system-control-toggle.active .toggle-slider {
+  transform: translateX(28px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* System Tabs */
+.system-control-tabs {
+  display: flex;
+  background: #f1f5f9;
+  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
+}
+
+.system-control-tab {
+  background: transparent;
+  color: #64748b;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  justify-content: center;
+}
+
+.system-control-tab svg {
+  width: 16px;
+  height: 16px;
+}
+
+.system-control-tab:hover {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.system-control-tab.active {
+  background: #ef4444;
+  color: white;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+/* Alignment Tabs - Specialized styling */
+.alignment-tabs {
+  display: flex;
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 3px;
+  gap: 3px;
+  border: 1px solid #e2e8f0;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.alignment-tab {
+  background: transparent;
+  color: #64748b;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  justify-content: center;
+  min-width: 0;
+}
+
+.alignment-tab svg {
+  width: 14px;
+  height: 14px;
+}
+
+.alignment-tab:hover {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.alignment-tab.active {
+  background: #ffffff;
+  color: #ef4444;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   SYSTEM CONTROL BUTTONS
+   ========================================================================== */
+
+.system-control-btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 2px solid transparent;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.system-control-btn.primary {
+  background: #dc2626;
+  color: white;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.system-control-btn.primary:hover {
+  background: #b91c1c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(220, 38, 38, 0.4);
+}
+
+.system-control-btn.secondary {
+  background: #64748b;
+  color: white;
+  box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
+}
+
+.system-control-btn.secondary:hover {
+  background: #475569;
+  transform: translateY(-2px);
+}
+
+.system-control-btn.outline {
+  background: transparent;
+  color: #dc2626;
+  border-color: #dc2626;
+}
+
+.system-control-btn.outline:hover {
+  background: #dc2626;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.system-control-btn.small {
+  padding: 8px 16px;
+  font-size: 12px;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .system-control-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .system-control-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .system-control-icon.large {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .system-control-icon.large svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .system-control-icon.extra-large {
+    width: 64px;
+    height: 64px;
+  }
+  
+  .system-control-icon.extra-large svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .system-control-icon {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .system-control-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .system-control-btn {
+    padding: 10px 20px;
+    font-size: 12px;
+  }
+}

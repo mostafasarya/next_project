@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import WebsitOuterNavigationBar from './WebsitOuterNavigationBar';
 import './AuthPage.css';
 
 const AuthPage: React.FC = () => {
@@ -46,6 +47,7 @@ const AuthPage: React.FC = () => {
 
   return (
     <div className="landing-page">
+      <WebsitOuterNavigationBar />
       <div className="auth-container">
         <div className="auth-header">
           <h1>Welcome to Online Store</h1>

@@ -3,16 +3,21 @@
 import React from 'react';
 import './Footer.css';
 
-const Footer: React.FC = () => {
+interface FooterProps {
+  currentLanguage: string;
+  translations: any;
+  t: (key: string) => string;
+}
+
+const Footer: React.FC<FooterProps> = ({ currentLanguage, translations, t }) => {
   return (
     <footer className="footer">
       <div className="footer-content">
         {/* Free Shipping Section */}
         <div className="footer-section">
-          <h3 className="footer-heading">Free Shipping</h3>
+          <h3 className="footer-heading">{t('free_shipping')}</h3>
           <p className="footer-description">
-            Kirrin Finch is proud to offer free shipping in the US on all orders of $200 and above. 
-            We also offer low rates to international destinations.
+            {t('free_shipping_description')}
           </p>
           <div className="social-media-icons">
             <a href="#" className="social-icon facebook">
@@ -35,35 +40,35 @@ const Footer: React.FC = () => {
 
         {/* About Section */}
         <div className="footer-section">
-          <h3 className="footer-heading">About</h3>
+          <h3 className="footer-heading">{t('about')}</h3>
           <ul className="footer-links">
-            <li><a href="#">Our Story</a></li>
-            <li><a href="#">Press & Media</a></li>
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Sustainability</a></li>
-            <li><a href="#">Social Giveback</a></li>
+            <li><a href="#">{t('our_story')}</a></li>
+            <li><a href="#">{t('press_media')}</a></li>
+            <li><a href="#">{t('careers')}</a></li>
+            <li><a href="#">{t('sustainability')}</a></li>
+            <li><a href="#">{t('social_giveback')}</a></li>
           </ul>
         </div>
 
         {/* Resources Section */}
         <div className="footer-section">
-          <h3 className="footer-heading">Resources</h3>
+          <h3 className="footer-heading">{t('resources')}</h3>
           <ul className="footer-links">
-            <li><a href="#">Blog</a></li>
-            <li><a href="#">Dapper Scouts</a></li>
-            <li><a href="#">Garment Care</a></li>
-            <li><a href="#">Fit & Size Guide</a></li>
+            <li><a href="#">{t('blog')}</a></li>
+            <li><a href="#">{t('dapper_scouts')}</a></li>
+            <li><a href="#">{t('garment_care')}</a></li>
+            <li><a href="#">{t('fit_size_guide')}</a></li>
           </ul>
         </div>
 
         {/* Support Section */}
         <div className="footer-section">
-          <h3 className="footer-heading">Support</h3>
+          <h3 className="footer-heading">{t('support')}</h3>
           <ul className="footer-links">
-            <li><a href="#">Help Center</a></li>
-            <li><a href="#">Contact Us</a></li>
-            <li><a href="#">Shipping & Returns</a></li>
-            <li><a href="#">Start A Return or Exchange</a></li>
+            <li><a href="#">{t('help_center')}</a></li>
+            <li><a href="#">{t('contact_us')}</a></li>
+            <li><a href="#">{t('shipping_returns')}</a></li>
+            <li><a href="#">{t('start_return_exchange')}</a></li>
           </ul>
         </div>
       </div>

@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import './AllProductsPage.css';
+import VariantCreation from './VariantCreation';
+import './ProductsManagementPage.css';
 
 interface ProductVariant {
   id: string;
@@ -14,6 +15,7 @@ interface ProductVariant {
   editCount: number;
   ifSoldOut: 'keep selling' | 'stop selling';
   isTracking: boolean;
+  parameters: { [key: string]: string };
 }
 
 interface Product {
@@ -33,13 +35,31 @@ interface Product {
   isTracking: boolean;
 }
 
-const AllProductsPage: React.FC = () => {
+interface Section {
+  id: string;
+  name: string;
+  type: 'section';
+  position: number; // Position in the hierarchy
+}
+
+const ProductsManagementPage: React.FC = () => {
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
+  const [sections, setSections] = useState<Section[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [draggedItem, setDraggedItem] = useState<{ id: string; type: 'product'; index: number } | null>(null);
-  const [dragOverItem, setDragOverItem] = useState<{ id: string; type: 'product'; index: number } | null>(null);
+  const [draggedItem, setDraggedItem] = useState<{ id: string; type: 'product' | 'section'; index: number } | null>(null);
+  const [dragOverItem, setDragOverItem] = useState<{ id: string; type: 'product' | 'section'; index: number } | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [showAddSectionForm, setShowAddSectionForm] = useState(false);
+  const [newSectionName, setNewSectionName] = useState('');
+  const [editingSectionId, setEditingSectionId] = useState<string | null>(null);
+  const [editingSectionName, setEditingSectionName] = useState('');
+  const [fixedHeaderSection, setFixedHeaderSection] = useState<Section>({
+    id: 'fixed-header-section',
+    name: 'Section 1',
+    type: 'section',
+    position: -999 // Very low position to ensure it's always at the top
+  });
   const [newProduct, setNewProduct] = useState<Partial<Product>>({
     name: '',
     category: '',
@@ -52,12 +72,10 @@ const AllProductsPage: React.FC = () => {
     count: 0,
     editCount: 0,
     ifSoldOut: 'keep selling',
-    isTracking: true,
+    isTracking: false,
     variants: []
   });
-  const [newVariants, setNewVariants] = useState<Partial<ProductVariant>[]>([
-    { name: '', price: 0, beforePrice: 0, saveAmount: 0, count: 0, editCount: 0, ifSoldOut: 'keep selling', isTracking: true }
-  ]);
+  const [newVariants, setNewVariants] = useState<ProductVariant[]>([]);
   const [showVariants, setShowVariants] = useState(false);
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -122,7 +140,8 @@ const AllProductsPage: React.FC = () => {
             count: 20,
             editCount: 0,
             ifSoldOut: 'keep selling',
-            isTracking: true
+            isTracking: true,
+            parameters: { size: 'S' }
           },
           {
             id: '3-2',
@@ -133,7 +152,8 @@ const AllProductsPage: React.FC = () => {
             count: 10,
             editCount: 0,
             ifSoldOut: 'keep selling',
-            isTracking: true
+            isTracking: true,
+            parameters: { size: 'M' }
           }
         ]
       }
@@ -153,7 +173,7 @@ const AllProductsPage: React.FC = () => {
     }
   }, []);
 
-  const handleEditCount = (productId: string, variantId?: string, value: number) => {
+  const handleEditCount = (productId: string, value: number, variantId?: string) => {
     setProducts(prevProducts => 
       prevProducts.map(product => {
         if (product.id === productId) {
@@ -241,7 +261,7 @@ const AllProductsPage: React.FC = () => {
     );
   };
 
-  const handleIfSoldOutChange = (productId: string, variantId?: string, value: 'keep selling' | 'stop selling') => {
+  const handleIfSoldOutChange = (productId: string, value: 'keep selling' | 'stop selling', variantId?: string) => {
     setProducts(prevProducts => 
       prevProducts.map(product => {
         if (product.id === productId) {
@@ -290,13 +310,13 @@ const AllProductsPage: React.FC = () => {
   };
 
   // Drag and Drop Handlers
-  const handleDragStart = (e: React.DragEvent, item: { id: string; type: 'product'; index: number }) => {
+  const handleDragStart = (e: React.DragEvent, item: { id: string; type: 'product' | 'section'; index: number }) => {
     setDraggedItem(item);
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/html', e.currentTarget.outerHTML);
   };
 
-  const handleDragOver = (e: React.DragEvent, item: { id: string; type: 'product'; index: number }) => {
+  const handleDragOver = (e: React.DragEvent, item: { id: string; type: 'product' | 'section'; index: number }) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
     setDragOverItem(item);
@@ -307,7 +327,7 @@ const AllProductsPage: React.FC = () => {
     setDragOverItem(null);
   };
 
-  const handleDrop = (e: React.DragEvent, targetItem: { id: string; type: 'product'; index: number }) => {
+  const handleDrop = (e: React.DragEvent, targetItem: { id: string; type: 'product' | 'section'; index: number }) => {
     e.preventDefault();
     
     if (!draggedItem || draggedItem.id === targetItem.id) {
@@ -316,25 +336,103 @@ const AllProductsPage: React.FC = () => {
       return;
     }
 
-    setProducts(prevProducts => {
-      const newProducts = [...prevProducts];
-      
-      // Reorder products
-      const draggedProduct = newProducts.find(p => p.id === draggedItem.id);
-      const targetProduct = newProducts.find(p => p.id === targetItem.id);
-      
-      if (draggedProduct && targetProduct) {
-        const draggedIndex = newProducts.indexOf(draggedProduct);
-        const targetIndex = newProducts.indexOf(targetProduct);
+    // Handle section dragging
+    if (draggedItem.type === 'section') {
+      const draggedSection = sections.find(s => s.id === draggedItem.id);
+      if (!draggedSection) return;
+
+      console.log('Section drag drop:', {
+        draggedSection: draggedSection.name,
+        targetItem: targetItem.type,
+        targetId: targetItem.id,
+        currentSections: sections.map(s => ({ name: s.name, position: s.position }))
+      });
+
+      // Use a single state update to avoid race conditions
+      setSections(prevSections => {
+        const newSections = [...prevSections];
         
-        // Remove dragged item
-        newProducts.splice(draggedIndex, 1);
-        // Insert at target position
-        newProducts.splice(targetIndex, 0, draggedProduct);
-      }
-      
-      return newProducts;
-    });
+        // Remove the dragged section
+        const draggedIndex = newSections.findIndex(s => s.id === draggedItem.id);
+        if (draggedIndex === -1) return prevSections;
+        
+        const [draggedSectionData] = newSections.splice(draggedIndex, 1);
+        
+        // Calculate target position based on the current combined list
+        let targetPosition = 0;
+        
+        if (targetItem.type === 'section') {
+          // Insert before another section
+          const targetSection = newSections.find(s => s.id === targetItem.id);
+          if (targetSection) {
+            targetPosition = targetSection.position;
+          }
+        } else {
+          // Insert after a product (at the lower border)
+          const targetProduct = products.find(p => p.id === targetItem.id);
+          if (targetProduct) {
+            const productIndex = products.indexOf(targetProduct);
+            
+            // Count how many sections currently have positions <= productIndex
+            // This tells us how many sections come before this product in the display
+            const sectionsBeforeProduct = newSections.filter(s => s.position <= productIndex).length;
+            
+            // The target position should be the product index + 1 + the number of sections before it
+            // This places the section AFTER the product (at its lower border)
+            targetPosition = productIndex + 1 + sectionsBeforeProduct;
+            
+            console.log('Product insertion debug:', {
+              targetProduct: targetProduct.name,
+              productIndex,
+              sectionsBeforeProduct,
+              targetPosition,
+              sections: newSections.map(s => ({ name: s.name, position: s.position }))
+            });
+          }
+        }
+
+        // Note: Bottom insertion is now handled by the dedicated bottom drop zone
+
+        // Update positions of sections that come after the target position
+        newSections.forEach(section => {
+          if (section.position >= targetPosition) {
+            section.position += 1;
+          }
+        });
+        
+        // Insert the dragged section at the target position
+        draggedSectionData.position = targetPosition;
+        newSections.push(draggedSectionData);
+        
+        console.log('Section drop result:', {
+          targetPosition,
+          finalSections: newSections.map(s => ({ name: s.name, position: s.position }))
+        });
+        
+        return newSections;
+      });
+    } else {
+      // Handle product dragging (existing logic)
+      setProducts(prevProducts => {
+        const newProducts = [...prevProducts];
+        
+        // Reorder products
+        const draggedProduct = newProducts.find(p => p.id === draggedItem.id);
+        const targetProduct = newProducts.find(p => p.id === targetItem.id);
+        
+        if (draggedProduct && targetProduct) {
+          const draggedIndex = newProducts.indexOf(draggedProduct);
+          const targetIndex = newProducts.indexOf(targetProduct);
+          
+          // Remove dragged item
+          newProducts.splice(draggedIndex, 1);
+          // Insert at target position
+          newProducts.splice(targetIndex, 0, draggedProduct);
+        }
+        
+        return newProducts;
+      });
+    }
 
     setDraggedItem(null);
     setDragOverItem(null);
@@ -343,6 +441,100 @@ const AllProductsPage: React.FC = () => {
   const handleDragEnd = () => {
     setDraggedItem(null);
     setDragOverItem(null);
+  };
+
+  // Section Management Functions
+  const handleAddSection = () => {
+    setShowAddSectionForm(true);
+  };
+
+  const handleCloseSectionForm = () => {
+    setShowAddSectionForm(false);
+    setNewSectionName('');
+  };
+
+  const handleCreateSection = () => {
+    if (!newSectionName.trim()) return;
+
+    // Use a single state update to avoid race conditions
+    setSections(prevSections => {
+      const newSections = [...prevSections];
+      
+      // Find the minimum position among existing sections
+      const minPosition = newSections.length > 0 
+        ? Math.min(...newSections.map(s => s.position))
+        : 0;
+      
+      // Create new section at position (minPosition - 1) to ensure it's at the very top
+      const newSection: Section = {
+        id: `section-${Date.now()}`,
+        name: newSectionName.trim(),
+        type: 'section',
+        position: minPosition - 1
+      };
+      
+      newSections.push(newSection);
+      return newSections;
+    });
+    
+    handleCloseSectionForm();
+  };
+
+  const handleDeleteSection = (sectionId: string) => {
+    setSections(prevSections => {
+      const sectionToDelete = prevSections.find(s => s.id === sectionId);
+      if (!sectionToDelete) return prevSections;
+      
+      const deletedPosition = sectionToDelete.position;
+      
+      // Remove the section and update positions of sections that come after it
+      return prevSections
+        .filter(section => section.id !== sectionId)
+        .map(section => ({
+          ...section,
+          position: section.position > deletedPosition ? section.position - 1 : section.position
+        }));
+    });
+  };
+
+  const handleEditSection = (sectionId: string, currentName: string) => {
+    setEditingSectionId(sectionId);
+    setEditingSectionName(currentName);
+  };
+
+  const handleSaveSectionEdit = () => {
+    if (editingSectionId && editingSectionName.trim()) {
+      setSections(prevSections =>
+        prevSections.map(section =>
+          section.id === editingSectionId
+            ? { ...section, name: editingSectionName.trim() }
+            : section
+        )
+      );
+      setEditingSectionId(null);
+      setEditingSectionName('');
+    }
+  };
+
+  const handleCancelSectionEdit = () => {
+    setEditingSectionId(null);
+    setEditingSectionName('');
+  };
+
+  const handleEditFixedHeader = () => {
+    setEditingSectionId('fixed-header-section');
+    setEditingSectionName(fixedHeaderSection.name);
+  };
+
+  const handleSaveFixedHeaderEdit = () => {
+    if (editingSectionName.trim()) {
+      setFixedHeaderSection(prev => ({
+        ...prev,
+        name: editingSectionName.trim()
+      }));
+      setEditingSectionId(null);
+      setEditingSectionName('');
+    }
   };
 
   // Add Product Form Handlers
@@ -364,12 +556,10 @@ const AllProductsPage: React.FC = () => {
       count: 0,
       editCount: 0,
       ifSoldOut: 'keep selling',
-      isTracking: true,
+      isTracking: false,
       variants: []
     });
-    setNewVariants([
-      { name: '', price: 0, beforePrice: 0, saveAmount: 0, count: 0, editCount: 0, ifSoldOut: 'keep selling', isTracking: true }
-    ]);
+    setNewVariants([]);
     setShowVariants(false);
     setShowAdvancedSettings(false);
   };
@@ -378,30 +568,6 @@ const AllProductsPage: React.FC = () => {
     setNewProduct(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleVariantChange = (index: number, field: keyof ProductVariant, value: any) => {
-    setNewVariants(prev => 
-      prev.map((variant, i) => 
-        i === index ? { ...variant, [field]: value } : variant
-      )
-    );
-  };
-
-  const addVariant = () => {
-    setNewVariants(prev => [...prev, { 
-      name: '', 
-      price: 0, 
-      beforePrice: 0, 
-      saveAmount: 0, 
-      count: 0, 
-      editCount: 0, 
-      ifSoldOut: 'keep selling', 
-      isTracking: true 
-    }]);
-  };
-
-  const removeVariant = (index: number) => {
-    setNewVariants(prev => prev.filter((_, i) => i !== index));
-  };
 
   // Image upload handlers
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -466,19 +632,7 @@ const AllProductsPage: React.FC = () => {
 
   const handleSubmitProduct = () => {
     const newId = (products.length + 1).toString();
-    const productVariants: ProductVariant[] = newVariants
-      .filter(variant => variant.name && variant.name.trim() !== '')
-      .map((variant, index) => ({
-        id: `${newId}-${index + 1}`,
-        name: variant.name!,
-        price: variant.price!,
-        beforePrice: variant.beforePrice!,
-        saveAmount: variant.saveAmount!,
-        count: variant.count!,
-        editCount: variant.editCount!,
-        ifSoldOut: variant.ifSoldOut!,
-        isTracking: variant.isTracking!
-      }));
+    const productVariants: ProductVariant[] = newVariants;
 
     const newProductData: Product = {
       id: newId,
@@ -507,11 +661,41 @@ const AllProductsPage: React.FC = () => {
     product.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const filteredSections = sections.filter(section =>
+    section.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Create combined list of items (sections and products) for rendering
+  const allItems = [fixedHeaderSection, ...filteredSections, ...filteredProducts].sort((a, b) => {
+    // Get position for comparison
+    let posA, posB;
+    
+    if ('position' in a) {
+      // It's a section - use its position directly
+      posA = a.position;
+    } else {
+      // It's a product - use its index in the products array
+      const productIndex = filteredProducts.indexOf(a as Product);
+      posA = productIndex;
+    }
+    
+    if ('position' in b) {
+      // It's a section - use its position directly
+      posB = b.position;
+    } else {
+      // It's a product - use its index in the products array
+      const productIndex = filteredProducts.indexOf(b as Product);
+      posB = productIndex;
+    }
+    
+    return posA - posB;
+  });
+
   // Calculate global product numbers
   let globalProductNumber = 1;
 
   return (
-    <div className="all-products-page">
+    <div className="products-management-container">
       {/* Header */}
       <div className="products-header">
         <div className="header-left">
@@ -519,7 +703,7 @@ const AllProductsPage: React.FC = () => {
             <span className="back-icon">←</span>
             Back to Design
           </button>
-          <h1 className="page-title">All Products</h1>
+          <h1 className="page-title">Products Management</h1>
         </div>
         <div className="header-center">
           <div className="search-input-container">
@@ -534,6 +718,10 @@ const AllProductsPage: React.FC = () => {
           </div>
         </div>
         <div className="header-right">
+          <button className="add-section-btn" onClick={handleAddSection}>
+            <span className="add-icon">📋</span>
+            ADD section
+          </button>
           <button className="add-product-btn" onClick={handleAddProduct}>
             <span className="add-icon">+</span>
             Add Product
@@ -552,9 +740,97 @@ const AllProductsPage: React.FC = () => {
           <div className="header-cell actions-col">Actions</div>
         </div>
 
-        {filteredProducts.flatMap((product, index) => {
-          const currentProductNumber = globalProductNumber++;
+        {allItems.flatMap((item, index) => {
           const rows = [];
+          
+          // Check if item is a section
+          if ('type' in item && item.type === 'section') {
+            const section = item as Section;
+            const isFixedHeader = section.id === 'fixed-header-section';
+            
+            rows.push(
+              <div 
+                key={section.id} 
+                className={`section-row ${isFixedHeader ? 'fixed-header-section' : 'regular-section'} ${draggedItem?.id === section.id ? 'dragging' : ''} ${dragOverItem?.id === section.id ? 'drag-over' : ''}`}
+                draggable={!isFixedHeader}
+                onDragStart={!isFixedHeader ? (e) => handleDragStart(e, { id: section.id, type: 'section', index }) : undefined}
+                onDragOver={!isFixedHeader ? (e) => handleDragOver(e, { id: section.id, type: 'section', index }) : undefined}
+                onDragLeave={!isFixedHeader ? handleDragLeave : undefined}
+                onDrop={!isFixedHeader ? (e) => handleDrop(e, { id: section.id, type: 'section', index }) : undefined}
+                onDragEnd={!isFixedHeader ? handleDragEnd : undefined}
+              >
+                <div className="section-cell">
+                  {editingSectionId === section.id ? (
+                    <div className="section-edit-form">
+                      <input
+                        type="text"
+                        value={editingSectionName}
+                        onChange={(e) => setEditingSectionName(e.target.value)}
+                        className={`section-edit-input ${isFixedHeader ? 'fixed-header-input' : 'regular-section-input'}`}
+                        autoFocus
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            isFixedHeader ? handleSaveFixedHeaderEdit() : handleSaveSectionEdit();
+                          } else if (e.key === 'Escape') {
+                            handleCancelSectionEdit();
+                          }
+                        }}
+                      />
+                      <div className="section-edit-actions">
+                        <button 
+                          className="section-save-btn"
+                          onClick={isFixedHeader ? handleSaveFixedHeaderEdit : handleSaveSectionEdit}
+                          title="Save"
+                        >
+                          ✓
+                        </button>
+                        <button 
+                          className="section-cancel-edit-btn"
+                          onClick={handleCancelSectionEdit}
+                          title="Cancel"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <span className={`section-name ${isFixedHeader ? 'fixed-header-name' : 'regular-section-name'}`}>
+                      {section.name}
+                    </span>
+                  )}
+                </div>
+                <div className="section-actions">
+                  {editingSectionId !== section.id && (
+                    <button 
+                      className={`edit-section-btn ${isFixedHeader ? 'fixed-header-edit-btn' : 'regular-section-edit-btn'}`}
+                      onClick={isFixedHeader ? handleEditFixedHeader : () => handleEditSection(section.id, section.name)}
+                      title={isFixedHeader ? "Edit Header Name" : "Edit Section Name"}
+                    >
+                      ✏️
+                    </button>
+                  )}
+                  {!isFixedHeader && (
+                    <button 
+                      className="delete-section-btn"
+                      onClick={() => handleDeleteSection(section.id)}
+                      title="Delete Section"
+                    >
+                      🗑️
+                    </button>
+                  )}
+                </div>
+                <div className="section-spacer"></div>
+                <div className="section-spacer"></div>
+                <div className="section-spacer"></div>
+                <div className="section-spacer"></div>
+              </div>
+            );
+            return rows;
+          }
+
+          // Handle product items
+          const product = item as Product;
+          const currentProductNumber = globalProductNumber++;
           
           // Add main product row
           rows.push(
@@ -614,7 +890,7 @@ const AllProductsPage: React.FC = () => {
                     <input
                       type="number"
                       value={product.editCount}
-                      onChange={(e) => handleEditCount(product.id, undefined, parseInt(e.target.value) || 0)}
+                      onChange={(e) => handleEditCount(product.id, parseInt(e.target.value) || 0)}
                       className="edit-count-input"
                       min="0"
                     />
@@ -641,7 +917,7 @@ const AllProductsPage: React.FC = () => {
                   <>
                     <button 
                       className={`selling-btn ${product.ifSoldOut === 'keep selling' ? 'keep-selling' : 'stop-selling'}`}
-                      onClick={() => handleIfSoldOutChange(product.id, undefined, product.ifSoldOut === 'keep selling' ? 'stop selling' : 'keep selling')}
+                      onClick={() => handleIfSoldOutChange(product.id, product.ifSoldOut === 'keep selling' ? 'stop selling' : 'keep selling')}
                     >
                       {product.ifSoldOut === 'keep selling' ? 'Keep selling' : 'Stop selling'}
                     </button>
@@ -703,7 +979,7 @@ const AllProductsPage: React.FC = () => {
                   <input
                     type="number"
                     value={variant.editCount}
-                    onChange={(e) => handleEditCount(product.id, variant.id, parseInt(e.target.value) || 0)}
+                    onChange={(e) => handleEditCount(product.id, parseInt(e.target.value) || 0, variant.id)}
                     className="edit-count-input"
                     min="0"
                   />
@@ -724,7 +1000,7 @@ const AllProductsPage: React.FC = () => {
                 <div className="sold-out-cell">
                   <button 
                     className={`selling-btn ${variant.ifSoldOut === 'keep selling' ? 'keep-selling' : 'stop-selling'}`}
-                    onClick={() => handleIfSoldOutChange(product.id, variant.id, variant.ifSoldOut === 'keep selling' ? 'stop selling' : 'keep selling')}
+                    onClick={() => handleIfSoldOutChange(product.id, variant.ifSoldOut === 'keep selling' ? 'stop selling' : 'keep selling', variant.id)}
                   >
                     {variant.ifSoldOut === 'keep selling' ? 'Keep selling' : 'Stop selling'}
                   </button>
@@ -755,6 +1031,59 @@ const AllProductsPage: React.FC = () => {
           
           return rows;
         })}
+        
+        {/* Bottom Drop Zone */}
+        <div 
+          className={`bottom-drop-zone ${dragOverItem?.id === 'bottom-zone' ? 'drag-over' : ''}`}
+          onDragOver={(e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            setDragOverItem({ id: 'bottom-zone', type: 'section', index: -1 });
+          }}
+          onDragLeave={(e) => {
+            e.preventDefault();
+            if (dragOverItem?.id === 'bottom-zone') {
+              setDragOverItem(null);
+            }
+          }}
+          onDrop={(e) => {
+            e.preventDefault();
+            if (draggedItem && draggedItem.type === 'section') {
+              const draggedSection = sections.find(s => s.id === draggedItem.id);
+              if (!draggedSection) return;
+
+              setSections(prevSections => {
+                const newSections = [...prevSections];
+                
+                // Remove the dragged section
+                const draggedIndex = newSections.findIndex(s => s.id === draggedItem.id);
+                if (draggedIndex === -1) return prevSections;
+                
+                const [draggedSectionData] = newSections.splice(draggedIndex, 1);
+                
+                // Calculate position at the bottom
+                const maxPosition = Math.max(
+                  ...newSections.map(s => s.position),
+                  products.length - 1,
+                  -1
+                );
+                const targetPosition = maxPosition + 1;
+                
+                // Insert the dragged section at the bottom
+                draggedSectionData.position = targetPosition;
+                newSections.push(draggedSectionData);
+                
+                return newSections;
+              });
+            }
+            setDraggedItem(null);
+            setDragOverItem(null);
+          }}
+        >
+          <div className="drop-zone-content">
+            <span className="drop-zone-text">Drop section here to add at bottom</span>
+          </div>
+        </div>
       </div>
 
       {/* Add Product Form Modal */}
@@ -911,116 +1240,12 @@ const AllProductsPage: React.FC = () => {
               </div>
               </div>
 
-              <div className="form-section">
-                <div className="section-header" onClick={() => setShowVariants(!showVariants)}>
-                  <h3>Product Variants (Optional)</h3>
-                  <span className={`toggle-icon ${showVariants ? 'expanded' : 'collapsed'}`}>▼</span>
-                </div>
-                {showVariants && (
-                  <>
-                    {newVariants.map((variant, index) => (
-                  <div key={index} className="variant-form">
-                    <div className="variant-header">
-                      <h4>Variant {index + 1}</h4>
-                      {newVariants.length > 1 && (
-                        <button 
-                          type="button" 
-                          className="remove-variant-btn"
-                          onClick={() => removeVariant(index)}
-                        >
-                          Remove
-                        </button>
-                      )}
-                    </div>
-                    
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label>Variant Name</label>
-                        <input
-                          type="text"
-                          value={variant.name}
-                          onChange={(e) => handleVariantChange(index, 'name', e.target.value)}
-                          placeholder="e.g., small, medium, large"
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Count</label>
-                        <input
-                          type="number"
-                          value={variant.count}
-                          onChange={(e) => handleVariantChange(index, 'count', parseInt(e.target.value) || 0)}
-                          min="0"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label>Price ($)</label>
-                        <input
-                          type="number"
-                          step="0.01"
-                          value={variant.price}
-                          onChange={(e) => handleVariantChange(index, 'price', parseFloat(e.target.value) || 0)}
-                          min="0"
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Before Price ($)</label>
-                        <input
-                          type="number"
-                          step="0.01"
-                          value={variant.beforePrice}
-                          onChange={(e) => handleVariantChange(index, 'beforePrice', parseFloat(e.target.value) || 0)}
-                          min="0"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label>Save Amount ($)</label>
-                        <input
-                          type="number"
-                          step="0.01"
-                          value={variant.saveAmount}
-                          onChange={(e) => handleVariantChange(index, 'saveAmount', parseFloat(e.target.value) || 0)}
-                          min="0"
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>If Sold Out</label>
-                        <select
-                          value={variant.ifSoldOut}
-                          onChange={(e) => handleVariantChange(index, 'ifSoldOut', e.target.value as 'keep selling' | 'stop selling')}
-                        >
-                          <option value="keep selling">Keep selling</option>
-                          <option value="stop selling">Stop selling</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label>
-                          <input
-                            type="checkbox"
-                            checked={variant.isTracking}
-                            onChange={(e) => handleVariantChange(index, 'isTracking', e.target.checked)}
-                          />
-                          Keep tracking
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                
-                <button type="button" className="add-variant-btn" onClick={addVariant}>
-                  + Add Variant
-                </button>
-                  </>
-                )}
-              </div>
+              {/* Product Variants Section */}
+              <VariantCreation
+                variants={newVariants}
+                onVariantsChange={setNewVariants}
+                className="product-variants-section"
+              />
             </div>
 
             <div className="modal-footer">
@@ -1030,6 +1255,61 @@ const AllProductsPage: React.FC = () => {
               <button className="submit-btn" onClick={handleSubmitProduct}>
                 Add Product
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Section Form Modal */}
+      {showAddSectionForm && (
+        <div className="modal-overlay" onClick={handleCloseSectionForm}>
+          <div className="section-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="section-modal-header">
+              <div className="section-modal-title">
+                <h2>Create New Section</h2>
+              </div>
+              <button className="section-close-btn" onClick={handleCloseSectionForm}>
+                <span>×</span>
+              </button>
+            </div>
+            
+            <div className="section-modal-body">
+              <div className="section-description">
+                <p>Add a new section to organize your products. Sections can be dragged and dropped between products.</p>
+              </div>
+              
+              <form onSubmit={(e) => { e.preventDefault(); handleCreateSection(); }} className="section-form">
+                <div className="section-form-group">
+                  <label htmlFor="sectionName" className="section-label">
+                    <span className="label-icon">🏷️</span>
+                    Section Name
+                  </label>
+                  <input
+                    type="text"
+                    id="sectionName"
+                    value={newSectionName}
+                    onChange={(e) => setNewSectionName(e.target.value)}
+                    placeholder="e.g., Featured Products, New Arrivals, Sale Items..."
+                    required
+                    autoFocus
+                    className="section-input"
+                  />
+                  <div className="section-input-hint">
+                    Choose a descriptive name that helps organize your products
+                  </div>
+                </div>
+                
+                <div className="section-form-actions">
+                  <button type="button" className="section-cancel-btn" onClick={handleCloseSectionForm}>
+                    <span className="btn-icon">↩️</span>
+                    Cancel
+                  </button>
+                  <button type="submit" className="section-create-btn" disabled={!newSectionName.trim()}>
+                    <span className="btn-icon">✨</span>
+                    Create Section
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
@@ -1073,4 +1353,4 @@ const AllProductsPage: React.FC = () => {
   );
 };
 
-export default AllProductsPage;
+export default ProductsManagementPage;

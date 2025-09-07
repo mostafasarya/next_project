@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import DesignStorePagesLayout from '../../components/DesignStorePagesLayout';
-import './CatalogPage.css';
+import { useRouter, useParams } from 'next/navigation';
+import DesignStorePagesLayout from '../../../components/DesignStorePagesLayout';
+import '../CatalogPage.css';
 
 interface Product {
   id: string;
@@ -29,14 +29,62 @@ interface Category {
   products: Product[];
 }
 
-const CatalogPage: React.FC = () => {
+interface CatalogPage {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  createdAt: Date;
+}
+
+const DynamicCatalogPage: React.FC = () => {
   const router = useRouter();
+  const params = useParams();
+  const slug = params.slug as string;
+  
+  const [catalogPage, setCatalogPage] = useState<CatalogPage | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [activeTab, setActiveTab] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
+
+  // Load catalog page data
+  useEffect(() => {
+    const loadCatalogPage = () => {
+      try {
+        const savedCatalogPages = localStorage.getItem('catalogPages');
+        if (savedCatalogPages) {
+          const catalogPages: CatalogPage[] = JSON.parse(savedCatalogPages).map((page: any) => ({
+            ...page,
+            createdAt: new Date(page.createdAt)
+          }));
+          
+          const foundPage = catalogPages.find(page => page.slug === slug);
+          if (foundPage) {
+            setCatalogPage(foundPage);
+            loadMockData();
+          } else {
+            setNotFound(true);
+          }
+        } else {
+          setNotFound(true);
+        }
+      } catch (error) {
+        console.error('Error loading catalog page:', error);
+        setNotFound(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (slug) {
+      loadCatalogPage();
+    }
+  }, [slug]);
 
   // Mock data for products and categories
-  useEffect(() => {
+  const loadMockData = () => {
     const mockProducts: Product[] = [
       {
         id: '1',
@@ -178,7 +226,7 @@ const CatalogPage: React.FC = () => {
 
     setCategories(mockCategories);
     setActiveTab(mockCategories[0].id);
-  }, []);
+  };
 
   const activeCategory = categories.find(cat => cat.id === activeTab);
   const filteredProducts = activeCategory?.products.filter(product =>
@@ -191,11 +239,51 @@ const CatalogPage: React.FC = () => {
     setSearchTerm('');
   };
 
+  if (loading) {
+    return (
+      <DesignStorePagesLayout 
+        title="Loading..."
+        showBackButton={true}
+        backUrl="/catalog-management"
+      >
+        <div className="catalog-page">
+          <div className="loading-state">
+            <p>Loading catalog page...</p>
+          </div>
+        </div>
+      </DesignStorePagesLayout>
+    );
+  }
+
+  if (notFound || !catalogPage) {
+    return (
+      <DesignStorePagesLayout 
+        title="Catalog Not Found"
+        showBackButton={true}
+        backUrl="/catalog-management"
+      >
+        <div className="catalog-page">
+          <div className="not-found-state">
+            <div className="not-found-icon">📋</div>
+            <h2>Catalog Page Not Found</h2>
+            <p>The catalog page you're looking for doesn't exist or may have been deleted.</p>
+            <button 
+              className="back-to-management-btn"
+              onClick={() => router.push('/catalog-management')}
+            >
+              Back to Catalog Management
+            </button>
+          </div>
+        </div>
+      </DesignStorePagesLayout>
+    );
+  }
+
   return (
     <DesignStorePagesLayout 
-      title="Product Catalog"
+      title={catalogPage.name}
       showBackButton={true}
-      backUrl="/design"
+      backUrl="/catalog-management"
     >
       <div className="catalog-page">
         {/* Hero Section with Image Container */}
@@ -210,11 +298,13 @@ const CatalogPage: React.FC = () => {
           {/* Catalog Header */}
           <div className="catalog-header-section">
             <h1 className="catalog-title" contentEditable suppressContentEditableWarning={true}>
-              Browse Our Menu
+              {catalogPage.name}
             </h1>
-            <p className="catalog-subtitle" contentEditable suppressContentEditableWarning={true}>
-              Savour the flavour, unveil the variety
-            </p>
+            {catalogPage.description && (
+              <p className="catalog-subtitle" contentEditable suppressContentEditableWarning={true}>
+                {catalogPage.description}
+              </p>
+            )}
           </div>
         </div>
 
@@ -273,4 +363,4 @@ const CatalogPage: React.FC = () => {
   );
 };
 
-export default CatalogPage;
+export default DynamicCatalogPage;

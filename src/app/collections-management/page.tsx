@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import './CollectionsPage.css';
+import './CollectionsPagesManagement.css';
 
 interface Product {
   id: string;
@@ -29,7 +29,7 @@ interface Collection {
   createdAt: Date;
 }
 
-const CollectionsPage: React.FC = () => {
+const CollectionsPagesManagement: React.FC = () => {
   const router = useRouter();
   const [collections, setCollections] = useState<Collection[]>([]);
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -41,8 +41,26 @@ const CollectionsPage: React.FC = () => {
   const [availableProducts, setAvailableProducts] = useState<Product[]>([]);
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
 
-  // Mock data for products (same as AllProductsPage)
+  // Load collections from localStorage and initialize mock data
   useEffect(() => {
+    // Load collections from localStorage
+    const loadCollections = () => {
+      try {
+        const savedCollections = localStorage.getItem('collections');
+        if (savedCollections) {
+          const parsedCollections = JSON.parse(savedCollections).map((collection: any) => ({
+            ...collection,
+            createdAt: new Date(collection.createdAt)
+          }));
+          setCollections(parsedCollections);
+        }
+      } catch (error) {
+        console.error('Error loading collections:', error);
+      }
+    };
+
+    loadCollections();
+
     const mockProducts: Product[] = [
       {
         id: '1',
@@ -208,13 +226,20 @@ const CollectionsPage: React.FC = () => {
       createdAt: new Date()
     };
 
-    setCollections(prev => [...prev, newCollectionData]);
+    const updatedCollections = [...collections, newCollectionData];
+    setCollections(updatedCollections);
+    
+    // Save to localStorage
+    localStorage.setItem('collections', JSON.stringify(updatedCollections));
+    
     handleCloseForm();
   };
 
   const handleDeleteCollection = (collectionId: string) => {
     if (confirm('Are you sure you want to delete this collection?')) {
-      setCollections(prev => prev.filter(collection => collection.id !== collectionId));
+      const updatedCollections = collections.filter(collection => collection.id !== collectionId);
+      setCollections(updatedCollections);
+      localStorage.setItem('collections', JSON.stringify(updatedCollections));
     }
   };
 
@@ -227,7 +252,7 @@ const CollectionsPage: React.FC = () => {
             <span className="back-icon">←</span>
             Back to Design
           </button>
-          <h1 className="page-title">All Collections</h1>
+          <h1 className="page-title">Collections Management</h1>
         </div>
         <div className="header-right">
           <button className="create-collection-btn" onClick={handleCreateCollection}>
@@ -379,9 +404,9 @@ const CollectionsPage: React.FC = () => {
             </div>
           </div>
         </div>
-      )}
-    </div>
-  );
-};
+              )}
+      </div>
+    );
+  };
 
-export default CollectionsPage;
+export default CollectionsPagesManagement;

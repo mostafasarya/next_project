@@ -1,0 +1,131 @@
+/* StyleTextUser Control Component */
+.style-text-control {
+  position: relative;
+  width: 100%;
+}
+
+.text-control-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.text-control-input {
+  flex: 1;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 8px 12px;
+  background: white;
+  font-size: 16px;
+  color: #374151;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.text-control-input:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.text-control-input:disabled {
+  background: #f9fafb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Enhanced styling using CSS custom properties */
+.style-text-control .text-control-input {
+  font-weight: var(--font-weight, 400) !important;
+  text-align: var(--text-align, left) !important;
+}
+
+/* Bold text styling with high specificity */
+.style-text-control .text-control-input.bold-text {
+  font-weight: 700 !important;
+}
+
+/* Override any global input styling that might interfere */
+.style-text-control input[type="text"] {
+  font-weight: var(--font-weight, inherit) !important;
+  text-align: var(--text-align, inherit) !important;
+}
+
+.text-control-edit-icon {
+  background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
+  border: 2px solid #fecaca;
+  color: #ef4444;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  opacity: 1;
+  transform: translateX(0);
+  flex-shrink: 0;
+}
+
+.text-control-edit-icon:hover:not(:disabled) {
+  border-color: #fca5a5;
+  color: #dc2626;
+  transform: translateX(0) translateY(-1px);
+  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.2);
+}
+
+.text-control-edit-icon:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f3f4f6;
+  border-color: #d1d5db;
+  color: #9ca3af;
+}
+
+/* Alignment Tabs - System Control Assets Style */
+.alignment-tabs {
+  display: flex;
+  gap: 8px;
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.alignment-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.alignment-tab svg {
+  width: 16px;
+  height: 16px;
+}
+
+.alignment-tab:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.alignment-tab.active {
+  background: #ef4444;
+  color: white;
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+}
+
+.alignment-tab.active svg {
+  color: white;
+}

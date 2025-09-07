@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useRef } from 'react';
+import { HiCamera, HiCog } from 'react-icons/hi';
 import './StoreBar.css';
+import './SystemControlIcons.css';
 
 interface StoreBarProps {
   storeLogo: string | null;
@@ -158,9 +160,13 @@ const StoreBar: React.FC<StoreBarProps> = ({
                 <div className="logo-icon">🖼️</div>
               )}
             </div>
-            <button className="logo-control-btn upload-btn" onClick={handleUploadClick}>📷</button>
+            <button className="system-control-icon camera medium" onClick={handleUploadClick}>
+              <HiCamera />
+            </button>
+            <button className="system-control-icon settings medium" onClick={onSettingsClick}>
+              <HiCog />
+            </button>
           </div>
-          <button className="logo-control-btn settings-btn" onClick={onSettingsClick}>⚙️</button>
         </div>
         <div className="store-bar-actions">
           <button 
@@ -198,33 +204,62 @@ const StoreBar: React.FC<StoreBarProps> = ({
                     </button>
                   </div>
                   <div className="language-selector-list">
-                    {selectedLanguages.map((language) => (
-                      <div 
-                        key={language}
-                        className={`language-selector-option ${currentLanguage === language ? 'active' : ''}`}
-                        onClick={() => onLanguageChange(language)}
-                      >
-                        <span className="language-selector-flag">
-                          {language === 'English' ? '🇺🇸' : 
-                           language === 'Spanish' ? '🇪🇸' :
-                           language === 'French' ? '🇫🇷' :
-                           language === 'German' ? '🇩🇪' :
-                           language === 'Italian' ? '🇮🇹' :
-                           language === 'Portuguese' ? '🇵🇹' :
-                           language === 'Russian' ? '🇷🇺' :
-                           language === 'Chinese' ? '🇨🇳' :
-                           language === 'Japanese' ? '🇯🇵' :
-                           language === 'Korean' ? '🇰🇷' :
-                           language === 'Arabic' ? '🇸🇦' :
-                           language === 'Hindi' ? '🇮🇳' :
-                           language === 'Turkish' ? '🇹🇷' : '🌐'}
-                        </span>
-                        <span className="language-selector-name">{language}</span>
-                        {currentLanguage === language && (
-                          <span className="language-selector-check">✓</span>
-                        )}
-                      </div>
-                    ))}
+                    {selectedLanguages.map((language) => {
+                      // Map native script names to display names
+                      const getDisplayName = (lang: string) => {
+                        const mapping: { [key: string]: string } = {
+                          'English': 'English',
+                          'العربية': 'العربية',
+                          'Español': 'Español',
+                          'Français': 'Français',
+                          'Deutsch': 'Deutsch',
+                          'Português': 'Português',
+                          'Türkçe': 'Türkçe',
+                          'हिन्दी': 'हिन्दी',
+                          'Italiano': 'Italiano',
+                          'Русский': 'Русский',
+                          '日本語': '日本語',
+                          '中文': '中文',
+                          '한국어': '한국어'
+                        };
+                        return mapping[lang] || lang;
+                      };
+
+                      const getFlag = (lang: string) => {
+                        const flagMapping: { [key: string]: string } = {
+                          'English': '🇺🇸',
+                          'العربية': '🇸🇦',
+                          'Español': '🇪🇸',
+                          'Français': '🇫🇷',
+                          'Deutsch': '🇩🇪',
+                          'Português': '🇵🇹',
+                          'Türkçe': '🇹🇷',
+                          'हिन्दी': '🇮🇳',
+                          'Italiano': '🇮🇹',
+                          'Русский': '🇷🇺',
+                          '日本語': '🇯🇵',
+                          '中文': '🇨🇳',
+                          '한국어': '🇰🇷'
+                        };
+                        return flagMapping[lang] || '🌐';
+                      };
+
+                      return (
+                        <div 
+                          key={language}
+                          className={`language-selector-option ${currentLanguage === language ? 'active' : ''}`}
+                          onClick={() => onLanguageChange(language)}
+                        >
+                          <span className="language-selector-flag">
+                            {getFlag(language)}
+                          </span>
+                          <span className="language-selector-name">{getDisplayName(language)}</span>
+                          {currentLanguage === language && (
+                            <span className="language-selector-check">✓</span>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -271,7 +306,10 @@ const StoreBar: React.FC<StoreBarProps> = ({
                 <div className="empty-cart">
                   <span className="empty-cart-icon">🛒</span>
                   <p>Your cart is empty</p>
-                  <button className="start-shopping-btn" onClick={onCartDrawerClose}>
+                  <button className="start-shopping-btn" onClick={() => {
+                    onCartDrawerClose();
+                    window.location.href = '/products-management';
+                  }}>
                     Start Shopping
                   </button>
                 </div>
@@ -309,7 +347,10 @@ const StoreBar: React.FC<StoreBarProps> = ({
                       <span>Total:</span>
                       <span className="total-price">${onGetTotalPrice().toFixed(2)}</span>
                     </div>
-                    <button className="checkout-btn" onClick={onCartDrawerClose}>
+                    <button className="checkout-btn" onClick={() => {
+                      onCartDrawerClose();
+                      window.location.href = '/checkout';
+                    }}>
                       Checkout
                     </button>
                   </div>
@@ -334,7 +375,10 @@ const StoreBar: React.FC<StoreBarProps> = ({
                 <div className="empty-wishlist">
                   <span className="empty-wishlist-icon">❤️</span>
                   <p>Your wishlist is empty</p>
-                  <button className="start-shopping-btn" onClick={onWishlistDrawerClose}>
+                  <button className="start-shopping-btn" onClick={() => {
+                    onWishlistDrawerClose();
+                    window.location.href = '/products-management';
+                  }}>
                     Start Shopping
                   </button>
                 </div>
@@ -376,7 +420,10 @@ const StoreBar: React.FC<StoreBarProps> = ({
                       <span>Items in wishlist:</span>
                       <span className="total-count">{wishlistItems.length}</span>
                     </div>
-                    <button className="view-all-btn" onClick={onWishlistDrawerClose}>
+                    <button className="view-all-btn" onClick={() => {
+                      onWishlistDrawerClose();
+                      window.location.href = '/products-management';
+                    }}>
                       Continue Shopping
                     </button>
                   </div>

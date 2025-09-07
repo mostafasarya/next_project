@@ -6,7 +6,6 @@ import DesignStorePagesLayout from '../../components/DesignStorePagesLayout';
 const ExampleLayoutPage: React.FC = () => {
   return (
     <DesignStorePagesLayout 
-      title="Example Page"
       showBackButton={true}
       backUrl="/design"
     >

@@ -123,49 +123,120 @@
   background: #2563eb;
 }
 
-/* Products Table */
+/* Products Table - Odoo Style */
 .products-table {
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 
 .table-header {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
-  gap: 16px;
-  padding: 16px 24px;
+  grid-template-columns: 40px 2fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 12px;
+  padding: 12px 16px;
   background: #f8f9fa;
-  border-bottom: 1px solid #e5e7eb;
-  font-weight: 600;
-  color: #374151;
-  font-size: 14px;
+  border-bottom: 1px solid #dee2e6;
+  font-weight: 500;
+  color: #495057;
+  font-size: 13px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .header-cell {
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  text-transform: none;
+  letter-spacing: normal;
+  user-select: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
 }
 
-/* Product Rows */
+.header-cell:hover {
+  color: #007bff;
+}
+
+.header-cell.sortable::after {
+  content: "↕";
+  opacity: 0.3;
+  font-size: 10px;
+  margin-left: 4px;
+}
+
+.header-cell.sortable.sorted-asc::after {
+  content: "↑";
+  opacity: 1;
+  color: #007bff;
+}
+
+.header-cell.sortable.sorted-desc::after {
+  content: "↓";
+  opacity: 1;
+  color: #007bff;
+}
+
+.header-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-checkbox input[type="checkbox"] {
+  margin: 0;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* Product Rows - Odoo Style */
 .product-row {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
-  gap: 16px;
-  padding: 16px 24px;
-  border-bottom: 1px solid #f3f4f6;
-  transition: background-color 0.2s ease;
+  grid-template-columns: 40px 2fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 12px;
+  padding: 8px 16px;
+  border-bottom: 1px solid #f1f3f4;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.product-row:nth-child(even) {
+  background: #fafbfc;
 }
 
 .product-row:hover {
-  background: #f8f9fa;
+  background: #e3f2fd !important;
+  border-color: #bbdefb;
+}
+
+.product-row.selected {
+  background: #e8f5e8 !important;
+  border-color: #c8e6c9;
+}
+
+.product-row-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-row-checkbox input[type="checkbox"] {
+  margin: 0;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
 }
 
 .product-cell {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .product-info {
@@ -174,25 +245,45 @@
 }
 
 .product-name {
-  font-weight: 500;
-  color: #111827;
-  margin-bottom: 4px;
+  font-weight: 400;
+  color: #212529;
+  margin-bottom: 2px;
+  font-size: 14px;
+  text-decoration: none;
 }
 
-.product-category {
-  font-size: 12px;
-  color: #6b7280;
+.product-name.clickable {
+  color: #007bff;
+  cursor: pointer;
 }
 
-.product-emoji {
-  font-size: 24px;
-  width: 40px;
-  height: 40px;
+.product-name.clickable:hover {
+  text-decoration: underline;
+}
+
+.product-number {
+  font-size: 11px;
+  color: #6c757d;
+  min-width: 20px;
+}
+
+.product-image-container {
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f3f4f6;
-  border-radius: 8px;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 3px;
+}
+
+.product-image {
+  width: 28px;
+  height: 28px;
+  object-fit: cover;
+  border-radius: 2px;
+  font-size: 16px;
 }
 
 /* Variant Creation Integration */
@@ -362,23 +453,25 @@
   background: #e5e7eb;
 }
 
-/* Section Styling */
+/* Section Styling - Odoo Style */
 .section-row {
   display: grid;
   grid-template-columns: 1fr;
-  padding: 12px 24px;
-  background: #f8f9fa;
-  border-bottom: 1px solid #e5e7eb;
-  font-weight: 600;
-  color: #374151;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: 12px;
+  padding: 8px 16px;
+  background: #e9ecef;
+  border-bottom: 1px solid #dee2e6;
+  font-weight: 500;
+  color: #495057;
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: 13px;
+  border-left: 3px solid #6c757d;
 }
 
 .section-row.fixed-header-section {
-  background: #3b82f6;
+  background: #007bff;
   color: white;
+  border-left-color: #0056b3;
 }
 
 .section-cell {
@@ -402,9 +495,25 @@
 .section-edit-input {
   flex: 1;
   padding: 6px 10px;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
-  font-size: 14px;
+  border: 1px solid #ced4da;
+  border-radius: 3px;
+  font-size: 13px;
+  background: white;
+}
+
+.section-edit-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.section-edit-input.fixed-header-input {
+  background: rgba(255, 255, 255, 0.9);
+  color: #212529;
+}
+
+.section-edit-input.regular-section-input {
+  background: white;
 }
 
 .section-edit-actions {
@@ -415,38 +524,102 @@
 .section-save-btn,
 .section-cancel-edit-btn {
   padding: 4px 8px;
-  border: none;
-  border-radius: 4px;
-  font-size: 12px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  font-size: 11px;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .section-save-btn {
-  background: #10b981;
+  background: #28a745;
   color: white;
+  border-color: #28a745;
+}
+
+.section-save-btn:hover {
+  background: #1e7e34;
+  border-color: #1e7e34;
 }
 
 .section-cancel-edit-btn {
-  background: #ef4444;
+  background: #dc3545;
   color: white;
+  border-color: #dc3545;
 }
 
-/* Variant Row Styling */
+.section-cancel-edit-btn:hover {
+  background: #c82333;
+  border-color: #c82333;
+}
+
+.section-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.edit-section-btn,
+.delete-section-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 3px;
+  font-size: 14px;
+  transition: background 0.2s ease;
+}
+
+.edit-section-btn:hover,
+.delete-section-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.fixed-header-edit-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.regular-section-edit-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* Variant Row Styling - Odoo Style */
 .variant-row {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
-  gap: 16px;
-  padding: 12px 24px 12px 48px;
-  border-bottom: 1px solid #f3f4f6;
-  background: #fafafa;
-  border-left: 3px solid #d1d5db;
+  grid-template-columns: 40px 2fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 12px;
+  padding: 6px 16px 6px 40px;
+  border-bottom: 1px solid #f1f3f4;
+  background: #fdfefe;
+  border-left: 2px solid #dee2e6;
+  position: relative;
+}
+
+.variant-row:nth-child(even) {
+  background: #fafbfc;
 }
 
 .variant-row:hover {
-  background: #f5f5f5;
+  background: #f0f8ff !important;
+  border-color: #bbdefb;
 }
 
-/* Cell Styling */
+.variant-row.selected {
+  background: #e8f5e8 !important;
+  border-color: #c8e6c9;
+}
+
+.variant-cell {
+  padding-left: 20px;
+}
+
+.variant-name {
+  font-size: 13px;
+  color: #495057;
+  font-weight: 400;
+}
+
+/* Cell Styling - Odoo Style */
 .price-cell,
 .count-cell,
 .edit-count-cell,
@@ -454,129 +627,381 @@
 .actions-cell {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  font-size: 13px;
 }
 
 .variants-indicator {
-  color: #6b7280;
+  color: #6c757d;
   font-style: italic;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .price-info {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 }
 
 .current-price {
-  font-weight: 600;
-  color: #111827;
+  font-weight: 500;
+  color: #212529;
+  font-size: 13px;
 }
 
 .before-price {
-  font-size: 12px;
-  color: #6b7280;
+  font-size: 11px;
+  color: #6c757d;
   text-decoration: line-through;
 }
 
 .save-amount {
-  font-size: 12px;
-  color: #10b981;
-  font-weight: 500;
+  font-size: 11px;
+  color: #28a745;
+  font-weight: 400;
 }
 
 .count-value {
-  font-weight: 500;
-  color: #111827;
+  font-weight: 400;
+  color: #212529;
+  font-size: 13px;
 }
 
 .edit-count-input {
-  width: 60px;
-  padding: 4px 8px;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
+  width: 50px;
+  padding: 3px 6px;
+  border: 1px solid #ced4da;
+  border-radius: 3px;
   text-align: center;
-  font-size: 14px;
+  font-size: 12px;
+  background: white;
 }
 
-.count-btn {
-  padding: 4px 8px;
+.edit-count-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Button Styling - Odoo Style */
+.add-count-btn,
+.deduct-count-btn {
+  padding: 2px 8px;
+  border: 1px solid #ced4da;
+  border-radius: 3px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: white;
+  color: #495057;
+}
+
+.add-count-btn:hover {
+  background: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.deduct-count-btn:hover {
+  background: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.selling-btn {
+  padding: 3px 8px;
+  border: 1px solid #ced4da;
+  border-radius: 3px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: white;
+  color: #495057;
+  text-transform: capitalize;
+}
+
+.selling-btn.keep-selling {
+  background: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+}
+
+.selling-btn.stop-selling {
+  background: #f8d7da;
+  color: #721c24;
+  border-color: #f5c6cb;
+}
+
+.tracking-btn {
+  padding: 3px 8px;
+  border: 1px solid #ced4da;
+  border-radius: 3px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: white;
+  color: #495057;
+  text-transform: capitalize;
+}
+
+.tracking-btn.tracking {
+  background: #d1ecf1;
+  color: #0c5460;
+  border-color: #bee5eb;
+}
+
+.tracking-btn.not-tracking {
+  background: #f8f9fa;
+  color: #6c757d;
+  border-color: #dee2e6;
+}
+
+.dropdown-arrow {
+  color: #6c757d;
+  font-size: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.action-icons {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.product-row:hover .action-icons,
+.variant-row:hover .action-icons {
+  opacity: 1;
+}
+
+.edit-icon,
+.delete-icon {
+  background: none;
   border: none;
-  border-radius: 4px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 3px;
   font-size: 12px;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background 0.2s ease;
 }
 
-.add-btn {
-  background: #10b981;
-  color: white;
+.edit-icon:hover {
+  background: #e9ecef;
 }
 
-.add-btn:hover {
-  background: #059669;
+.delete-icon:hover {
+  background: #f8d7da;
 }
 
-.deduct-btn {
-  background: #ef4444;
-  color: white;
-}
-
-.deduct-btn:hover {
-  background: #dc2626;
-}
-
-.sold-out-btn {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 4px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.keep-selling {
-  background: #10b981;
-  color: white;
-}
-
-.stop-selling {
-  background: #ef4444;
-  color: white;
-}
-
-.tracking-toggle {
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
-}
-
-.delete-btn {
-  padding: 6px 10px;
-  background: #fee2e2;
-  color: #dc2626;
-  border: 1px solid #fecaca;
-  border-radius: 4px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.delete-btn:hover {
-  background: #fecaca;
-  border-color: #f87171;
-}
-
-/* Drag and Drop Styling */
+/* Drag and Drop Styling - Odoo Style */
 .dragging {
-  opacity: 0.5;
-  transform: scale(0.95);
+  opacity: 0.6;
+  transform: scale(0.98);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .drag-over {
-  border-top: 2px solid #3b82f6;
-  background: #eff6ff;
+  border-top: 2px solid #007bff;
+  background: #e3f2fd;
+}
+
+/* Table Improvements */
+.products-table .table-header .header-cell:first-child {
+  justify-content: center;
+}
+
+/* Enhanced row selection styling */
+.product-row input[type="checkbox"]:checked + .product-cell,
+.variant-row input[type="checkbox"]:checked + .product-cell {
+  background: rgba(0, 123, 255, 0.1);
+}
+
+/* Improved responsive behavior */
+.products-table {
+  min-width: 800px;
+  overflow-x: auto;
+}
+
+/* Better spacing for actions */
+.actions-cell {
+  justify-content: flex-end;
+}
+
+/* Subtle border radius for buttons */
+.add-count-btn,
+.deduct-count-btn,
+.selling-btn,
+.tracking-btn {
+  border-radius: 2px;
+}
+
+/* Focus states for accessibility */
+.edit-count-input:focus,
+.product-row-checkbox input:focus,
+.header-checkbox input:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 1px;
+}
+
+/* Section Modal Styles - Odoo Design */
+.section-modal-content {
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.section-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.section-modal-title h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  color: #212529;
+}
+
+.section-close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 3px;
+  transition: background 0.2s ease;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section-close-btn:hover {
+  background: #e9ecef;
+}
+
+.section-modal-body {
+  padding: 20px;
+}
+
+.section-description {
+  margin-bottom: 20px;
+}
+
+.section-description p {
+  color: #6c757d;
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.section-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #495057;
+}
+
+.label-icon {
+  font-size: 16px;
+}
+
+.section-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.section-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.section-input-hint {
+  font-size: 12px;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.section-form-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.section-cancel-btn,
+.section-create-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.section-cancel-btn {
+  background: #f8f9fa;
+  color: #6c757d;
+  border-color: #ced4da;
+}
+
+.section-cancel-btn:hover {
+  background: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.section-create-btn {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.section-create-btn:hover:not(:disabled) {
+  background: #0056b3;
+  border-color: #0056b3;
+}
+
+.section-create-btn:disabled {
+  background: #e9ecef;
+  color: #adb5bd;
+  border-color: #e9ecef;
+  cursor: not-allowed;
+}
+
+.btn-icon {
+  font-size: 12px;
 }
 
 /* Responsive Design */
@@ -606,5 +1031,39 @@
   
   .form-row .form-group {
     margin-bottom: 16px;
+  }
+
+  /* Section Modal Responsive */
+  .section-modal-content {
+    width: 95%;
+    max-width: 400px;
+    margin: 10px;
+  }
+  
+  .section-modal-header {
+    padding: 12px 16px;
+  }
+  
+  .section-modal-title h2 {
+    font-size: 16px;
+  }
+  
+  .section-modal-body {
+    padding: 16px;
+  }
+  
+  .section-form-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .section-cancel-btn,
+  .section-create-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .section-input {
+    font-size: 16px; /* Prevents zoom on iOS */
   }
 }

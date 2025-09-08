@@ -732,11 +732,16 @@ const ProductsManagementPage: React.FC = () => {
       {/* Products Table */}
       <div className="products-table">
         <div className="table-header">
-          <div className="header-cell product-col">product</div>
-          <div className="header-cell price-col">price</div>
-          <div className="header-cell count-col">count</div>
-          <div className="header-cell edit-col">Edit count</div>
-          <div className="header-cell sold-out-col">If sold out</div>
+          <div className="header-cell header-checkbox">
+            <input type="checkbox" onChange={(e) => {
+              // TODO: Implement select all functionality
+            }} />
+          </div>
+          <div className="header-cell product-col sortable">Product</div>
+          <div className="header-cell price-col sortable">Price</div>
+          <div className="header-cell count-col sortable">Count</div>
+          <div className="header-cell edit-col">Edit Count</div>
+          <div className="header-cell sold-out-col">If Sold Out</div>
           <div className="header-cell actions-col">Actions</div>
         </div>
 
@@ -819,10 +824,6 @@ const ProductsManagementPage: React.FC = () => {
                     </button>
                   )}
                 </div>
-                <div className="section-spacer"></div>
-                <div className="section-spacer"></div>
-                <div className="section-spacer"></div>
-                <div className="section-spacer"></div>
               </div>
             );
             return rows;
@@ -844,6 +845,14 @@ const ProductsManagementPage: React.FC = () => {
               onDrop={(e) => handleDrop(e, { id: product.id, type: 'product', index })}
               onDragEnd={handleDragEnd}
             >
+              <div className="product-row-checkbox">
+                <input 
+                  type="checkbox" 
+                  onChange={(e) => {
+                    // TODO: Implement row selection
+                  }} 
+                />
+              </div>
               <div className="product-cell">
                 <span className="product-number">{product.id}</span>
                 <div className="product-image-container">
@@ -961,6 +970,14 @@ const ProductsManagementPage: React.FC = () => {
                 onDrop={(e) => handleDrop(e, { id: variant.id, type: 'product', index: variantNumber })}
                 onDragEnd={handleDragEnd}
               >
+                <div className="product-row-checkbox">
+                  <input 
+                    type="checkbox" 
+                    onChange={(e) => {
+                      // TODO: Implement variant selection
+                    }} 
+                  />
+                </div>
                 <div className="product-cell variant-cell">
                   <span className="product-number">{variant.id}</span>
                   <span className="variant-name">{variant.name}</span>

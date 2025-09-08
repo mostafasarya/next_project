@@ -35,6 +35,7 @@ import SystemDrawer from '../../components/SystemDrawer';
 import StyleTextUser from '../../components/StyleTextUser';
 import StyleButton, { ButtonStyles, defaultButtonStyles } from '../../components/StyleButton';
 import StyledButton from '../../components/StyledButton';
+import ProductContainerDisplay from '../../components/ProductContainerDisplay';
 import './SystemControlAssets.css';
 
 // React Icons imports - Heroicons library for consistent iconography
@@ -904,6 +905,60 @@ const SystemControlAssets: React.FC = () => {
             Icon Button
           </button>
           <button className="system-btn primary small">Small Button</button>
+        </div>
+      </div>
+
+      {/* Product Container Display Component */}
+      <div className="assets-section">
+        <h2 className="section-title">Product Container Display Component</h2>
+        
+        <div className="control-group">
+          <h3 className="control-title">Unified Product Card</h3>
+          <div className="control-demo">
+            <div className="product-container-display-demo">
+              <h4 className="demo-subtitle">Complete Product Display in Single Card</h4>
+              
+              <ProductContainerDisplay className="demo-product-display" />
+              
+              <div className="demo-info">
+                <p><strong>Component Specifications:</strong></p>
+                <ul>
+                  <li><strong>Parent Container:</strong> 475px width with single unified card</li>
+                  <li><strong>Image Section:</strong> Full width with 457px height</li>
+                  <li><strong>Details Section:</strong> Complete product information below image</li>
+                  <li><strong>Default Text:</strong> 14px font size throughout</li>
+                  <li><strong>Product Elements:</strong> Name, price, reviews, descriptions, sizes, quantity, add to cart</li>
+                  <li><strong>Size Variants:</strong> Selectable sizes with availability status</li>
+                  <li><strong>Quantity Counter:</strong> Plus/minus controls with validation</li>
+                  <li><strong>Unified Design:</strong> Single card with image and details merged seamlessly</li>
+                  <li><strong>Clean Layout:</strong> Organized vertical flow from image to details</li>
+                  <li><strong>Responsive Design:</strong> Adapts to mobile screens while maintaining proportions</li>
+                </ul>
+              </div>
+
+              <div className="demo-code-example">
+                <h4>Usage Example:</h4>
+                <pre className="code-block">
+{`import ProductContainerDisplay from './ProductContainerDisplay';
+
+// Basic usage
+<ProductContainerDisplay />
+
+// With custom className
+<ProductContainerDisplay className="custom-display" />
+
+// Component Features:
+// - Single unified card design (475px width)
+// - Image section: Full width at 457px height
+// - Details section: Complete product information
+// - 14px default text size for all elements
+// - Clean vertical layout flow
+// - Size selection and quantity management
+// - Responsive mobile adaptation`}
+                </pre>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

@@ -1,0 +1,604 @@
+/* =================================================================
+   PRODUCT CONTAINER DISPLAY COMPONENT STYLES
+   ================================================================= */
+
+.product-container-display {
+  width: 475px;
+  margin: 20px auto;
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  position: relative;
+  padding-bottom: 40px; /* Add space for the visibility icon */
+}
+
+/* Merged Product Card */
+.product-card-merged {
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  overflow: visible;
+}
+
+.product-card-merged:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Product Image Section */
+.product-image-section {
+  width: 100%;
+  height: 457px;
+  overflow: visible;
+  position: relative;
+}
+
+/* Image container to maintain image cropping */
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 8px 8px 0 0;
+}
+
+
+/* Visibility Control Section */
+.visibility-control-section {
+  position: absolute;
+  bottom: -29px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Special styling for visibility system control icon */
+.system-control-icon.visibility {
+  background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+  color: #2563eb;
+  border-color: #bfdbfe;
+}
+
+.system-control-icon.visibility:hover {
+  border-color: #93c5fd;
+  color: #1d4ed8;
+}
+
+.visibility-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 280px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+}
+
+.visibility-dropdown-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f8f9fa;
+  border-radius: 8px 8px 0 0;
+}
+
+.visibility-dropdown-header span {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.visibility-options {
+  padding: 8px 0;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.visibility-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-size: 14px;
+  color: #374151;
+}
+
+.visibility-option:hover {
+  background: #f8f9fa;
+}
+
+.visibility-option input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: #10b981;
+}
+
+.visibility-option span {
+  flex: 1;
+  user-select: none;
+}
+
+/* Product Details Section */
+.product-details-section {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Element containers with flex layout for inline edit icons */
+.product-price-container,
+.product-rating-container,
+.product-sizes-container,
+.quantity-container-editor {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Add to cart container with relative positioning for absolute edit icon */
+.add-to-cart-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* StyleTextUser containers already have flex layout built-in */
+.product-name-container,
+.product-description-container {
+  position: relative;
+}
+
+/* Note: Individual containers have specific flex settings defined above */
+
+.product-name-editor,
+.product-description-editor {
+  flex: 1;
+}
+
+/* Remove borders from all text elements */
+.product-name-editor .text-control-input,
+.product-description-editor .text-control-input {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  outline: none !important;
+}
+
+.product-name-editor .text-control-input:focus,
+.product-description-editor .text-control-input:focus {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Remove borders from price display */
+.current-price,
+.original-price {
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+}
+
+/* Remove borders from review count */
+.review-count {
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+}
+
+/* Remove borders from quantity value */
+.quantity-value {
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+}
+
+/* Remove borders from sizes title */
+.sizes-title {
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+}
+
+/* Remove borders from quantity title */
+.quantity-title {
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+}
+
+/* Global rule to remove borders from all text elements in product container */
+.product-container-display h1,
+.product-container-display h2,
+.product-container-display h3,
+.product-container-display h4,
+.product-container-display h5,
+.product-container-display h6,
+.product-container-display p,
+.product-container-display span,
+.product-container-display div[contenteditable],
+.product-container-display input[type="text"],
+.product-container-display textarea {
+  border: none !important;
+  outline: none !important;
+}
+
+.product-container-display h1:focus,
+.product-container-display h2:focus,
+.product-container-display h3:focus,
+.product-container-display h4:focus,
+.product-container-display h5:focus,
+.product-container-display h6:focus,
+.product-container-display p:focus,
+.product-container-display span:focus,
+.product-container-display div[contenteditable]:focus,
+.product-container-display input[type="text"]:focus,
+.product-container-display textarea:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Override StyleTextUser edit icons to match rounded style */
+.product-name-editor .text-control-edit-icon,
+.product-description-editor .text-control-edit-icon {
+  background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%) !important;
+  border: 2px solid #fecaca !important;
+  color: #ef4444 !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  font-size: 12px !important;
+  margin-left: 8px !important;
+  flex-shrink: 0 !important;
+  position: static !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+.product-name-editor .text-control-edit-icon:hover,
+.product-description-editor .text-control-edit-icon:hover {
+  border-color: #ef4444 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2) !important;
+}
+
+.product-price-edit-icon,
+.product-review-edit-icon,
+.product-size-edit-icon,
+.quantity-edit-icon {
+  background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
+  border: 2px solid #fecaca;
+  color: #ef4444;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 12px;
+  margin-left: 8px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(4px);
+}
+
+.add-to-cart-edit-icon {
+  background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
+  border: 2px solid #fecaca;
+  color: #ef4444;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 12px;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(4px);
+}
+
+.product-price-edit-icon:hover,
+.product-review-edit-icon:hover,
+.product-size-edit-icon:hover,
+.quantity-edit-icon:hover,
+.add-to-cart-edit-icon:hover {
+  border-color: #ef4444;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.product-sizes-container {
+  align-items: flex-start;
+}
+
+.product-sizes {
+  flex: 1;
+}
+
+.quantity-container-editor {
+  align-items: flex-start;
+}
+
+.quantity-container {
+  flex: 1;
+}
+
+.add-to-cart-container {
+  position: relative;
+  margin-top: 8px;
+}
+
+.add-to-cart-styled-btn {
+  flex: 1;
+}
+
+
+.product-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* Price */
+.product-price {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.current-price {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.original-price {
+  font-size: 16px;
+  color: #9ca3af;
+  text-decoration: line-through;
+}
+
+/* Rating */
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stars {
+  display: flex;
+  gap: 1px;
+}
+
+.star {
+  width: 14px;
+  height: 14px;
+  color: #fbbf24;
+}
+
+.star.empty {
+  color: #e5e7eb;
+}
+
+.review-count {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* Descriptions */
+.product-description {
+  margin: 0;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.product-description.primary {
+  color: #374151;
+  font-weight: 500;
+}
+
+.product-description.secondary {
+  color: #6b7280;
+}
+
+/* Size Variants */
+.product-sizes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sizes-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+}
+
+.sizes-list {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.size-option {
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  color: #374151;
+  font-weight: 500;
+}
+
+.size-option:hover:not(.unavailable) {
+  border-color: #d1d5db;
+  background: #f9fafb;
+}
+
+.size-option.selected {
+  border-color: #3b82f6;
+  background: #eff6ff;
+  color: #1e40af;
+}
+
+.size-option.unavailable {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f9fafb;
+  color: #9ca3af;
+}
+
+/* Quantity Container */
+.quantity-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quantity-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+}
+
+.quantity-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  background: white;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 12px;
+}
+
+.quantity-btn:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.quantity-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.quantity-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* Add to Cart Button */
+.add-to-cart-btn {
+  width: 100%;
+  padding: 12px 20px;
+  background: #111827;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 8px;
+}
+
+.add-to-cart-btn:hover {
+  background: #374151;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+.add-to-cart-btn:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .product-container-display {
+    width: 100%;
+    max-width: 475px;
+    padding: 0 16px;
+  }
+
+  .product-image-section {
+    height: auto;
+    aspect-ratio: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-container-display {
+    width: 100%;
+    padding: 0 12px;
+  }
+
+  .product-details-section {
+    padding: 16px;
+  }
+
+  .product-name {
+    font-size: 16px;
+  }
+
+  .current-price {
+    font-size: 18px;
+  }
+
+  .sizes-list {
+    flex-direction: column;
+  }
+
+  .size-option {
+    width: 100%;
+    text-align: center;
+  }
+}

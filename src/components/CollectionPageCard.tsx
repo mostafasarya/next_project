@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { HiArrowsExpand, HiCamera, HiX, HiTrash, HiPencil } from 'react-icons/hi';
+import { HiArrowsExpand, HiCamera, HiX, HiTrash, HiPencil, HiEye } from 'react-icons/hi';
 import SystemDrawer from './SystemDrawer';
 import StyleTextUser from './StyleTextUser';
 import './CollectionPageCard.css';
@@ -51,6 +51,14 @@ const CollectionPageCard: React.FC<CollectionPageCardProps> = ({
     textAlign: 'center'
   });
   
+  // Visibility control
+  const [showVisibilityControl, setShowVisibilityControl] = React.useState(false);
+  const [cardVisibility, setCardVisibility] = React.useState({
+    headerCard: true,
+    filterCard: true,
+    productsCard: true
+  });
+  
   // Handle image upload
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -84,17 +92,18 @@ const CollectionPageCard: React.FC<CollectionPageCardProps> = ({
         setShowColorControl(false);
         setShowHeaderDimensionsControl(false);
         setShowHeaderTextEditor(false);
+        setShowVisibilityControl(false);
       }
     };
 
-    if (showDimensionsControl || showColorControl || showHeaderDimensionsControl || showHeaderTextEditor) {
+    if (showDimensionsControl || showColorControl || showHeaderDimensionsControl || showHeaderTextEditor || showVisibilityControl) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [showDimensionsControl, showColorControl, showHeaderDimensionsControl, showHeaderTextEditor]);
+  }, [showDimensionsControl, showColorControl, showHeaderDimensionsControl, showHeaderTextEditor, showVisibilityControl]);
 
   return (
     <div className="collection-page-card" style={{ 
@@ -124,6 +133,13 @@ const CollectionPageCard: React.FC<CollectionPageCardProps> = ({
               <circle cx="16" cy="16" r="2" fill="#f59e0b"/>
               <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
             </svg>
+          </button>
+          <button 
+            className="system-control-icon visibility-control"
+            onClick={() => setShowVisibilityControl(!showVisibilityControl)}
+            title="Control Card Visibility"
+          >
+            <HiEye />
           </button>
         </div>
 
@@ -217,11 +233,49 @@ const CollectionPageCard: React.FC<CollectionPageCardProps> = ({
           </div>
         )}
 
+        {/* Visibility Control Panel */}
+        {showVisibilityControl && (
+          <div className="control-panel visibility-panel">
+            <h4>Card Visibility</h4>
+            <div className="control-group">
+              <label className="visibility-checkbox">
+                <input
+                  type="checkbox"
+                  checked={cardVisibility.headerCard}
+                  onChange={(e) => setCardVisibility(prev => ({ ...prev, headerCard: e.target.checked }))}
+                />
+                Show Header Card
+              </label>
+            </div>
+            <div className="control-group">
+              <label className="visibility-checkbox">
+                <input
+                  type="checkbox"
+                  checked={cardVisibility.filterCard}
+                  onChange={(e) => setCardVisibility(prev => ({ ...prev, filterCard: e.target.checked }))}
+                />
+                Show Filter Card
+              </label>
+            </div>
+            <div className="control-group">
+              <label className="visibility-checkbox">
+                <input
+                  type="checkbox"
+                  checked={cardVisibility.productsCard}
+                  onChange={(e) => setCardVisibility(prev => ({ ...prev, productsCard: e.target.checked }))}
+                />
+                Show Products Card
+              </label>
+            </div>
+          </div>
+        )}
+
 
         {/* Collection Page Content with 3 Children Cards */}
         <div className="collection-page-card-content" style={{ gap: `${cardsSpacing}px` }}>
           
           {/* Collection Header Card */}
+          {cardVisibility.headerCard && (
           <div 
             className="collection-header-card" 
             style={{ 
@@ -302,6 +356,7 @@ const CollectionPageCard: React.FC<CollectionPageCardProps> = ({
               </div>
             </div>
           </div>
+          )}
 
           {/* Bottom Section with Filter and Products Cards */}
           <div 
@@ -312,6 +367,7 @@ const CollectionPageCard: React.FC<CollectionPageCardProps> = ({
           >
             
             {/* Filter Card */}
+            {cardVisibility.filterCard && (
             <div 
               className="collection-filter-card" 
               style={{ 
@@ -363,8 +419,10 @@ const CollectionPageCard: React.FC<CollectionPageCardProps> = ({
                 <button className="apply-filters-btn">Apply Filters</button>
               </div>
             </div>
+            )}
 
             {/* Products Display Card */}
+            {cardVisibility.productsCard && (
             <div 
               className="collection-products-card" 
               style={{ 
@@ -408,6 +466,7 @@ const CollectionPageCard: React.FC<CollectionPageCardProps> = ({
                 </div>
               </div>
             </div>
+            )}
 
           </div>
         </div>

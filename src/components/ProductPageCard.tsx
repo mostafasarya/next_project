@@ -5,6 +5,7 @@ import { HiArrowsExpand, HiRefresh, HiEye, HiPencil } from 'react-icons/hi';
 import SystemDrawer from './SystemDrawer';
 import StyleButton, { ButtonStyles, defaultButtonStyles } from './StyleButton';
 import StyledButton from './StyledButton';
+import StylePriceEditor from './StylePriceEditor';
 import './ProductPageCard.css';
 
 interface ProductPageCardProps {
@@ -152,12 +153,12 @@ const ProductPageCard: React.FC<ProductPageCardProps> = ({
   
   // Price editor state
   const [showPriceEditor, setShowPriceEditor] = React.useState(false);
-  const [activePriceTab, setActivePriceTab] = React.useState('current');
   const [priceStyles, setPriceStyles] = React.useState({
     currentPrice: {
       show: true,
       fontSize: 24,
       fontWeight: '700',
+      fontFamily: 'Inter, sans-serif',
       textAlign: 'left',
       color: '#28a745'
     },
@@ -165,6 +166,7 @@ const ProductPageCard: React.FC<ProductPageCardProps> = ({
       show: false,
       fontSize: 18,
       fontWeight: '400',
+      fontFamily: 'Inter, sans-serif',
       textAlign: 'left',
       color: '#6c757d'
     },
@@ -172,10 +174,12 @@ const ProductPageCard: React.FC<ProductPageCardProps> = ({
       show: false,
       fontSize: 14,
       fontWeight: '500',
+      fontFamily: 'Inter, sans-serif',
       textAlign: 'left',
       color: '#dc3545'
     },
-    horizontalSpacing: 12
+    horizontalSpacing: 12,
+    bottomSpacing: 0
   });
 
   // Add to Cart Button editor state
@@ -423,7 +427,10 @@ const ProductPageCard: React.FC<ProductPageCardProps> = ({
             className={`draggable-element ${isDragging ? 'dragging' : ''}`}
             style={elementStyle}
           >
-            <div className="product-price-container">
+            <div 
+              className="product-price-container"
+              style={{ marginBottom: `${priceStyles.bottomSpacing}px` }}
+            >
               <div 
                 className="product-price-section"
                 style={{
@@ -434,39 +441,54 @@ const ProductPageCard: React.FC<ProductPageCardProps> = ({
               >
                 {priceStyles.currentPrice.show && (
                   <div 
-                    className="product-price"
+                    className="product-price dynamic-price-current"
                     style={{
                       fontSize: `${priceStyles.currentPrice.fontSize}px`,
                       fontWeight: priceStyles.currentPrice.fontWeight,
+                      fontFamily: priceStyles.currentPrice.fontFamily,
                       color: priceStyles.currentPrice.color,
-                      textAlign: priceStyles.currentPrice.textAlign as any
-                    }}
+                      textAlign: priceStyles.currentPrice.textAlign as any,
+                      '--dynamic-font-size': `${priceStyles.currentPrice.fontSize}px`,
+                      '--dynamic-font-weight': priceStyles.currentPrice.fontWeight,
+                      '--dynamic-font-family': priceStyles.currentPrice.fontFamily,
+                      '--dynamic-color': priceStyles.currentPrice.color,
+                    } as any}
                   >
                     ${price.toFixed(2)}
               </div>
             )}
                 {priceStyles.beforePrice.show && (
                   <div 
-                    className="product-before-price"
+                    className="product-before-price dynamic-price-before"
                     style={{
                       fontSize: `${priceStyles.beforePrice.fontSize}px`,
                       fontWeight: priceStyles.beforePrice.fontWeight,
+                      fontFamily: priceStyles.beforePrice.fontFamily,
                       color: priceStyles.beforePrice.color,
-                      textAlign: priceStyles.beforePrice.textAlign as any
-                    }}
+                      textAlign: priceStyles.beforePrice.textAlign as any,
+                      '--dynamic-font-size': `${priceStyles.beforePrice.fontSize}px`,
+                      '--dynamic-font-weight': priceStyles.beforePrice.fontWeight,
+                      '--dynamic-font-family': priceStyles.beforePrice.fontFamily,
+                      '--dynamic-color': priceStyles.beforePrice.color,
+                    } as any}
                   >
                     ${(price * 1.2).toFixed(2)}
           </div>
                 )}
                 {priceStyles.save.show && (
                   <div 
-                    className="product-save"
+                    className="product-save dynamic-price-save"
                     style={{
                       fontSize: `${priceStyles.save.fontSize}px`,
                       fontWeight: priceStyles.save.fontWeight,
+                      fontFamily: priceStyles.save.fontFamily,
                       color: priceStyles.save.color,
-                      textAlign: priceStyles.save.textAlign as any
-                    }}
+                      textAlign: priceStyles.save.textAlign as any,
+                      '--dynamic-font-size': `${priceStyles.save.fontSize}px`,
+                      '--dynamic-font-weight': priceStyles.save.fontWeight,
+                      '--dynamic-font-family': priceStyles.save.fontFamily,
+                      '--dynamic-color': priceStyles.save.color,
+                    } as any}
                   >
                     Save ${((price * 1.2) - price).toFixed(2)}
             </div>
@@ -1997,346 +2019,16 @@ const ProductPageCard: React.FC<ProductPageCardProps> = ({
         </SystemDrawer>
 
         {/* Price Editor Drawer */}
-        <SystemDrawer
+        <StylePriceEditor
           isOpen={showPriceEditor}
           onClose={() => setShowPriceEditor(false)}
+          priceStyles={priceStyles}
+          onStylesChange={setPriceStyles}
           title="Price Style Editor"
           width={400}
           position="right"
           pushContent={true}
-        >
-          {/* Price Tabs */}
-          <div className="drawer-section" onClick={(e) => e.stopPropagation()}>
-            <div className="system-control-tabs">
-              <button
-                className={`system-control-tab ${activePriceTab === 'current' ? 'active' : ''}`}
-                onClick={(e) => { e.stopPropagation(); setActivePriceTab('current'); }}
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                Current Price
-              </button>
-              <button
-                className={`system-control-tab ${activePriceTab === 'before' ? 'active' : ''}`}
-                onClick={(e) => { e.stopPropagation(); setActivePriceTab('before'); }}
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-                Before Price
-              </button>
-              <button
-                className={`system-control-tab ${activePriceTab === 'save' ? 'active' : ''}`}
-                onClick={(e) => { e.stopPropagation(); setActivePriceTab('save'); }}
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                Save
-              </button>
-            </div>
-          </div>
-
-          {/* Current Price Controls */}
-          {activePriceTab === 'current' && (
-            <div className="drawer-section" onClick={(e) => e.stopPropagation()}>
-              <h4 className="drawer-section-title">Current Price</h4>
-            
-            {/* Show/Hide Toggle */}
-            <div className="system-control-toggle">
-              <div 
-                className={`toggle-slider ${priceStyles.currentPrice.show ? 'active' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setPriceStyles({
-                    ...priceStyles,
-                    currentPrice: { ...priceStyles.currentPrice, show: !priceStyles.currentPrice.show }
-                  });
-                }}
-              ></div>
-              <span className="toggle-text">{priceStyles.currentPrice.show ? 'Show' : 'Hide'}</span>
-            </div>
-
-            {/* Font Size */}
-            <div className="drawer-range-container">
-              <div className="drawer-range-label">
-                <span>Font Size</span>
-                <span className="drawer-range-value">{priceStyles.currentPrice.fontSize}px</span>
-              </div>
-              <input
-                type="range"
-                min="16" max="36" value={priceStyles.currentPrice.fontSize}
-                onChange={(e) => setPriceStyles({
-                  ...priceStyles,
-                  currentPrice: { ...priceStyles.currentPrice, fontSize: Number(e.target.value) }
-                })}
-                className="drawer-range" onClick={(e) => e.stopPropagation()}
-              />
-            </div>
-
-            {/* Font Weight */}
-            <div className="drawer-form-group">
-              <select
-                value={priceStyles.currentPrice.fontWeight}
-                onChange={(e) => setPriceStyles({
-                  ...priceStyles,
-                  currentPrice: { ...priceStyles.currentPrice, fontWeight: e.target.value }
-                })}
-                className="drawer-select" onClick={(e) => e.stopPropagation()}
-              >
-                <option value="300">Light (300)</option>
-                <option value="400">Normal (400)</option>
-                <option value="500">Medium (500)</option>
-                <option value="600">Semi Bold (600)</option>
-                <option value="700">Bold (700)</option>
-                <option value="800">Extra Bold (800)</option>
-              </select>
-            </div>
-
-            {/* Text Alignment */}
-            <div className="alignment-tabs">
-              <button
-                className={`alignment-tab ${priceStyles.currentPrice.textAlign === 'left' ? 'active' : ''}`}
-                onClick={(e) => { e.stopPropagation(); setPriceStyles({...priceStyles, currentPrice: {...priceStyles.currentPrice, textAlign: 'left'}}); }}
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 19h18v2H3v-2zm0-6h12v2H3v-2zm0-6h18v2H3v-2zm0-6h12v2H3v-2z"/></svg>
-                Left
-              </button>
-              <button
-                className={`alignment-tab ${priceStyles.currentPrice.textAlign === 'center' ? 'active' : ''}`}
-                onClick={(e) => { e.stopPropagation(); setPriceStyles({...priceStyles, currentPrice: {...priceStyles.currentPrice, textAlign: 'center'}}); }}
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 19h18v2H3v-2zm3-6h12v2H6v-2zm-3-6h18v2H3v-2zm3-6h12v2H6v-2z"/></svg>
-                Center
-              </button>
-              <button
-                className={`alignment-tab ${priceStyles.currentPrice.textAlign === 'right' ? 'active' : ''}`}
-                onClick={(e) => { e.stopPropagation(); setPriceStyles({...priceStyles, currentPrice: {...priceStyles.currentPrice, textAlign: 'right'}}); }}
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 19h18v2H3v-2zm6-6h12v2H9v-2zm-6-6h18v2H3v-2zm6-6h12v2H9v-2z"/></svg>
-                Right
-              </button>
-            </div>
-
-            {/* Text Color */}
-            <div className="drawer-form-group">
-              <input
-                type="color"
-                value={priceStyles.currentPrice.color}
-                onChange={(e) => setPriceStyles({
-                  ...priceStyles,
-                  currentPrice: { ...priceStyles.currentPrice, color: e.target.value }
-                })}
-                className="drawer-color-input" onClick={(e) => e.stopPropagation()}
-              />
-            </div>
-            </div>
-          )}
-
-          {/* Before Price Controls */}
-          {activePriceTab === 'before' && (
-            <div className="drawer-section" onClick={(e) => e.stopPropagation()}>
-              <h4 className="drawer-section-title">Before Price</h4>
-            
-            {/* Show/Hide Toggle */}
-            <div className="system-control-toggle">
-              <div 
-                className={`toggle-slider ${priceStyles.beforePrice.show ? 'active' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setPriceStyles({
-                    ...priceStyles,
-                    beforePrice: { ...priceStyles.beforePrice, show: !priceStyles.beforePrice.show }
-                  });
-                }}
-              ></div>
-              <span className="toggle-text">{priceStyles.beforePrice.show ? 'Show' : 'Hide'}</span>
-            </div>
-
-            {/* Font Size */}
-            <div className="drawer-range-container">
-              <div className="drawer-range-label">
-                <span>Font Size</span>
-                <span className="drawer-range-value">{priceStyles.beforePrice.fontSize}px</span>
-              </div>
-              <input
-                type="range"
-                min="12" max="28" value={priceStyles.beforePrice.fontSize}
-                onChange={(e) => setPriceStyles({
-                  ...priceStyles,
-                  beforePrice: { ...priceStyles.beforePrice, fontSize: Number(e.target.value) }
-                })}
-                className="drawer-range" onClick={(e) => e.stopPropagation()}
-              />
-            </div>
-
-            {/* Font Weight */}
-            <div className="drawer-form-group">
-              <select
-                value={priceStyles.beforePrice.fontWeight}
-                onChange={(e) => setPriceStyles({
-                  ...priceStyles,
-                  beforePrice: { ...priceStyles.beforePrice, fontWeight: e.target.value }
-                })}
-                className="drawer-select" onClick={(e) => e.stopPropagation()}
-              >
-                <option value="300">Light (300)</option>
-                <option value="400">Normal (400)</option>
-                <option value="500">Medium (500)</option>
-                <option value="600">Semi Bold (600)</option>
-                <option value="700">Bold (700)</option>
-                <option value="800">Extra Bold (800)</option>
-              </select>
-            </div>
-
-            {/* Text Alignment */}
-            <div className="alignment-tabs">
-              <button
-                className={`alignment-tab ${priceStyles.beforePrice.textAlign === 'left' ? 'active' : ''}`}
-                onClick={(e) => { e.stopPropagation(); setPriceStyles({...priceStyles, beforePrice: {...priceStyles.beforePrice, textAlign: 'left'}}); }}
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 19h18v2H3v-2zm0-6h12v2H3v-2zm0-6h18v2H3v-2zm0-6h12v2H3v-2z"/></svg>
-                Left
-              </button>
-              <button
-                className={`alignment-tab ${priceStyles.beforePrice.textAlign === 'center' ? 'active' : ''}`}
-                onClick={(e) => { e.stopPropagation(); setPriceStyles({...priceStyles, beforePrice: {...priceStyles.beforePrice, textAlign: 'center'}}); }}
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 19h18v2H3v-2zm3-6h12v2H6v-2zm-3-6h18v2H3v-2zm3-6h12v2H6v-2z"/></svg>
-                Center
-              </button>
-              <button
-                className={`alignment-tab ${priceStyles.beforePrice.textAlign === 'right' ? 'active' : ''}`}
-                onClick={(e) => { e.stopPropagation(); setPriceStyles({...priceStyles, beforePrice: {...priceStyles.beforePrice, textAlign: 'right'}}); }}
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 19h18v2H3v-2zm6-6h12v2H9v-2zm-6-6h18v2H3v-2zm6-6h12v2H9v-2z"/></svg>
-                Right
-              </button>
-            </div>
-
-            {/* Text Color */}
-            <div className="drawer-form-group">
-              <input
-                type="color"
-                value={priceStyles.beforePrice.color}
-                onChange={(e) => setPriceStyles({
-                  ...priceStyles,
-                  beforePrice: { ...priceStyles.beforePrice, color: e.target.value }
-                })}
-                className="drawer-color-input" onClick={(e) => e.stopPropagation()}
-              />
-            </div>
-            </div>
-          )}
-
-          {/* Save Controls */}
-          {activePriceTab === 'save' && (
-            <div className="drawer-section" onClick={(e) => e.stopPropagation()}>
-              <h4 className="drawer-section-title">Save</h4>
-            
-            {/* Show/Hide Toggle */}
-            <div className="system-control-toggle">
-              <div 
-                className={`toggle-slider ${priceStyles.save.show ? 'active' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setPriceStyles({
-                    ...priceStyles,
-                    save: { ...priceStyles.save, show: !priceStyles.save.show }
-                  });
-                }}
-              ></div>
-              <span className="toggle-text">{priceStyles.save.show ? 'Show' : 'Hide'}</span>
-            </div>
-
-            {/* Font Size */}
-            <div className="drawer-range-container">
-              <div className="drawer-range-label">
-                <span>Font Size</span>
-                <span className="drawer-range-value">{priceStyles.save.fontSize}px</span>
-              </div>
-              <input
-                type="range"
-                min="10" max="20" value={priceStyles.save.fontSize}
-                onChange={(e) => setPriceStyles({
-                  ...priceStyles,
-                  save: { ...priceStyles.save, fontSize: Number(e.target.value) }
-                })}
-                className="drawer-range" onClick={(e) => e.stopPropagation()}
-              />
-            </div>
-
-            {/* Font Weight */}
-            <div className="drawer-form-group">
-              <select
-                value={priceStyles.save.fontWeight}
-                onChange={(e) => setPriceStyles({
-                  ...priceStyles,
-                  save: { ...priceStyles.save, fontWeight: e.target.value }
-                })}
-                className="drawer-select" onClick={(e) => e.stopPropagation()}
-              >
-                <option value="300">Light (300)</option>
-                <option value="400">Normal (400)</option>
-                <option value="500">Medium (500)</option>
-                <option value="600">Semi Bold (600)</option>
-                <option value="700">Bold (700)</option>
-                <option value="800">Extra Bold (800)</option>
-              </select>
-            </div>
-
-            {/* Text Alignment */}
-            <div className="alignment-tabs">
-              <button
-                className={`alignment-tab ${priceStyles.save.textAlign === 'left' ? 'active' : ''}`}
-                onClick={(e) => { e.stopPropagation(); setPriceStyles({...priceStyles, save: {...priceStyles.save, textAlign: 'left'}}); }}
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 19h18v2H3v-2zm0-6h12v2H3v-2zm0-6h18v2H3v-2zm0-6h12v2H3v-2z"/></svg>
-                Left
-              </button>
-              <button
-                className={`alignment-tab ${priceStyles.save.textAlign === 'center' ? 'active' : ''}`}
-                onClick={(e) => { e.stopPropagation(); setPriceStyles({...priceStyles, save: {...priceStyles.save, textAlign: 'center'}}); }}
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 19h18v2H3v-2zm3-6h12v2H6v-2zm-3-6h18v2H3v-2zm3-6h12v2H6v-2z"/></svg>
-                Center
-              </button>
-              <button
-                className={`alignment-tab ${priceStyles.save.textAlign === 'right' ? 'active' : ''}`}
-                onClick={(e) => { e.stopPropagation(); setPriceStyles({...priceStyles, save: {...priceStyles.save, textAlign: 'right'}}); }}
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 19h18v2H3v-2zm6-6h12v2H9v-2zm-6-6h18v2H3v-2zm6-6h12v2H9v-2z"/></svg>
-                Right
-              </button>
-            </div>
-
-            {/* Text Color */}
-            <div className="drawer-form-group">
-              <input
-                type="color"
-                value={priceStyles.save.color}
-                onChange={(e) => setPriceStyles({
-                  ...priceStyles,
-                  save: { ...priceStyles.save, color: e.target.value }
-                })}
-                className="drawer-color-input" onClick={(e) => e.stopPropagation()}
-              />
-            </div>
-            </div>
-          )}
-
-          {/* Horizontal Spacing */}
-          <div className="drawer-section" onClick={(e) => e.stopPropagation()}>
-            <h4 className="drawer-section-title">Horizontal Spacing</h4>
-            <div className="drawer-range-container">
-              <div className="drawer-range-label">
-                <span>Spacing</span>
-                <span className="drawer-range-value">{priceStyles.horizontalSpacing}px</span>
-              </div>
-              <input
-                type="range"
-                min="4" max="24" value={priceStyles.horizontalSpacing}
-                onChange={(e) => setPriceStyles({...priceStyles, horizontalSpacing: Number(e.target.value)})}
-                className="drawer-range" onClick={(e) => e.stopPropagation()}
-              />
-            </div>
-          </div>
-        </SystemDrawer>
+        />
 
         {/* Add to Cart Button Editor */}
         <StyleButton

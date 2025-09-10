@@ -469,6 +469,28 @@
   margin-bottom: 16px;
 }
 
+/* Dynamic price styles - use CSS custom properties for responsive styling */
+.product-price.dynamic-price-current {
+  font-size: var(--dynamic-font-size, 24px) !important;
+  font-weight: var(--dynamic-font-weight, 700) !important;
+  font-family: var(--dynamic-font-family, 'Inter, sans-serif') !important;
+  color: var(--dynamic-color, #28a745) !important;
+}
+
+.product-before-price.dynamic-price-before {
+  font-size: var(--dynamic-font-size, 18px) !important;
+  font-weight: var(--dynamic-font-weight, 400) !important;
+  font-family: var(--dynamic-font-family, 'Inter, sans-serif') !important;
+  color: var(--dynamic-color, #6c757d) !important;
+}
+
+.product-save.dynamic-price-save {
+  font-size: var(--dynamic-font-size, 14px) !important;
+  font-weight: var(--dynamic-font-weight, 500) !important;
+  font-family: var(--dynamic-font-family, 'Inter, sans-serif') !important;
+  color: var(--dynamic-color, #dc3545) !important;
+}
+
 .product-description {
   color: #6c757d;
   line-height: 1.6;

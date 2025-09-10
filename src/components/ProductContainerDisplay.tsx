@@ -6,6 +6,7 @@ import StyleTextUser from './StyleTextUser';
 import StyleButton, { ButtonStyles, defaultButtonStyles } from './StyleButton';
 import StyledButton from './StyledButton';
 import SystemDrawer from './SystemDrawer';
+import StylePriceEditor from './StylePriceEditor';
 import './ProductContainerDisplay.css';
 import './SystemControlIcons.css';
 
@@ -89,19 +90,29 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
   const [priceStyles, setPriceStyles] = useState({
     currentPrice: {
       show: true,
-      fontSize: 20,
+      fontSize: 24,
       fontWeight: '700',
+      fontFamily: 'Inter, sans-serif',
       textAlign: 'left',
-      color: '#111827'
+      color: '#28a745'
     },
     beforePrice: {
-      show: true,
-      fontSize: 16,
+      show: false,
+      fontSize: 18,
       fontWeight: '400',
+      fontFamily: 'Inter, sans-serif',
       textAlign: 'left',
-      color: '#9ca3af'
+      color: '#6c757d'
     },
-    horizontalSpacing: 8,
+    save: {
+      show: false,
+      fontSize: 14,
+      fontWeight: '500',
+      fontFamily: 'Inter, sans-serif',
+      textAlign: 'left',
+      color: '#dc3545'
+    },
+    horizontalSpacing: 12,
     bottomSpacing: 0
   });
 
@@ -351,31 +362,67 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
               className="product-price-container"
               style={{ marginBottom: `${priceStyles.bottomSpacing}px` }}
             >
-              <div className="product-price-section">
-                <span 
-                  className="current-price"
-                  style={{
-                    fontSize: `${priceStyles.currentPrice.fontSize}px`,
-                    fontWeight: priceStyles.currentPrice.fontWeight,
-                    color: priceStyles.currentPrice.color,
-                    textAlign: priceStyles.currentPrice.textAlign as any,
-                    marginRight: `${priceStyles.horizontalSpacing}px`
-                  }}
-                >
-                  ${editablePrice.toFixed(2)}
-                </span>
-                {priceStyles.beforePrice.show && editableOriginalPrice > 0 && (
-                  <span 
-                    className="original-price"
+              <div 
+                className="product-price-section"
+                style={{
+                  gap: `${priceStyles.horizontalSpacing}px`,
+                  justifyContent: priceStyles.currentPrice.textAlign === 'center' ? 'center' : 
+                                 priceStyles.currentPrice.textAlign === 'right' ? 'flex-end' : 'flex-start'
+                }}
+              >
+                {priceStyles.currentPrice.show && (
+                  <div 
+                    className="product-price dynamic-price-current"
+                    style={{
+                      fontSize: `${priceStyles.currentPrice.fontSize}px`,
+                      fontWeight: priceStyles.currentPrice.fontWeight,
+                      fontFamily: priceStyles.currentPrice.fontFamily,
+                      color: priceStyles.currentPrice.color,
+                      textAlign: priceStyles.currentPrice.textAlign as any,
+                      '--dynamic-font-size': `${priceStyles.currentPrice.fontSize}px`,
+                      '--dynamic-font-weight': priceStyles.currentPrice.fontWeight,
+                      '--dynamic-font-family': priceStyles.currentPrice.fontFamily,
+                      '--dynamic-color': priceStyles.currentPrice.color,
+                    } as any}
+                  >
+                    ${editablePrice.toFixed(2)}
+                  </div>
+                )}
+                {priceStyles.beforePrice.show && (
+                  <div 
+                    className="product-before-price dynamic-price-before"
                     style={{
                       fontSize: `${priceStyles.beforePrice.fontSize}px`,
                       fontWeight: priceStyles.beforePrice.fontWeight,
+                      fontFamily: priceStyles.beforePrice.fontFamily,
                       color: priceStyles.beforePrice.color,
-                      textAlign: priceStyles.beforePrice.textAlign as any
-                    }}
+                      textAlign: priceStyles.beforePrice.textAlign as any,
+                      '--dynamic-font-size': `${priceStyles.beforePrice.fontSize}px`,
+                      '--dynamic-font-weight': priceStyles.beforePrice.fontWeight,
+                      '--dynamic-font-family': priceStyles.beforePrice.fontFamily,
+                      '--dynamic-color': priceStyles.beforePrice.color,
+                    } as any}
                   >
-                    ${editableOriginalPrice.toFixed(2)}
-                  </span>
+                    ${(editablePrice * 1.2).toFixed(2)}
+                  </div>
+                )}
+                {priceStyles.save.show && (
+                  <div 
+                    className="product-save dynamic-price-save"
+                    style={{
+                      fontSize: `${priceStyles.save.fontSize}px`,
+                      fontWeight: priceStyles.save.fontWeight,
+                      fontFamily: priceStyles.save.fontFamily,
+                      color: priceStyles.save.color,
+                      textAlign: priceStyles.save.textAlign as any,
+                      '--dynamic-font-size': `${priceStyles.save.fontSize}px`,
+                      '--dynamic-font-weight': priceStyles.save.fontWeight,
+                      '--dynamic-font-family': priceStyles.save.fontFamily,
+                      '--dynamic-color': priceStyles.save.color,
+                    } as any}
+                  >
+                    Save ${((editablePrice * 1.2) - editablePrice).toFixed(2)}
+                  </div>
                 )}
               </div>
               <button 
@@ -579,155 +626,16 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
       </div>
 
       {/* Price Editor Drawer */}
-      <SystemDrawer
+      <StylePriceEditor
         isOpen={showPriceEditor}
         onClose={() => setShowPriceEditor(false)}
+        priceStyles={priceStyles}
+        onStylesChange={setPriceStyles}
         title="Price Style Editor"
-        width={350}
+        width={400}
         position="right"
         pushContent={true}
-      >
-        {/* Current Price Section */}
-        <div className="drawer-section">
-          <h4 className="drawer-section-title">Current Price</h4>
-          <div className="drawer-range-container">
-            <div className="drawer-range-label">
-              <span>Font Size</span>
-              <span className="drawer-range-value">{priceStyles.currentPrice.fontSize}px</span>
-            </div>
-            <input
-              type="range"
-              min="12" max="32"
-              value={priceStyles.currentPrice.fontSize}
-              onChange={(e) => setPriceStyles({
-                ...priceStyles,
-                currentPrice: { ...priceStyles.currentPrice, fontSize: Number(e.target.value) }
-              })}
-              className="drawer-range"
-            />
-          </div>
-          <div className="drawer-form-group">
-            <label className="drawer-form-label">Price Color</label>
-            <input
-              type="color"
-              value={priceStyles.currentPrice.color}
-              onChange={(e) => setPriceStyles({
-                ...priceStyles,
-                currentPrice: { ...priceStyles.currentPrice, color: e.target.value }
-              })}
-              className="drawer-form-input"
-            />
-          </div>
-          <div className="drawer-form-group">
-            <label className="drawer-form-label">Price Value</label>
-            <input
-              type="number"
-              step="0.01"
-              value={editablePrice}
-              onChange={(e) => setEditablePrice(Number(e.target.value) || 0)}
-              className="drawer-form-input"
-            />
-          </div>
-        </div>
-
-        {/* Original Price Section */}
-        <div className="drawer-section">
-          <h4 className="drawer-section-title">Original Price</h4>
-          <div className="drawer-form-group">
-            <label className="toggle-label">
-              <span>Show Original Price</span>
-              <div 
-                className={`system-control-toggle ${priceStyles.beforePrice.show ? 'active' : ''}`}
-                onClick={() => setPriceStyles({
-                  ...priceStyles,
-                  beforePrice: { ...priceStyles.beforePrice, show: !priceStyles.beforePrice.show }
-                })}
-              >
-                <div className="toggle-slider"></div>
-              </div>
-            </label>
-          </div>
-          {priceStyles.beforePrice.show && (
-            <>
-              <div className="drawer-range-container">
-                <div className="drawer-range-label">
-                  <span>Font Size</span>
-                  <span className="drawer-range-value">{priceStyles.beforePrice.fontSize}px</span>
-                </div>
-                <input
-                  type="range"
-                  min="10" max="24"
-                  value={priceStyles.beforePrice.fontSize}
-                  onChange={(e) => setPriceStyles({
-                    ...priceStyles,
-                    beforePrice: { ...priceStyles.beforePrice, fontSize: Number(e.target.value) }
-                  })}
-                  className="drawer-range"
-                />
-              </div>
-              <div className="drawer-form-group">
-                <label className="drawer-form-label">Original Price Color</label>
-                <input
-                  type="color"
-                  value={priceStyles.beforePrice.color}
-                  onChange={(e) => setPriceStyles({
-                    ...priceStyles,
-                    beforePrice: { ...priceStyles.beforePrice, color: e.target.value }
-                  })}
-                  className="drawer-form-input"
-                />
-              </div>
-              <div className="drawer-form-group">
-                <label className="drawer-form-label">Original Price Value</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={editableOriginalPrice}
-                  onChange={(e) => setEditableOriginalPrice(Number(e.target.value) || 0)}
-                  className="drawer-form-input"
-                />
-              </div>
-            </>
-          )}
-        </div>
-
-        {/* Spacing */}
-        <div className="drawer-section">
-          <h4 className="drawer-section-title">Spacing</h4>
-          <div className="drawer-range-container">
-            <div className="drawer-range-label">
-              <span>Horizontal Spacing</span>
-              <span className="drawer-range-value">{priceStyles.horizontalSpacing}px</span>
-            </div>
-            <input
-              type="range"
-              min="4" max="24"
-              value={priceStyles.horizontalSpacing}
-              onChange={(e) => setPriceStyles({
-                ...priceStyles,
-                horizontalSpacing: Number(e.target.value)
-              })}
-              className="drawer-range"
-            />
-          </div>
-          <div className="drawer-range-container">
-            <div className="drawer-range-label">
-              <span>Bottom Spacing</span>
-              <span className="drawer-range-value">{priceStyles.bottomSpacing}px</span>
-            </div>
-            <input
-              type="range"
-              min="0" max="32"
-              value={priceStyles.bottomSpacing}
-              onChange={(e) => setPriceStyles({
-                ...priceStyles,
-                bottomSpacing: Number(e.target.value)
-              })}
-              className="drawer-range"
-            />
-          </div>
-        </div>
-      </SystemDrawer>
+      />
 
       {/* Review Editor Drawer */}
       <SystemDrawer

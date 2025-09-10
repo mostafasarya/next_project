@@ -1,0 +1,38 @@
+/* ==========================================================================
+   STYLE PRICE EDITOR COMPONENT
+   ========================================================================== */
+
+/* The StylePriceEditor component inherits most of its styling from:
+   - SystemDrawer.css (drawer structure, sections, form elements)
+   - SystemControlIcons.css (tabs, toggles, ranges, alignment controls)
+   
+   This file contains only component-specific overrides and additions. */
+
+/* Price Editor specific customizations */
+.style-price-editor {
+  /* Component wrapper - inherits from SystemDrawer */
+}
+
+/* Tab customizations for price editor */
+.style-price-editor .system-control-tabs {
+  /* Tabs inherit from SystemControlIcons.css */
+  margin-bottom: 20px;
+}
+
+.style-price-editor .system-control-tab {
+  /* Individual tab styling inherited from SystemControlIcons.css */
+  min-width: 120px;
+}
+
+/* Drawer section spacing for price editor */
+.style-price-editor .drawer-section {
+  /* Section styling inherited from SystemDrawer.css */
+}
+
+/* Range and form controls inherit all styling from parent CSS files */
+.style-price-editor .drawer-range-container,
+.style-price-editor .drawer-form-group,
+.style-price-editor .alignment-tabs,
+.style-price-editor .system-control-toggle {
+  /* All styling inherited from SystemDrawer.css and SystemControlIcons.css */
+}

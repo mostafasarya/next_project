@@ -14,7 +14,6 @@ interface StyleTextUserProps {
     color: string;
     fontWeight: string;
     bottomSpacing: number;
-    isBold: boolean;
     textAlign: string;
   };
   onStylesChange: (styles: any) => void;
@@ -33,6 +32,8 @@ const StyleTextUser: React.FC<StyleTextUserProps> = ({
   disabled = false
 }) => {
   const [showEditor, setShowEditor] = React.useState(false);
+  const [isEditMode, setIsEditMode] = React.useState(false);
+  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
 
   const updateStyle = (property: string, value: any) => {
     onStylesChange({
@@ -41,37 +42,85 @@ const StyleTextUser: React.FC<StyleTextUserProps> = ({
     });
   };
 
+  const autoResize = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+    }
+  };
+
+  React.useEffect(() => {
+    autoResize();
+  }, [value]);
+
+
+
   return (
     <div className={`style-text-control ${className}`}>
-      <div className="text-control-container">
-        <input
-          type="text"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder}
-          disabled={disabled}
-          className={`text-control-input ${styles.isBold ? 'bold-text' : ''}`}
-          style={{
-            fontSize: `${styles.fontSize}px`,
-            fontFamily: styles.fontFamily,
-            color: styles.color,
-            fontWeight: styles.isBold ? '700' : styles.fontWeight,
-            marginBottom: `${styles.bottomSpacing}px`,
-            textAlign: styles.textAlign as any,
-            // CSS custom properties for more reliable styling
-            '--text-align': styles.textAlign,
-            '--font-weight': styles.isBold ? '700' : styles.fontWeight,
-            '--is-bold': styles.isBold ? '1' : '0'
-          } as React.CSSProperties}
-        />
-        <button 
-          className="text-control-edit-icon"
-          onClick={() => setShowEditor(!showEditor)}
-          title="Edit Text Style"
-          disabled={disabled}
-        >
-          <HiPencil />
-        </button>
+      <div 
+        className="text-control-container"
+        style={{
+          '--dynamic-font-size': `${styles.fontSize}px`,
+          '--dynamic-font-family': styles.fontFamily,
+          '--dynamic-color': styles.color,
+          '--dynamic-font-weight': styles.fontWeight,
+          '--dynamic-text-align': styles.textAlign,
+        } as React.CSSProperties}
+      >
+        <div className="text-content-wrapper">
+          {isEditMode ? (
+            <textarea
+              ref={textareaRef}
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+              onInput={autoResize}
+              placeholder={placeholder}
+              disabled={disabled}
+              className="text-control-input dynamic-text-styling"
+              style={{
+                marginBottom: `${styles.bottomSpacing}px`,
+                resize: 'vertical',
+                minHeight: '80px',
+                paddingRight: '32px',
+              }}
+              rows={3}
+              onBlur={() => setIsEditMode(false)}
+              autoFocus
+            />
+          ) : (
+            <div
+              className={`text-control-display dynamic-text-styling ${!value ? 'empty' : ''}`}
+              style={{
+                marginBottom: `${styles.bottomSpacing}px`,
+                padding: '1px 1px',
+                border: '1px solid transparent',
+                borderRadius: '6px',
+                background: 'transparent',
+                cursor: 'pointer',
+                wordWrap: 'break-word',
+                wordBreak: 'break-word',
+                whiteSpace: 'normal',
+                overflowWrap: 'break-word',
+              display: 'block',
+              width: '100%',
+              paddingRight: '32px',
+              }}
+              onClick={() => setIsEditMode(true)}
+              onDoubleClick={() => setIsEditMode(true)}
+              title="Click to edit"
+            >
+              {value || <span style={{ color: '#9ca3af', fontStyle: 'italic' }}>{placeholder}</span>}
+            </div>
+          )}
+          <button 
+            className="text-control-edit-icon inline-icon"
+            onClick={() => setShowEditor(!showEditor)}
+            title="Edit Text Style"
+            disabled={disabled}
+          >
+            <HiPencil />
+          </button>
+        </div>
       </div>
 
       {/* Text Style Editor Drawer */}
@@ -114,13 +163,70 @@ const StyleTextUser: React.FC<StyleTextUserProps> = ({
               className="drawer-form-select"
               onClick={(e) => e.stopPropagation()}
             >
-              <option value="Inter">Inter</option>
-              <option value="Arial">Arial</option>
-              <option value="Helvetica">Helvetica</option>
-              <option value="Georgia">Georgia</option>
-              <option value="Times New Roman">Times New Roman</option>
-              <option value="Roboto">Roboto</option>
-              <option value="Open Sans">Open Sans</option>
+              {/* Modern Sans-Serif Fonts */}
+              <optgroup label="Modern Sans-Serif">
+                <option value="Inter, sans-serif">Inter</option>
+                <option value="Poppins, sans-serif">Poppins</option>
+                <option value="Montserrat, sans-serif">Montserrat</option>
+                <option value="Nunito, sans-serif">Nunito</option>
+                <option value="Source Sans 3, sans-serif">Source Sans 3</option>
+                <option value="Work Sans, sans-serif">Work Sans</option>
+                <option value="DM Sans, sans-serif">DM Sans</option>
+                <option value="Plus Jakarta Sans, sans-serif">Plus Jakarta Sans</option>
+              </optgroup>
+              
+              {/* Classic Sans-Serif Fonts */}
+              <optgroup label="Classic Sans-Serif">
+                <option value="Roboto, sans-serif">Roboto</option>
+                <option value="Open Sans, sans-serif">Open Sans</option>
+                <option value="Lato, sans-serif">Lato</option>
+                <option value="Helvetica, Arial, sans-serif">Helvetica</option>
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Trebuchet MS, sans-serif">Trebuchet MS</option>
+              </optgroup>
+              
+              {/* Serif Fonts */}
+              <optgroup label="Serif Fonts">
+                <option value="Playfair Display, serif">Playfair Display</option>
+                <option value="Merriweather, serif">Merriweather</option>
+                <option value="Crimson Text, serif">Crimson Text</option>
+                <option value="Libre Baskerville, serif">Libre Baskerville</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Baskerville, serif">Baskerville</option>
+                <option value="Garamond, serif">Garamond</option>
+              </optgroup>
+              
+              {/* Display Fonts */}
+              <optgroup label="Display Fonts">
+                <option value="Oswald, sans-serif">Oswald</option>
+                <option value="Bebas Neue, sans-serif">Bebas Neue</option>
+                <option value="Raleway, sans-serif">Raleway</option>
+                <option value="Fjalla One, sans-serif">Fjalla One</option>
+                <option value="Anton, sans-serif">Anton</option>
+                <option value="Russo One, sans-serif">Russo One</option>
+              </optgroup>
+              
+              {/* Monospace Fonts */}
+              <optgroup label="Monospace Fonts">
+                <option value="JetBrains Mono, monospace">JetBrains Mono</option>
+                <option value="Source Code Pro, monospace">Source Code Pro</option>
+                <option value="Fira Code, monospace">Fira Code</option>
+                <option value="Monaco, monospace">Monaco</option>
+                <option value="Consolas, monospace">Consolas</option>
+                <option value="Courier New, monospace">Courier New</option>
+              </optgroup>
+              
+              {/* Script & Decorative Fonts */}
+              <optgroup label="Script & Decorative">
+                <option value="Dancing Script, cursive">Dancing Script</option>
+                <option value="Great Vibes, cursive">Great Vibes</option>
+                <option value="Pacifico, cursive">Pacifico</option>
+                <option value="Lobster, cursive">Lobster</option>
+                <option value="Comfortaa, sans-serif">Comfortaa</option>
+                <option value="Righteous, sans-serif">Righteous</option>
+              </optgroup>
             </select>
           </div>
         </div>
@@ -181,25 +287,6 @@ const StyleTextUser: React.FC<StyleTextUserProps> = ({
           </div>
         </div>
 
-        {/* Bold Toggle */}
-        <div className="drawer-section" onClick={(e) => e.stopPropagation()}>
-          <h4 className="drawer-section-title">Bold Text</h4>
-          <div className="drawer-form-group">
-            <label className="toggle-label">
-              <span>Enable Bold</span>
-              <div 
-                className={`system-control-toggle ${styles.isBold ? 'active' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  updateStyle('isBold', !styles.isBold);
-                  updateStyle('fontWeight', !styles.isBold ? '700' : '400');
-                }}
-              >
-                <div className="toggle-slider"></div>
-              </div>
-            </label>
-          </div>
-        </div>
 
         {/* Text Alignment */}
         <div className="drawer-section" onClick={(e) => e.stopPropagation()}>

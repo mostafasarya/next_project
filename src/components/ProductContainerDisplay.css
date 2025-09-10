@@ -68,72 +68,122 @@
   color: #1d4ed8;
 }
 
-.visibility-dropdown {
+/* Card Control */
+.card-control-container {
   position: absolute;
-  top: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: 280px;
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 1001;
+  top: 8px;
+  right: 8px;
+  z-index: 1004;
 }
 
-.visibility-dropdown-header {
-  padding: 12px 16px;
-  border-bottom: 1px solid #e5e7eb;
-  background: #f8f9fa;
-  border-radius: 8px 8px 0 0;
+.system-control-icon.card-control {
+  background: linear-gradient(135deg, #ffffff 0%, #fefbf2 100%);
+  color: #f59e0b;
+  border-color: #fed7aa;
 }
 
-.visibility-dropdown-header span {
-  font-size: 14px;
-  font-weight: 600;
-  color: #374151;
+.system-control-icon.card-control:hover {
+  border-color: #fdba74;
+  color: #d97706;
 }
 
-.visibility-options {
-  padding: 8px 0;
-  max-height: 300px;
-  overflow-y: auto;
+/* Image Dimension Control */
+.image-dimension-control {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 1003;
 }
 
-.visibility-option {
+.system-control-icon.dimensions {
+  background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+  color: #16a34a;
+  border-color: #bbf7d0;
+}
+
+.system-control-icon.dimensions:hover {
+  border-color: #86efac;
+  color: #15803d;
+}
+
+/* Toggle Switch Styles - SystemControlAssets Theme */
+.drawer-toggle-container {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  cursor: pointer;
-  transition: background 0.2s ease;
+  gap: 16px;
+  margin: 8px 0;
+}
+
+.drawer-toggle-container .toggle-label {
   font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  transition: all 0.2s ease;
+}
+
+.drawer-toggle-container .toggle-label.active {
   color: #374151;
+  font-weight: 600;
 }
 
-.visibility-option:hover {
-  background: #f8f9fa;
+.drawer-toggle-container .drawer-toggle {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
 }
 
-.visibility-option input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  margin: 0;
+.drawer-toggle-container .drawer-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.drawer-toggle-container .toggle-slider {
+  position: absolute;
   cursor: pointer;
-  accent-color: #10b981;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e5e7eb;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  width: 48px;
+  height: 24px;
 }
 
-.visibility-option span {
-  flex: 1;
-  user-select: none;
+.drawer-toggle-container .toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  top: 3px;
+  background-color: white;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
+
+/* Active toggle state - background color change */
+.drawer-toggle-container .drawer-toggle input:checked + .toggle-slider {
+  background-color: #ef4444;
+}
+
+/* Active toggle state - circle movement */
+.drawer-toggle-container .drawer-toggle input:checked + .toggle-slider:before {
+  transform: translateX(24px);
+}
+
+
 
 /* Product Details Section */
 .product-details-section {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 5px;
 }
 
 /* Element containers with flex layout for inline edit icons */
@@ -166,7 +216,7 @@
   flex: 1;
 }
 
-/* Remove borders from all text elements */
+/* Remove borders from all text elements while preserving typography */
 .product-name-editor .text-control-input,
 .product-description-editor .text-control-input {
   border: none !important;
@@ -175,6 +225,14 @@
   padding: 0 !important;
   margin: 0 !important;
   outline: none !important;
+  /* Let inline styles take full control */
+}
+
+/* Override placeholder color */
+.product-name-editor .text-control-input::placeholder,
+.product-description-editor .text-control-input::placeholder {
+  color: #9ca3af !important;
+  opacity: 0.6 !important;
 }
 
 .product-name-editor .text-control-input:focus,
@@ -269,7 +327,7 @@
   font-size: 12px !important;
   margin-left: 8px !important;
   flex-shrink: 0 !important;
-  position: static !important;
+  position: static ;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
   backdrop-filter: blur(4px) !important;
 }

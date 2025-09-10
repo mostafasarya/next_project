@@ -57,7 +57,10 @@ import {
   HiMenu,             // Menu/hamburger icon
   HiChevronDown,      // Dropdown/collapsible indicator
   HiArrowsExpand,     // Dimensions/resize control
-  HiEye               // Visibility/show-hide control
+  HiEye,              // Visibility/show-hide control
+  HiViewBoards,       // Card/board control layout
+  HiArrowLeft,        // Left arrow navigation
+  HiArrowRight        // Right arrow navigation
 } from 'react-icons/hi';
 import { TbCircleLetterB } from 'react-icons/tb';
 
@@ -497,6 +500,36 @@ const SystemControlAssets: React.FC = () => {
               </button>
             </div>
             <span className="icon-label">Visibility</span>
+          </div>
+
+          {/* Card Control Icon - Controls card layouts and arrangements */}
+          <div className="icon-item">
+            <div className="icon-container">
+              <button className="system-control-icon card-control">
+                <HiViewBoards />
+              </button>
+            </div>
+            <span className="icon-label">Card Control</span>
+          </div>
+
+          {/* Left Arrow Icon - Navigation and back functionality */}
+          <div className="icon-item">
+            <div className="icon-container">
+              <button className="system-control-icon left-arrow">
+                <HiArrowLeft />
+              </button>
+            </div>
+            <span className="icon-label">Left Arrow</span>
+          </div>
+
+          {/* Right Arrow Icon - Navigation and forward functionality */}
+          <div className="icon-item">
+            <div className="icon-container">
+              <button className="system-control-icon right-arrow">
+                <HiArrowRight />
+              </button>
+            </div>
+            <span className="icon-label">Right Arrow</span>
           </div>
         </div>
       </div>

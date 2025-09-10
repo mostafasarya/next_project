@@ -5,22 +5,31 @@
 }
 
 .text-control-container {
-  display: flex;
-  align-items: center;
-  gap: 12px;
   position: relative;
+  width: 100%;
+}
+
+.text-content-wrapper {
+  position: relative;
+  line-height: 1.5;
 }
 
 .text-control-input {
-  flex: 1;
+  width: 100%;
   border: 1px solid #d1d5db;
   border-radius: 6px;
-  padding: 8px 12px;
+  padding: 1px 1px;
   background: white;
-  font-size: 16px;
-  color: #374151;
+  /* Removed default font-size and color to allow inline styles to take precedence */
   transition: all 0.2s ease;
   outline: none;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+  overflow-wrap: break-word;
+  resize: vertical;
+  min-height: 80px;
+  box-sizing: border-box;
 }
 
 .text-control-input:focus {
@@ -34,39 +43,63 @@
   cursor: not-allowed;
 }
 
-/* Enhanced styling using CSS custom properties */
-.style-text-control .text-control-input {
-  font-weight: var(--font-weight, 400) !important;
-  text-align: var(--text-align, left) !important;
+/* Dynamic text styling using CSS custom properties */
+.dynamic-text-styling {
+  font-size: var(--dynamic-font-size, 14px) !important;
+  font-family: var(--dynamic-font-family, 'Inter, sans-serif') !important;
+  color: var(--dynamic-color, #374151) !important;
+  font-weight: var(--dynamic-font-weight, 400) !important;
+  text-align: var(--dynamic-text-align, left) !important;
 }
 
-/* Bold text styling with high specificity */
-.style-text-control .text-control-input.bold-text {
-  font-weight: 700 !important;
+/* Text display mode styling */
+.text-control-display {
+  transition: all 0.2s ease;
+  outline: none;
+  box-sizing: border-box;
+  line-height: 1.5;
+  width: 100%;
 }
 
-/* Override any global input styling that might interfere */
-.style-text-control input[type="text"] {
-  font-weight: var(--font-weight, inherit) !important;
-  text-align: var(--text-align, inherit) !important;
+.text-control-display:hover {
+  border-color: #d1d5db !important;
+  background: #f9fafb !important;
 }
+
+.text-control-display:focus {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+.text-control-display.empty {
+  color: #9ca3af;
+  font-style: italic;
+}
+
 
 .text-control-edit-icon {
   background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
   border: 2px solid #fecaca;
   color: #ef4444;
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 14px;
+  font-size: 12px;
   opacity: 1;
   transform: translateX(0);
-  flex-shrink: 0;
+}
+
+.text-control-edit-icon.inline-icon {
+  position: absolute !important;
+  top: 0;
+  right: 0;
+  margin: 0;
+  z-index: 10;
 }
 
 .text-control-edit-icon:hover:not(:disabled) {
@@ -74,6 +107,16 @@
   color: #dc2626;
   transform: translateX(0) translateY(-1px);
   box-shadow: 0 4px 8px rgba(239, 68, 68, 0.2);
+}
+
+.text-control-edit-icon.inline-icon:hover:not(:disabled) {
+  border-color: #fca5a5;
+  color: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.2);
+  position: absolute !important;
+  top: 0;
+  right: 0;
 }
 
 .text-control-edit-icon:disabled {

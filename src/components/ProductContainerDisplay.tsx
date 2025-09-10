@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { HiStar, HiMinus, HiPlus, HiPencil, HiEye, HiChevronDown } from 'react-icons/hi';
+import { HiStar, HiMinus, HiPlus, HiPencil, HiEye, HiChevronDown, HiViewBoards, HiArrowsExpand } from 'react-icons/hi';
 import StyleTextUser from './StyleTextUser';
 import StyleButton, { ButtonStyles, defaultButtonStyles } from './StyleButton';
 import StyledButton from './StyledButton';
@@ -53,37 +53,35 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState(product.sizes[0]);
 
-  // Editor states
+  // Editor states  
+  const [editableProductName, setEditableProductName] = useState(product.name);
   const [showProductNameEditor, setShowProductNameEditor] = useState(false);
   const [productNameStyles, setProductNameStyles] = useState({
     fontSize: 18,
-    fontFamily: 'Inter',
+    fontFamily: 'Inter, sans-serif',
     color: '#111827',
     fontWeight: '600',
     bottomSpacing: 0,
-    isBold: true,
     textAlign: 'left'
   });
 
   const [showDescriptionEditor, setShowDescriptionEditor] = useState(false);
   const [descriptionStyles, setDescriptionStyles] = useState({
     fontSize: 14,
-    fontFamily: 'Inter',
+    fontFamily: 'Inter, sans-serif',
     color: '#374151',
     fontWeight: '500',
     bottomSpacing: 0,
-    isBold: false,
     textAlign: 'left'
   });
 
   const [showDescription2Editor, setShowDescription2Editor] = useState(false);
   const [description2Styles, setDescription2Styles] = useState({
     fontSize: 14,
-    fontFamily: 'Inter',
+    fontFamily: 'Inter, sans-serif',
     color: '#6b7280',
     fontWeight: '400',
     bottomSpacing: 0,
-    isBold: false,
     textAlign: 'left'
   });
 
@@ -165,7 +163,6 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
   });
 
   // Editable text states
-  const [editableProductName, setEditableProductName] = useState(product.name);
   const [editableDescription1, setEditableDescription1] = useState(product.description1);
   const [editableDescription2, setEditableDescription2] = useState(product.description2);
   const [editablePrice, setEditablePrice] = useState(product.price);
@@ -183,6 +180,29 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
     quantity: true,
     addToCart: true
   });
+
+  // Card control state
+  const [showCardControl, setShowCardControl] = useState(false);
+  const [cardSettings, setCardSettings] = useState({
+    width: 475,
+    padding: 20,
+    borderRadius: 8,
+    backgroundColor: '#ffffff',
+    borderColor: '#e5e7eb',
+    borderWidth: 1,
+    showBorder: true,
+    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+    showShadow: true,
+    shadowIntensity: 0.1,
+    shadowBlur: 3,
+    shadowSpread: 0,
+    shadowOffsetX: 0,
+    shadowOffsetY: 1
+  });
+
+  // Image dimension control state
+  const [showImageDimensionControl, setShowImageDimensionControl] = useState(false);
+  const [imageHeight, setImageHeight] = useState(457);
 
   // Handlers
   const handleQuantityChange = (change: number) => {
@@ -204,6 +224,17 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
     }));
   };
 
+  const handleCardSettingChange = (setting: keyof typeof cardSettings, value: any) => {
+    setCardSettings(prev => ({
+      ...prev,
+      [setting]: value
+    }));
+  };
+
+  const handleImageHeightChange = (height: number) => {
+    setImageHeight(Math.max(200, Math.min(800, height)));
+  };
+
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, index) => (
       <HiStar 
@@ -219,14 +250,64 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
   };
 
   return (
-    <div className={`product-container-display ${className}`}>
-      <div className="product-card-merged">
+    <div 
+      className={`product-container-display ${className}`}
+      style={{
+        width: `${cardSettings.width}px`,
+        padding: `${cardSettings.padding}px`,
+      }}
+    >
+      {/* Card Control Icon */}
+      <div className="card-control-container">
+        <button 
+          className="system-control-icon card-control medium"
+          onClick={() => setShowCardControl(!showCardControl)}
+          type="button"
+          title="Control Card Settings"
+        >
+          <HiViewBoards />
+        </button>
+      </div>
+
+        <div 
+          className="product-card-merged"
+          style={{
+            borderRadius: `${cardSettings.borderRadius}px`,
+            backgroundColor: cardSettings.backgroundColor,
+            border: cardSettings.showBorder ? `${cardSettings.borderWidth}px solid ${cardSettings.borderColor}` : 'none',
+            boxShadow: cardSettings.showShadow ? 
+              `${cardSettings.shadowOffsetX}px ${cardSettings.shadowOffsetY}px ${cardSettings.shadowBlur}px ${cardSettings.shadowSpread}px rgba(0, 0, 0, ${cardSettings.shadowIntensity})` : 
+              'none'
+          }}
+      >
         {/* Product Image Section */}
-        <div className="product-image-section">
+        <div 
+          className="product-image-section"
+          style={{
+            height: `${imageHeight}px`
+          }}
+        >
+          {/* Image Dimension Control */}
+          <div className="image-dimension-control">
+            <button 
+              className="system-control-icon dimensions medium"
+              onClick={() => setShowImageDimensionControl(!showImageDimensionControl)}
+              type="button"
+              title="Control Image & Card Dimensions"
+            >
+              <HiArrowsExpand />
+            </button>
+          </div>
+
           <img 
             src={product.imageUrl} 
             alt={product.name}
             className="product-image"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover'
+            }}
             onError={(e) => {
               const target = e.target as HTMLImageElement;
               target.src = 'https://via.placeholder.com/457x457/f3f4f6/9ca3af?text=Product+Image';
@@ -242,80 +323,6 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
             >
               <HiEye />
             </button>
-            
-            {showVisibilityDropdown && (
-              <div className="visibility-dropdown">
-                <div className="visibility-dropdown-header">
-                  <span>Show/Hide Elements</span>
-                </div>
-                <div className="visibility-options">
-                  <label className="visibility-option">
-                    <input
-                      type="checkbox"
-                      checked={elementVisibility.productName}
-                      onChange={() => toggleElementVisibility('productName')}
-                    />
-                    <span>Product Name</span>
-                  </label>
-                  <label className="visibility-option">
-                    <input
-                      type="checkbox"
-                      checked={elementVisibility.price}
-                      onChange={() => toggleElementVisibility('price')}
-                    />
-                    <span>Price</span>
-                  </label>
-                  <label className="visibility-option">
-                    <input
-                      type="checkbox"
-                      checked={elementVisibility.rating}
-                      onChange={() => toggleElementVisibility('rating')}
-                    />
-                    <span>Rating & Reviews</span>
-                  </label>
-                  <label className="visibility-option">
-                    <input
-                      type="checkbox"
-                      checked={elementVisibility.description1}
-                      onChange={() => toggleElementVisibility('description1')}
-                    />
-                    <span>Description 1</span>
-                  </label>
-                  <label className="visibility-option">
-                    <input
-                      type="checkbox"
-                      checked={elementVisibility.description2}
-                      onChange={() => toggleElementVisibility('description2')}
-                    />
-                    <span>Description 2</span>
-                  </label>
-                  <label className="visibility-option">
-                    <input
-                      type="checkbox"
-                      checked={elementVisibility.sizeVariants}
-                      onChange={() => toggleElementVisibility('sizeVariants')}
-                    />
-                    <span>Size Variants</span>
-                  </label>
-                  <label className="visibility-option">
-                    <input
-                      type="checkbox"
-                      checked={elementVisibility.quantity}
-                      onChange={() => toggleElementVisibility('quantity')}
-                    />
-                    <span>Quantity Counter</span>
-                  </label>
-                  <label className="visibility-option">
-                    <input
-                      type="checkbox"
-                      checked={elementVisibility.addToCart}
-                      onChange={() => toggleElementVisibility('addToCart')}
-                    />
-                    <span>Add to Cart Button</span>
-                  </label>
-                </div>
-              </div>
-            )}
           </div>
         </div>
 
@@ -1144,6 +1151,428 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
         onStylesChange={setButtonStyles}
         title="Add to Cart Button Editor"
       />
+
+      {/* Card Control System Drawer */}
+      <SystemDrawer
+        isOpen={showCardControl}
+        onClose={() => setShowCardControl(false)}
+        title="Card Settings"
+      >
+        <div className="drawer-content">
+          {/* Dimensions Section */}
+          <div className="drawer-section">
+            <h4 className="drawer-section-title">Dimensions</h4>
+            <div className="drawer-form-group">
+              <label className="drawer-form-label">Width</label>
+              <div className="drawer-range-container">
+                <input
+                  type="range"
+                  min="200" max="800"
+                  value={cardSettings.width}
+                  onChange={(e) => handleCardSettingChange('width', Number(e.target.value))}
+                  className="drawer-range"
+                />
+                <span className="drawer-range-value">{cardSettings.width}px</span>
+              </div>
+            </div>
+            <div className="drawer-form-group">
+              <label className="drawer-form-label">Padding</label>
+              <div className="drawer-range-container">
+                <input
+                  type="range"
+                  min="0" max="50"
+                  value={cardSettings.padding}
+                  onChange={(e) => handleCardSettingChange('padding', Number(e.target.value))}
+                  className="drawer-range"
+                />
+                <span className="drawer-range-value">{cardSettings.padding}px</span>
+              </div>
+            </div>
+            <div className="drawer-form-group">
+              <label className="drawer-form-label">Border Radius</label>
+              <div className="drawer-range-container">
+                <input
+                  type="range"
+                  min="0" max="30"
+                  value={cardSettings.borderRadius}
+                  onChange={(e) => handleCardSettingChange('borderRadius', Number(e.target.value))}
+                  className="drawer-range"
+                />
+                <span className="drawer-range-value">{cardSettings.borderRadius}px</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Colors Section */}
+          <div className="drawer-section">
+            <h4 className="drawer-section-title">Colors</h4>
+            <div className="drawer-form-group">
+              <label className="drawer-form-label">Background Color</label>
+              <input
+                type="color"
+                value={cardSettings.backgroundColor}
+                onChange={(e) => handleCardSettingChange('backgroundColor', e.target.value)}
+                className="drawer-form-input"
+              />
+            </div>
+            <div className="drawer-form-group">
+              <label className="drawer-form-label">Border Color</label>
+              <input
+                type="color"
+                value={cardSettings.borderColor}
+                onChange={(e) => handleCardSettingChange('borderColor', e.target.value)}
+                className="drawer-form-input"
+              />
+            </div>
+          </div>
+
+          {/* Border Section */}
+          <div className="drawer-section">
+            <h4 className="drawer-section-title">Border</h4>
+            <div className="drawer-form-group">
+              <label className="drawer-form-label">Show Border</label>
+              <div className="drawer-toggle-container">
+                <label className="drawer-toggle">
+                  <input
+                    type="checkbox"
+                    checked={cardSettings.showBorder}
+                    onChange={(e) => handleCardSettingChange('showBorder', e.target.checked)}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+                <span className={`toggle-label ${cardSettings.showBorder ? 'active' : ''}`}>
+                  {cardSettings.showBorder ? 'Visible' : 'Hidden'}
+                </span>
+              </div>
+            </div>
+            {cardSettings.showBorder && (
+              <div className="drawer-form-group">
+                <label className="drawer-form-label">Border Width</label>
+                <div className="drawer-range-container">
+                  <input
+                    type="range"
+                    min="1" max="10"
+                    value={cardSettings.borderWidth}
+                    onChange={(e) => handleCardSettingChange('borderWidth', Number(e.target.value))}
+                    className="drawer-range"
+                  />
+                  <span className="drawer-range-value">{cardSettings.borderWidth}px</span>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Shadow Section */}
+          <div className="drawer-section">
+            <h4 className="drawer-section-title">Shadow</h4>
+            <div className="drawer-form-group">
+              <label className="drawer-form-label">Show Shadow</label>
+              <div className="drawer-toggle-container">
+                <label className="drawer-toggle">
+                  <input
+                    type="checkbox"
+                    checked={cardSettings.showShadow}
+                    onChange={(e) => handleCardSettingChange('showShadow', e.target.checked)}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+                <span className={`toggle-label ${cardSettings.showShadow ? 'active' : ''}`}>
+                  {cardSettings.showShadow ? 'Visible' : 'Hidden'}
+                </span>
+              </div>
+            </div>
+            {cardSettings.showShadow && (
+              <>
+                <div className="drawer-form-group">
+                  <label className="drawer-form-label">Shadow Intensity</label>
+                  <div className="drawer-range-container">
+                    <input
+                      type="range"
+                      min="0" max="1" step="0.05"
+                      value={cardSettings.shadowIntensity}
+                      onChange={(e) => handleCardSettingChange('shadowIntensity', Number(e.target.value))}
+                      className="drawer-range"
+                    />
+                    <span className="drawer-range-value">{Math.round(cardSettings.shadowIntensity * 100)}%</span>
+                  </div>
+                </div>
+                <div className="drawer-form-group">
+                  <label className="drawer-form-label">Shadow Blur</label>
+                  <div className="drawer-range-container">
+                    <input
+                      type="range"
+                      min="0" max="20"
+                      value={cardSettings.shadowBlur}
+                      onChange={(e) => handleCardSettingChange('shadowBlur', Number(e.target.value))}
+                      className="drawer-range"
+                    />
+                    <span className="drawer-range-value">{cardSettings.shadowBlur}px</span>
+                  </div>
+                </div>
+                <div className="drawer-form-group">
+                  <label className="drawer-form-label">Shadow Spread</label>
+                  <div className="drawer-range-container">
+                    <input
+                      type="range"
+                      min="-10" max="10"
+                      value={cardSettings.shadowSpread}
+                      onChange={(e) => handleCardSettingChange('shadowSpread', Number(e.target.value))}
+                      className="drawer-range"
+                    />
+                    <span className="drawer-range-value">{cardSettings.shadowSpread}px</span>
+                  </div>
+                </div>
+                <div className="drawer-form-group">
+                  <label className="drawer-form-label">Shadow Offset X</label>
+                  <div className="drawer-range-container">
+                    <input
+                      type="range"
+                      min="-20" max="20"
+                      value={cardSettings.shadowOffsetX}
+                      onChange={(e) => handleCardSettingChange('shadowOffsetX', Number(e.target.value))}
+                      className="drawer-range"
+                    />
+                    <span className="drawer-range-value">{cardSettings.shadowOffsetX}px</span>
+                  </div>
+                </div>
+                <div className="drawer-form-group">
+                  <label className="drawer-form-label">Shadow Offset Y</label>
+                  <div className="drawer-range-container">
+                    <input
+                      type="range"
+                      min="-20" max="20"
+                      value={cardSettings.shadowOffsetY}
+                      onChange={(e) => handleCardSettingChange('shadowOffsetY', Number(e.target.value))}
+                      className="drawer-range"
+                    />
+                    <span className="drawer-range-value">{cardSettings.shadowOffsetY}px</span>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </SystemDrawer>
+
+      {/* Image Dimension Control System Drawer */}
+      <SystemDrawer
+        isOpen={showImageDimensionControl}
+        onClose={() => setShowImageDimensionControl(false)}
+        title="Image & Card Dimensions"
+      >
+        <div className="drawer-content">
+          {/* Image Height Section */}
+          <div className="drawer-section">
+            <h4 className="drawer-section-title">Image Dimensions</h4>
+            <div className="drawer-form-group">
+              <label className="drawer-form-label">Height</label>
+              <div className="drawer-range-container">
+                <input
+                  type="range"
+                  min="200" max="800"
+                  value={imageHeight}
+                  onChange={(e) => handleImageHeightChange(Number(e.target.value))}
+                  className="drawer-range"
+                />
+                <span className="drawer-range-value">{imageHeight}px</span>
+              </div>
+            </div>
+            <div className="drawer-form-group">
+              <label className="drawer-form-label">Direct Input</label>
+              <input
+                type="number"
+                value={imageHeight}
+                onChange={(e) => handleImageHeightChange(Number(e.target.value))}
+                min="200"
+                max="800"
+                className="drawer-form-input"
+                style={{ width: '80px', textAlign: 'center' }}
+              />
+              <span style={{ marginLeft: '8px', fontSize: '12px', color: '#6b7280' }}>px</span>
+            </div>
+          </div>
+
+          {/* Card Width Section */}
+          <div className="drawer-section">
+            <h4 className="drawer-section-title">Card Dimensions</h4>
+            <div className="drawer-form-group">
+              <label className="drawer-form-label">Width</label>
+              <div className="drawer-range-container">
+                <input
+                  type="range"
+                  min="200" max="800"
+                  value={cardSettings.width}
+                  onChange={(e) => handleCardSettingChange('width', Number(e.target.value))}
+                  className="drawer-range"
+                />
+                <span className="drawer-range-value">{cardSettings.width}px</span>
+              </div>
+            </div>
+            <div className="drawer-form-group">
+              <label className="drawer-form-label">Direct Input</label>
+              <input
+                type="number"
+                value={cardSettings.width}
+                onChange={(e) => handleCardSettingChange('width', Number(e.target.value))}
+                min="200"
+                max="800"
+                className="drawer-form-input"
+                style={{ width: '80px', textAlign: 'center' }}
+              />
+              <span style={{ marginLeft: '8px', fontSize: '12px', color: '#6b7280' }}>px</span>
+            </div>
+          </div>
+        </div>
+      </SystemDrawer>
+
+      {/* Element Visibility Control System Drawer */}
+      <SystemDrawer
+        isOpen={showVisibilityDropdown}
+        onClose={() => setShowVisibilityDropdown(false)}
+        title="Element Visibility"
+      >
+        <div className="drawer-content">
+          {/* Visibility Controls Section */}
+          <div className="drawer-section">
+            <h4 className="drawer-section-title">Show/Hide Elements</h4>
+            <div className="drawer-form-group">
+              <label className="drawer-form-label">Product Name</label>
+              <div className="drawer-toggle-container">
+                <label className="drawer-toggle">
+                  <input
+                    type="checkbox"
+                    checked={elementVisibility.productName}
+                    onChange={() => toggleElementVisibility('productName')}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+                <span className={`toggle-label ${elementVisibility.productName ? 'active' : ''}`}>
+                  {elementVisibility.productName ? 'Visible' : 'Hidden'}
+                </span>
+              </div>
+            </div>
+            
+            <div className="drawer-form-group">
+              <label className="drawer-form-label">Price</label>
+              <div className="drawer-toggle-container">
+                <label className="drawer-toggle">
+                  <input
+                    type="checkbox"
+                    checked={elementVisibility.price}
+                    onChange={() => toggleElementVisibility('price')}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+                <span className={`toggle-label ${elementVisibility.price ? 'active' : ''}`}>
+                  {elementVisibility.price ? 'Visible' : 'Hidden'}
+                </span>
+              </div>
+            </div>
+            
+            <div className="drawer-form-group">
+              <label className="drawer-form-label">Rating & Reviews</label>
+              <div className="drawer-toggle-container">
+                <label className="drawer-toggle">
+                  <input
+                    type="checkbox"
+                    checked={elementVisibility.rating}
+                    onChange={() => toggleElementVisibility('rating')}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+                <span className={`toggle-label ${elementVisibility.rating ? 'active' : ''}`}>
+                  {elementVisibility.rating ? 'Visible' : 'Hidden'}
+                </span>
+              </div>
+            </div>
+            
+            <div className="drawer-form-group">
+              <label className="drawer-form-label">Description 1</label>
+              <div className="drawer-toggle-container">
+                <label className="drawer-toggle">
+                  <input
+                    type="checkbox"
+                    checked={elementVisibility.description1}
+                    onChange={() => toggleElementVisibility('description1')}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+                <span className={`toggle-label ${elementVisibility.description1 ? 'active' : ''}`}>
+                  {elementVisibility.description1 ? 'Visible' : 'Hidden'}
+                </span>
+              </div>
+            </div>
+            
+            <div className="drawer-form-group">
+              <label className="drawer-form-label">Description 2</label>
+              <div className="drawer-toggle-container">
+                <label className="drawer-toggle">
+                  <input
+                    type="checkbox"
+                    checked={elementVisibility.description2}
+                    onChange={() => toggleElementVisibility('description2')}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+                <span className={`toggle-label ${elementVisibility.description2 ? 'active' : ''}`}>
+                  {elementVisibility.description2 ? 'Visible' : 'Hidden'}
+                </span>
+              </div>
+            </div>
+            
+            <div className="drawer-form-group">
+              <label className="drawer-form-label">Size Variants</label>
+              <div className="drawer-toggle-container">
+                <label className="drawer-toggle">
+                  <input
+                    type="checkbox"
+                    checked={elementVisibility.sizeVariants}
+                    onChange={() => toggleElementVisibility('sizeVariants')}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+                <span className={`toggle-label ${elementVisibility.sizeVariants ? 'active' : ''}`}>
+                  {elementVisibility.sizeVariants ? 'Visible' : 'Hidden'}
+                </span>
+              </div>
+            </div>
+            
+            <div className="drawer-form-group">
+              <label className="drawer-form-label">Quantity Counter</label>
+              <div className="drawer-toggle-container">
+                <label className="drawer-toggle">
+                  <input
+                    type="checkbox"
+                    checked={elementVisibility.quantity}
+                    onChange={() => toggleElementVisibility('quantity')}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+                <span className={`toggle-label ${elementVisibility.quantity ? 'active' : ''}`}>
+                  {elementVisibility.quantity ? 'Visible' : 'Hidden'}
+                </span>
+              </div>
+            </div>
+            
+            <div className="drawer-form-group">
+              <label className="drawer-form-label">Add to Cart Button</label>
+              <div className="drawer-toggle-container">
+                <label className="drawer-toggle">
+                  <input
+                    type="checkbox"
+                    checked={elementVisibility.addToCart}
+                    onChange={() => toggleElementVisibility('addToCart')}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+                <span className={`toggle-label ${elementVisibility.addToCart ? 'active' : ''}`}>
+                  {elementVisibility.addToCart ? 'Visible' : 'Hidden'}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </SystemDrawer>
     </div>
   );
 };

@@ -342,16 +342,16 @@
 }
 
 .product-info {
-  margin-bottom: 24px;
+  margin-bottom: 8px;
 }
 
 /* Draggable Elements */
 .draggable-element {
   cursor: grab;
   transition: all 0.2s ease;
-  padding: 8px;
-  border-radius: 6px;
-  margin-bottom: 16px;
+  padding: 2px;
+  border-radius: 4px;
+  margin-bottom: 4px;
   position: relative;
 }
 
@@ -370,11 +370,11 @@
 .draggable-element::before {
   content: '⋮⋮';
   position: absolute;
-  left: -20px;
+  left: -16px;
   top: 50%;
   transform: translateY(-50%);
   color: #9ca3af;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: bold;
   opacity: 1;
   transition: opacity 0.2s ease;
@@ -498,20 +498,27 @@
 }
 
 /* Variants */
+.variants-container {
+  position: relative;
+}
+
 .variant-section {
-  margin-bottom: 20px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .variant-label {
   display: block;
   font-weight: 600;
   color: #495057;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .variant-options {
   display: flex;
-  gap: 8px;
+  gap: 4px;
   flex-wrap: wrap;
 }
 
@@ -523,6 +530,9 @@
   cursor: pointer;
   transition: all 0.2s;
   font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .variant-option:hover {
@@ -535,22 +545,94 @@
   color: white;
 }
 
+/* Color variant specific styles */
+.variant-option.color-variant {
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid #dee2e6;
+  overflow: hidden;
+  position: relative;
+  /* Size is now dynamically controlled via inline styles */
+}
+
+.variant-option.color-variant:hover {
+  transform: scale(1.1);
+  border-color: #007bff;
+}
+
+.variant-option.color-variant.selected {
+  border-color: #007bff;
+  border-width: 3px;
+  box-shadow: 0 0 0 2px #007bff;
+}
+
+/* Special handling for white color to ensure visibility */
+.variant-option.color-variant[title="white"],
+.variant-option.color-variant[title="White"] {
+  border-color: #6c757d;
+}
+
+.variant-option.color-variant[title="white"]:hover,
+.variant-option.color-variant[title="White"]:hover {
+  border-color: #007bff;
+}
+
+.variant-option.color-variant[title="white"].selected,
+.variant-option.color-variant[title="White"].selected {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px #007bff;
+}
+
+/* Variant edit icon positioning */
+.variant-edit-icon-positioned {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
+}
+
+.variant-edit-icon {
+  background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
+  border: 2px solid #fecaca;
+  color: #ef4444;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 12px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(4px);
+}
+
+.variant-edit-icon:hover {
+  border-color: #ef4444;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
 /* Quantity Section */
 .quantity-section {
-  margin-bottom: 24px;
+  margin-bottom: 8px;
 }
 
 .quantity-label {
   display: block;
   font-weight: 600;
   color: #495057;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .quantity-counter {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
 }
 
 .quantity-btn {

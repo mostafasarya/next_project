@@ -11,6 +11,7 @@ interface SystemDrawerProps {
   width?: number;
   position?: 'left' | 'right';
   pushContent?: boolean;
+  disableClickOutside?: boolean;
 }
 
 const SystemDrawer: React.FC<SystemDrawerProps> = ({
@@ -20,7 +21,8 @@ const SystemDrawer: React.FC<SystemDrawerProps> = ({
   children,
   width = 300,
   position = 'left',
-  pushContent = true
+  pushContent = true,
+  disableClickOutside = false
 }) => {
   const [startY, setStartY] = React.useState<number>(0);
   const [currentY, setCurrentY] = React.useState<number>(0);
@@ -58,6 +60,7 @@ const SystemDrawer: React.FC<SystemDrawerProps> = ({
       if (
         isOpen &&
         pushContent &&
+        !disableClickOutside &&
         drawerRef.current &&
         !drawerRef.current.contains(event.target as Node) &&
         window.innerWidth >= 769 // Only on desktop
@@ -66,18 +69,18 @@ const SystemDrawer: React.FC<SystemDrawerProps> = ({
       }
     };
 
-    if (isOpen && pushContent) {
+    if (isOpen && pushContent && !disableClickOutside) {
       // Add event listener with a slight delay to avoid immediate closure
       const timeoutId = setTimeout(() => {
         document.addEventListener('mousedown', handleClickOutside);
-      }, 100);
+      }, 500); // Increased delay to avoid conflicts
 
       return () => {
         clearTimeout(timeoutId);
         document.removeEventListener('mousedown', handleClickOutside);
       };
     }
-  }, [isOpen, pushContent, onClose]);
+  }, [isOpen, pushContent, disableClickOutside, onClose]);
 
   // Add body class for push content effect on desktop
   React.useEffect(() => {

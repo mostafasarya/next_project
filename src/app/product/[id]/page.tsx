@@ -23,7 +23,7 @@ const ProductPage: React.FC = () => {
     variants: [
       {
         name: "Size",
-        options: ["Small", "Medium", "Large", "Extra Large"]
+        options: ["XS", "S", "M", "L", "XL"]
       },
       {
         name: "Color",

@@ -242,6 +242,41 @@
   gap: 8px;
 }
 
+.product-name-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.product-variants {
+  font-size: 11px;
+  color: #6c757d;
+  font-style: italic;
+  line-height: 1.2;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.variant-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.variant-name {
+  font-weight: 500;
+  color: #000000;
+}
+
+.variant-parameters {
+  font-size: 11px;
+  color: #6c757d;
+  font-style: italic;
+  line-height: 1.2;
+}
+
 .product-info {
   display: flex;
   flex-direction: column;

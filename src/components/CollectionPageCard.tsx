@@ -1,10 +1,27 @@
 'use client';
 
 import React from 'react';
-import { HiArrowsExpand, HiCamera, HiX, HiTrash, HiPencil, HiEye } from 'react-icons/hi';
+import { HiArrowsExpand, HiCamera, HiX, HiTrash, HiPencil, HiEye, HiPlus, HiViewGrid } from 'react-icons/hi';
 import SystemDrawer from './SystemDrawer';
 import StyleTextUser from './StyleTextUser';
+import ProductContainerDisplay from './ProductContainerDisplay';
+import ProductsGrid from './ProductsGrid';
 import './CollectionPageCard.css';
+
+interface Product {
+  id: string;
+  name: string;
+  category: string;
+  image: string;
+  description: string;
+  price: string;
+  beforePrice?: string;
+  saveAmount?: string;
+  variants?: Array<{
+    type: string;
+    options: string[];
+  }>;
+}
 
 interface CollectionPageCardProps {
   collectionId: string;
@@ -59,6 +76,24 @@ const CollectionPageCard: React.FC<CollectionPageCardProps> = ({
     productsCard: true
   });
   
+  // Product selection state
+  const [showProductSelector, setShowProductSelector] = React.useState(false);
+  const [availableProducts, setAvailableProducts] = React.useState<Product[]>([]);
+  const [selectedProducts, setSelectedProducts] = React.useState<string[]>([]);
+  const [collectionProducts, setCollectionProducts] = React.useState<Product[]>([]);
+  
+  // Layout control state (managed by ProductsGrid)
+  const [gridLayout, setGridLayout] = React.useState({
+    columns: 'auto-fill',
+    minColumnWidth: 475,
+    gap: 20,
+    horizontalAlignment: 'center',
+    verticalAlignment: 'start'
+  });
+  const [mobileLayout, setMobileLayout] = React.useState({
+    columns: 1 // 1 or 2 columns for mobile
+  });
+  
   // Handle image upload
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -76,6 +111,237 @@ const CollectionPageCard: React.FC<CollectionPageCardProps> = ({
   const handleImageRemove = () => {
     setHeaderBackgroundImage(null);
   };
+
+  // Handle product selection
+  const handleProductSelect = (productId: string) => {
+    setSelectedProducts(prev => {
+      if (prev.includes(productId)) {
+        return prev.filter(id => id !== productId);
+      } else {
+        return [...prev, productId];
+      }
+    });
+  };
+
+  // Handle adding selected products to collection
+  const handleApplySelectedProducts = () => {
+    const productsToAdd = availableProducts.filter(product => selectedProducts.includes(product.id));
+    const newCollectionProducts = [...collectionProducts];
+    
+    productsToAdd.forEach(product => {
+      if (!newCollectionProducts.find(p => p.id === product.id)) {
+        newCollectionProducts.push(product);
+      }
+    });
+    
+    setCollectionProducts(newCollectionProducts);
+    
+    // Save to localStorage
+    try {
+      localStorage.setItem(`collection-${collectionId}-products`, JSON.stringify(newCollectionProducts));
+    } catch (error) {
+      console.error('Error saving collection products:', error);
+    }
+    
+    // Clear selections and close drawer
+    setSelectedProducts([]);
+    setShowProductSelector(false);
+  };
+
+  // Handle removing product from collection
+  const handleRemoveFromCollection = (productId: string) => {
+    const updatedProducts = collectionProducts.filter(product => product.id !== productId);
+    setCollectionProducts(updatedProducts);
+    
+    // Save to localStorage
+    try {
+      localStorage.setItem(`collection-${collectionId}-products`, JSON.stringify(updatedProducts));
+    } catch (error) {
+      console.error('Error saving collection products:', error);
+    }
+  };
+
+
+  // Load products from localStorage or create dummy products
+  React.useEffect(() => {
+    const loadProducts = () => {
+      try {
+        const savedProducts = localStorage.getItem('products');
+        if (savedProducts) {
+          const products = JSON.parse(savedProducts);
+          setAvailableProducts(products);
+        } else {
+          // Create dummy products for demonstration
+          // @ts-ignore - Temporary for dummy products with mixed types
+          const dummyProducts: Product[] = [
+            {
+              id: '1',
+              name: 'Premium Cotton T-Shirt',
+              category: 'Clothing',
+              image: '👕',
+              description: 'Comfortable and stylish cotton t-shirt perfect for everyday wear',
+              price: '$29.99',
+              beforePrice: '$39.99',
+              saveAmount: '$10.00',
+              variants: [
+                { type: 'Size', options: ['S', 'M', 'L', 'XL'] },
+                { type: 'Color', options: ['White', 'Black', 'Navy'] }
+              ]
+            },
+            {
+              id: '2',
+              name: 'Wireless Bluetooth Headphones',
+              category: 'Electronics',
+              image: '🎧',
+              description: 'High-quality wireless headphones with noise cancellation',
+              price: 149.99,
+              beforePrice: 199.99,
+              saveAmount: 50.00,
+              variants: [
+                { name: 'Color', options: ['Black', 'White', 'Silver'] }
+              ]
+            },
+            {
+              id: '3',
+              name: 'Classic Denim Jeans',
+              category: 'Clothing',
+              image: '👖',
+              description: 'Premium denim jeans with a classic fit',
+              price: 79.99,
+              beforePrice: 99.99,
+              saveAmount: 20.00,
+              variants: [
+                { name: 'Size', options: ['28', '30', '32', '34', '36'] },
+                { name: 'Wash', options: ['Light Blue', 'Dark Blue', 'Black'] }
+              ]
+            },
+            {
+              id: '4',
+              name: 'Leather Crossbody Bag',
+              category: 'Accessories',
+              image: '👜',
+              description: 'Elegant leather crossbody bag for daily use',
+              price: 89.99,
+              beforePrice: 0,
+              saveAmount: 0,
+              variants: [
+                { name: 'Color', options: ['Brown', 'Black', 'Tan'] }
+              ]
+            },
+            {
+              id: '5',
+              name: 'Smart Fitness Watch',
+              category: 'Electronics',
+              image: '⌚',
+              description: 'Advanced fitness tracking with heart rate monitor',
+              price: 199.99,
+              beforePrice: 249.99,
+              saveAmount: 50.00,
+              variants: [
+                { name: 'Band Color', options: ['Black', 'Blue', 'Pink', 'Green'] },
+                { name: 'Size', options: ['38mm', '42mm'] }
+              ]
+            },
+            {
+              id: '6',
+              name: 'Running Sneakers',
+              category: 'Footwear',
+              image: '👟',
+              description: 'Lightweight running shoes with superior comfort',
+              price: 119.99,
+              beforePrice: 139.99,
+              saveAmount: 20.00,
+              variants: [
+                { name: 'Size', options: ['7', '8', '9', '10', '11', '12'] },
+                { name: 'Color', options: ['White', 'Black', 'Red', 'Blue'] }
+              ]
+            },
+            {
+              id: '7',
+              name: 'Ceramic Coffee Mug',
+              category: 'Home & Kitchen',
+              image: '☕',
+              description: 'Beautiful handcrafted ceramic mug for your morning coffee',
+              price: 24.99,
+              beforePrice: 0,
+              saveAmount: 0,
+              variants: [
+                { name: 'Design', options: ['Plain', 'Floral', 'Geometric'] },
+                { name: 'Size', options: ['8oz', '12oz', '16oz'] }
+              ]
+            },
+            {
+              id: '8',
+              name: 'Wireless Phone Charger',
+              category: 'Electronics',
+              image: '🔌',
+              description: 'Fast wireless charging pad compatible with all Qi devices',
+              price: 39.99,
+              beforePrice: 49.99,
+              saveAmount: 10.00,
+              variants: [
+                { name: 'Color', options: ['Black', 'White'] }
+              ]
+            },
+            {
+              id: '9',
+              name: 'Hooded Sweatshirt',
+              category: 'Clothing',
+              image: '🧥',
+              description: 'Cozy hooded sweatshirt perfect for cooler days',
+              price: 54.99,
+              beforePrice: 69.99,
+              saveAmount: 15.00,
+              variants: [
+                { name: 'Size', options: ['XS', 'S', 'M', 'L', 'XL', 'XXL'] },
+                { name: 'Color', options: ['Gray', 'Black', 'Navy', 'Maroon'] }
+              ]
+            },
+            {
+              id: '10',
+              name: 'Stainless Steel Water Bottle',
+              category: 'Sports & Outdoors',
+              image: '🍼',
+              description: 'Insulated stainless steel water bottle keeps drinks cold for 24 hours',
+              price: 34.99,
+              beforePrice: 44.99,
+              saveAmount: 10.00,
+              variants: [
+                { name: 'Size', options: ['16oz', '20oz', '32oz'] },
+                { name: 'Color', options: ['Silver', 'Black', 'Blue', 'Pink', 'Green'] }
+              ]
+            }
+          ];
+          
+          setAvailableProducts(dummyProducts);
+          
+          // Save dummy products to localStorage for future use
+          localStorage.setItem('products', JSON.stringify(dummyProducts));
+        }
+      } catch (error) {
+        console.error('Error loading products:', error);
+      }
+    };
+
+    loadProducts();
+  }, []);
+
+  // Load collection products from localStorage
+  React.useEffect(() => {
+    const loadCollectionProducts = () => {
+      try {
+        const savedCollectionProducts = localStorage.getItem(`collection-${collectionId}-products`);
+        if (savedCollectionProducts) {
+          const products = JSON.parse(savedCollectionProducts);
+          setCollectionProducts(products);
+        }
+      } catch (error) {
+        console.error('Error loading collection products:', error);
+      }
+    };
+
+    loadCollectionProducts();
+  }, [collectionId]);
 
   // Handle clicking outside control panels to close them
   React.useEffect(() => {
@@ -427,43 +693,41 @@ const CollectionPageCard: React.FC<CollectionPageCardProps> = ({
               className="collection-products-card" 
               style={{ 
                 backgroundColor: childrenCardColor,
-                width: `${productsCardWidth}%`
+                width: cardVisibility.filterCard ? `${productsCardWidth}%` : '100%'
               }}
             >
               <div className="products-card-content">
-                <div className="products-header">
-                  <h3 className="products-title">Products in Collection</h3>
-                  <div className="products-controls">
-                    <select className="sort-select">
-                      <option value="name">Sort by Name</option>
-                      <option value="price">Sort by Price</option>
-                      <option value="date">Sort by Date</option>
-                    </select>
-                    <div className="view-toggle">
-                      <button className="view-btn grid-view active">Grid</button>
-                      <button className="view-btn list-view">List</button>
-                    </div>
-                  </div>
+                {/* Collection Products Header */}
+                <div className="collection-products-header">
+                  <h3 className="products-title">Products ({collectionProducts.length})</h3>
                 </div>
 
-                <div className="products-grid">
-                  {/* Sample Product Cards */}
-                  {[1, 2, 3, 4, 5, 6].map((item) => (
-                    <div key={item} className="product-card-mini">
-                      <div className="product-image-mini">🦴</div>
-                      <div className="product-info-mini">
-                        <h4 className="product-name-mini">Product {item}</h4>
-                        <p className="product-price-mini">$29.99</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="products-pagination">
-                  <button className="pagination-btn">← Previous</button>
-                  <span className="pagination-info">Page 1 of 3</span>
-                  <button className="pagination-btn">Next →</button>
-                </div>
+                {/* Products Grid Component */}
+                <ProductsGrid
+                  products={collectionProducts}
+                  onProductRemove={handleRemoveFromCollection}
+                  onProductAdd={() => setShowProductSelector(true)}
+                  onProductReorder={(reorderedProducts) => {
+                    setCollectionProducts(reorderedProducts);
+                    // Save to localStorage
+                    try {
+                      localStorage.setItem(`collection-${collectionId}-products`, JSON.stringify(reorderedProducts));
+                    } catch (error) {
+                      console.error('Error saving reordered products:', error);
+                    }
+                  }}
+                  gridLayout={gridLayout}
+                  mobileLayout={mobileLayout}
+                  onGridLayoutChange={setGridLayout}
+                  onMobileLayoutChange={setMobileLayout}
+                  showAddButton={true}
+                  showLayoutControl={true}
+                  showRemoveButtons={true}
+                  enableDragAndDrop={true}
+                  emptyStateTitle="No products in this collection yet"
+                  emptyStateSubtitle="Add Your First Product"
+                  emptyStateIcon="📦"
+                />
               </div>
             </div>
             )}
@@ -598,6 +862,116 @@ const CollectionPageCard: React.FC<CollectionPageCardProps> = ({
                 {headerText || 'Preview text will appear here...'}
               </div>
             </div>
+          </div>
+        </SystemDrawer>
+
+
+        {/* Product Selection Drawer */}
+        <SystemDrawer
+          isOpen={showProductSelector}
+          onClose={() => {
+            setShowProductSelector(false);
+            setSelectedProducts([]);
+          }}
+          title="Add Products to Collection"
+          width={500}
+          position="right"
+          pushContent={true}
+        >
+          {/* Products Search */}
+          <div className="drawer-section" onClick={(e) => e.stopPropagation()}>
+            <h4 className="drawer-section-title">Available Products ({availableProducts.length})</h4>
+            <div className="products-search">
+              <input
+                type="text"
+                placeholder="Search products..."
+                className="drawer-search-input"
+                onChange={(e) => {
+                  // You can add search functionality here if needed
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Selection Actions */}
+          <div className="drawer-section" onClick={(e) => e.stopPropagation()}>
+            <div className="selection-actions">
+              <div className="selection-count">
+                {selectedProducts.length} product{selectedProducts.length !== 1 ? 's' : ''} selected
+              </div>
+              <div className="action-buttons">
+                <button
+                  className="select-all-btn"
+                  onClick={() => {
+                    if (selectedProducts.length === availableProducts.length) {
+                      setSelectedProducts([]);
+                    } else {
+                      setSelectedProducts(availableProducts.map(p => p.id));
+                    }
+                  }}
+                >
+                  {selectedProducts.length === availableProducts.length ? 'Deselect All' : 'Select All'}
+                </button>
+                <button
+                  className="apply-selection-btn"
+                  onClick={handleApplySelectedProducts}
+                  disabled={selectedProducts.length === 0}
+                >
+                  Add Selected ({selectedProducts.length})
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Products List */}
+          <div className="drawer-section products-selection-list" onClick={(e) => e.stopPropagation()}>
+            {availableProducts.length === 0 ? (
+              <div className="no-products-available">
+                <div className="no-products-icon">📦</div>
+                <p>No products available</p>
+                <p className="no-products-subtitle">Create products in the Products Management page first</p>
+              </div>
+            ) : (
+              availableProducts.map(product => (
+                <div 
+                  key={product.id} 
+                  className={`product-selection-item ${selectedProducts.includes(product.id) ? 'selected' : ''} ${collectionProducts.find(p => p.id === product.id) ? 'already-added' : ''}`}
+                  onClick={() => !collectionProducts.find(p => p.id === product.id) && handleProductSelect(product.id)}
+                >
+                  <div className="product-selection-checkbox">
+                    <input
+                      type="checkbox"
+                      checked={selectedProducts.includes(product.id)}
+                      onChange={() => handleProductSelect(product.id)}
+                      disabled={!!collectionProducts.find(p => p.id === product.id)}
+                    />
+                  </div>
+                  <div className="product-selection-image">
+                    {product.image && product.image.startsWith('data:') ? (
+                      <img src={product.image} alt={product.name} />
+                    ) : (
+                      <div className="product-selection-emoji">{product.image || '📦'}</div>
+                    )}
+                  </div>
+                  <div className="product-selection-info">
+                    <h4 className="product-selection-name">{product.name}</h4>
+                    <p className="product-selection-category">{product.category}</p>
+                    <div className="product-selection-price">
+                      <span className="current-price">{product.price}</span>
+                      {product.beforePrice && (
+                        <span className="before-price">{product.beforePrice}</span>
+                      )}
+                    </div>
+                    {product.variants && product.variants.length > 0 && (
+                      <p className="product-selection-variants">{product.variants.length} variant{product.variants.length !== 1 ? 's' : ''}</p>
+                    )}
+                  </div>
+                  {collectionProducts.find(p => p.id === product.id) && (
+                    <div className="already-added-badge">Already Added</div>
+                  )}
+                </div>
+              ))
+            )}
           </div>
         </SystemDrawer>
     </div>

@@ -189,6 +189,7 @@
 /* Element containers with flex layout for inline edit icons */
 .product-price-container,
 .product-rating-container,
+.product-quantity-container,
 .product-sizes-container,
 .quantity-container-editor {
   display: flex;
@@ -342,7 +343,7 @@
 .product-price-edit-icon,
 .product-review-edit-icon,
 .product-size-edit-icon,
-.quantity-edit-icon {
+.product-quantity-edit-icon {
   background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
   border: 2px solid #fecaca;
   color: #ef4444;
@@ -385,7 +386,7 @@
 .product-price-edit-icon:hover,
 .product-review-edit-icon:hover,
 .product-size-edit-icon:hover,
-.quantity-edit-icon:hover,
+.product-quantity-edit-icon:hover,
 .add-to-cart-edit-icon:hover {
   border-color: #ef4444;
   transform: translateY(-2px);
@@ -431,6 +432,13 @@
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.product-price-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .current-price {
@@ -559,19 +567,33 @@
   width: fit-content;
 }
 
+/* Quantity section styling */
+.quantity-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quantity-counter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .quantity-btn {
-  width: 28px;
-  height: 28px;
-  border: 1px solid #e5e7eb;
-  border-radius: 4px;
-  background: white;
-  color: #374151;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  background: #ef4444;
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 12px;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .quantity-btn:hover:not(:disabled) {
@@ -585,11 +607,12 @@
 }
 
 .quantity-value {
-  font-size: 14px;
-  font-weight: 600;
-  color: #111827;
-  min-width: 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #374151;
+  min-width: 30px;
   text-align: center;
+  padding: 0 8px;
 }
 
 /* Add to Cart Button */
@@ -683,4 +706,214 @@
   font-weight: var(--dynamic-font-weight, 500) !important;
   font-family: var(--dynamic-font-family, 'Inter, sans-serif') !important;
   color: var(--dynamic-color, #dc3545) !important;
+}
+
+/* Non-editable text display styles */
+.product-name-display {
+  margin: 0;
+  padding: 0;
+  line-height: 1.4;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.product-description-display {
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+}
+
+/* Dynamic text styling with CSS custom properties */
+.dynamic-text-style {
+  font-size: var(--dynamic-font-size, 14px) !important;
+  font-family: var(--dynamic-font-family, 'Inter, sans-serif') !important;
+  color: var(--dynamic-color, #000000) !important;
+  font-weight: var(--dynamic-font-weight, 400) !important;
+  text-align: var(--dynamic-text-align, left) !important;
+}
+
+.product-description-display.primary {
+  /* Additional styles for primary description if needed */
+}
+
+.product-description-display.secondary {
+  /* Additional styles for secondary description if needed */
+}
+
+/* Edit icons for text elements */
+.product-name-edit-icon,
+.product-description-edit-icon,
+.product-description2-edit-icon {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  background: rgba(239, 68, 68, 0.1);
+  border: none;
+  border-radius: 50%;
+  color: #ef4444;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.product-name-edit-icon:hover,
+.product-description-edit-icon:hover,
+.product-description2-edit-icon:hover {
+  background: rgba(239, 68, 68, 0.2);
+  transform: scale(1.1);
+}
+
+.product-name-edit-icon svg,
+.product-description-edit-icon svg,
+.product-description2-edit-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Ensure text containers are positioned relative for icon positioning */
+.product-name-container,
+.product-description-container {
+  position: relative;
+}
+
+/* Drag and Drop Styles for All Elements */
+.elements-drag-container {
+  position: relative;
+  min-height: 50px;
+}
+
+/* Variants Styling */
+.variant-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.variant-label {
+  display: block;
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 4px;
+}
+
+.variant-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.variant-option {
+  padding: 8px 16px;
+  border: 2px solid #dee2e6;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.variant-option:hover {
+  border-color: #007bff;
+}
+
+.variant-option.selected {
+  border-color: #007bff;
+  background: #007bff;
+  color: white;
+}
+
+/* Color variant specific styles */
+.variant-option.color-variant {
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid #dee2e6;
+  overflow: hidden;
+  position: relative;
+  /* Size is now dynamically controlled via inline styles */
+}
+
+.variant-option.color-variant:hover {
+  transform: scale(1.1);
+  border-color: #007bff;
+}
+
+.variant-option.color-variant.selected {
+  border-color: #007bff;
+  border-width: 3px;
+  box-shadow: 0 0 0 2px #007bff;
+}
+
+/* Special handling for white color to ensure visibility */
+.variant-option.color-variant[title="white"],
+.variant-option.color-variant[title="White"] {
+  border-color: #6c757d;
+}
+
+.variant-option.color-variant[title="white"]:hover,
+.variant-option.color-variant[title="White"]:hover {
+  border-color: #007bff;
+}
+
+.variant-option.color-variant[title="white"].selected,
+.variant-option.color-variant[title="White"].selected {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px #007bff;
+}
+
+/* Variant edit icon positioning */
+.variant-edit-icon-positioned {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
+}
+
+.element-wrapper {
+  position: relative;
+  margin-bottom: 4px;
+}
+
+.draggable-element-item {
+  position: relative;
+  margin-bottom: 2px;
+  background: transparent;
+  transition: all 0.2s ease;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 4px;
+}
+
+.draggable-element-item:hover {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.draggable-element-item[style*="opacity: 0.5"] {
+  transform: scale(0.95);
+}
+
+
+/* Drop zone indicator */
+.draggable-element-item[style*="border: 2px dashed"] {
+  background: rgba(239, 68, 68, 0.05) !important;
+}
+
+/* Disable interactions during drag */
+.elements-drag-container[style*="pointer-events: none"] .draggable-element-item {
+  pointer-events: auto;
 }

@@ -6,6 +6,8 @@ import SystemDrawer from './SystemDrawer';
 import StyleButton, { ButtonStyles, defaultButtonStyles } from './StyleButton';
 import StyledButton from './StyledButton';
 import StylePriceEditor from './StylePriceEditor';
+import StyleQuantityCounterEditor from './StyleQuantityCounterEditor';
+import StyleVariantEditor from './StyleVariantEditor';
 import './ProductPageCard.css';
 
 interface ProductPageCardProps {
@@ -140,15 +142,42 @@ const ProductPageCard: React.FC<ProductPageCardProps> = ({
   const [showQuantityEditor, setShowQuantityEditor] = React.useState(false);
   const [quantityStyles, setQuantityStyles] = React.useState({
     theme: 'default',
-    buttonColor: '#ef4444',
-    buttonTextColor: '#ffffff',
+    buttonColor: '#f3f4f6',
+    buttonTextColor: '#374151',
     textColor: '#374151',
     fontSize: 16,
     fontWeight: '500',
-    borderRadius: 8,
+    borderRadius: 4,
     buttonSize: 40,
     spacing: 8,
-    layout: 'horizontal'
+    layout: 'horizontal',
+    bottomSpacing: 0
+  });
+
+  // Variant editor state
+  const [showVariantEditor, setShowVariantEditor] = React.useState(false);
+  const [variantStyles, setVariantStyles] = React.useState({
+    labelFontSize: 16,
+    labelFontWeight: '600',
+    labelColor: '#495057',
+    labelSpacing: 8,
+    optionFontSize: 10,
+    optionFontWeight: '400',
+    optionPadding: 4,
+    optionBorderRadius: 20,
+    optionSpacing: 8,
+    optionBackgroundColor: '#ffffff',
+    optionBorderColor: '#dee2e6',
+    optionTextColor: '#495057',
+    selectedBackgroundColor: '#007bff',
+    selectedBorderColor: '#007bff',
+    selectedTextColor: '#ffffff',
+    hoverBorderColor: '#007bff',
+    hoverBackgroundColor: '#ffffff',
+    layout: 'horizontal',
+    sectionSpacing: 20,
+    colorCircleSize: 24,
+    variantTypeSpacing: 16
   });
   
   // Price editor state
@@ -191,6 +220,69 @@ const ProductPageCard: React.FC<ProductPageCardProps> = ({
       ...prev,
       [variantName]: option
     }));
+  };
+
+  // Helper function to determine if a variant is a color variant
+  const isColorVariant = (variantName: string) => {
+    return variantName.toLowerCase().includes('color') || variantName.toLowerCase().includes('colour');
+  };
+
+  // Helper function to get color value from color name
+  const getColorValue = (colorName: string) => {
+    const colorMap: { [key: string]: string } = {
+      // Basic colors
+      'red': '#ef4444',
+      'blue': '#3b82f6',
+      'green': '#10b981',
+      'yellow': '#f59e0b',
+      'orange': '#f97316',
+      'purple': '#8b5cf6',
+      'pink': '#ec4899',
+      'gray': '#6b7280',
+      'grey': '#6b7280',
+      'black': '#000000',
+      'white': '#ffffff',
+      'brown': '#92400e',
+      'beige': '#f5f5dc',
+      'navy': '#1e3a8a',
+      'teal': '#14b8a6',
+      'lime': '#84cc16',
+      'indigo': '#6366f1',
+      'cyan': '#06b6d4',
+      'rose': '#f43f5e',
+      'amber': '#f59e0b',
+      'emerald': '#059669',
+      'violet': '#7c3aed',
+      'fuchsia': '#d946ef',
+      'sky': '#0ea5e9',
+      'slate': '#64748b',
+      'zinc': '#71717a',
+      'neutral': '#737373',
+      'stone': '#78716c',
+      // Specific shades
+      'light gray': '#d1d5db',
+      'dark gray': '#374151',
+      'light blue': '#93c5fd',
+      'dark blue': '#1e40af',
+      'light green': '#86efac',
+      'dark green': '#047857',
+      'maroon': '#7f1d1d',
+      'olive': '#65a30d',
+      'silver': '#c0c0c0',
+      'gold': '#fbbf24',
+      'coral': '#ff7f50',
+      'salmon': '#fa8072',
+      'khaki': '#f0e68c',
+      'plum': '#dda0dd',
+      'turquoise': '#40e0d0',
+      'crimson': '#dc143c',
+      'ivory': '#fffff0',
+      'azure': '#f0ffff',
+      'lavender': '#e6e6fa'
+    };
+    
+    const lowerColorName = colorName.toLowerCase().trim();
+    return colorMap[lowerColorName] || colorName; // Return original if not found
   };
 
   const handleQuantityChange = (change: number) => {
@@ -653,22 +745,98 @@ const ProductPageCard: React.FC<ProductPageCardProps> = ({
             className={`draggable-element ${isDragging ? 'dragging' : ''}`}
             style={elementStyle}
           >
+            <div className="variants-container" style={{ position: 'relative' }}>
+              <button 
+                className="system-control-icon edit small variant-edit-icon-positioned"
+                onClick={() => setShowVariantEditor(!showVariantEditor)}
+                title="Edit Variant Style"
+              >
+                <HiPencil />
+              </button>
           {variants.map((variant) => (
-            <div key={variant.name} className="variant-section">
-              <label className="variant-label">{variant.name}:</label>
-              <div className="variant-options">
-                {variant.options.map((option) => (
+                <div 
+                  key={variant.name} 
+                  className="variant-section"
+                  style={{
+                    marginBottom: variants.indexOf(variant) === variants.length - 1 ? `${variantStyles.sectionSpacing}px` : `${variantStyles.variantTypeSpacing}px`,
+                    flexDirection: variantStyles.layout === 'vertical' ? 'column' : 'row',
+                    alignItems: variantStyles.layout === 'vertical' ? 'flex-start' : 'center',
+                    gap: variantStyles.layout === 'vertical' ? `${variantStyles.labelSpacing}px` : `${variantStyles.optionSpacing}px`
+                  }}
+                >
+                  <label 
+                    className="variant-label"
+                    style={{
+                      fontSize: `${variantStyles.labelFontSize}px`,
+                      fontWeight: variantStyles.labelFontWeight,
+                      color: variantStyles.labelColor,
+                      marginBottom: variantStyles.layout === 'horizontal' ? '0' : `${variantStyles.labelSpacing}px`,
+                      marginRight: variantStyles.layout === 'horizontal' ? `${variantStyles.labelSpacing}px` : '0'
+                    }}
+                  >
+                    {variant.name}:
+                  </label>
+                  <div 
+                    className="variant-options"
+                    style={{
+                      gap: `${variantStyles.optionSpacing}px`,
+                      flexDirection: variantStyles.layout === 'vertical' ? 'column' : 'row',
+                      alignItems: variantStyles.layout === 'vertical' ? 'flex-start' : 'center'
+                    }}
+                  >
+                {variant.options.map((option) => {
+                  const isColor = isColorVariant(variant.name);
+                  const colorValue = isColor ? getColorValue(option) : null;
+                  
+                  return (
                   <button
                     key={option}
-                    className={`variant-option ${selectedVariants[variant.name] === option ? 'selected' : ''}`}
+                      className={`variant-option ${isColor ? 'color-variant' : ''} ${selectedVariants[variant.name] === option ? 'selected' : ''}`}
                     onClick={() => handleVariantChange(variant.name, option)}
-                  >
-                    {option}
+                      title={option} // Show color name on hover
+                      style={{
+                        fontSize: isColor ? '0' : `${variantStyles.optionFontSize}px`,
+                        fontWeight: variantStyles.optionFontWeight,
+                        padding: isColor ? '0' : `${variantStyles.optionPadding}px ${variantStyles.optionPadding * 2}px`,
+                        borderRadius: isColor ? '50%' : `${variantStyles.optionBorderRadius}px`,
+                        width: isColor ? `${variantStyles.colorCircleSize}px` : 'auto',
+                        height: isColor ? `${variantStyles.colorCircleSize}px` : 'auto',
+                        backgroundColor: isColor ? (colorValue || variantStyles.optionBackgroundColor) : (selectedVariants[variant.name] === option 
+                          ? variantStyles.selectedBackgroundColor 
+                          : variantStyles.optionBackgroundColor),
+                        borderColor: selectedVariants[variant.name] === option 
+                          ? variantStyles.selectedBorderColor 
+                          : variantStyles.optionBorderColor,
+                        borderWidth: selectedVariants[variant.name] === option ? '3px' : '2px',
+                        color: isColor ? 'transparent' : (selectedVariants[variant.name] === option 
+                          ? variantStyles.selectedTextColor 
+                          : variantStyles.optionTextColor),
+                        boxShadow: isColor && selectedVariants[variant.name] === option 
+                          ? `0 0 0 2px ${variantStyles.selectedBorderColor}` 
+                          : 'none',
+                        cursor: 'pointer'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (selectedVariants[variant.name] !== option && !isColor) {
+                          e.currentTarget.style.borderColor = variantStyles.hoverBorderColor;
+                          e.currentTarget.style.backgroundColor = variantStyles.hoverBackgroundColor;
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (selectedVariants[variant.name] !== option && !isColor) {
+                          e.currentTarget.style.borderColor = variantStyles.optionBorderColor;
+                          e.currentTarget.style.backgroundColor = variantStyles.optionBackgroundColor;
+                        }
+                      }}
+                    >
+                      {isColor ? '' : option}
                   </button>
-                ))}
+                  );
+                })}
               </div>
             </div>
           ))}
+            </div>
           </div>
         );
       
@@ -684,7 +852,7 @@ const ProductPageCard: React.FC<ProductPageCardProps> = ({
             className={`draggable-element ${isDragging ? 'dragging' : ''}`}
             style={elementStyle}
           >
-            <div className="quantity-section-container">
+            <div className="quantity-section-container" style={{ marginBottom: `${quantityStyles.bottomSpacing}px` }}>
               <div 
                 className="quantity-section"
                 style={{
@@ -713,7 +881,7 @@ const ProductPageCard: React.FC<ProductPageCardProps> = ({
                       width: `${quantityStyles.buttonSize}px`,
                       height: `${quantityStyles.buttonSize}px`,
                       fontSize: `${quantityStyles.fontSize}px`,
-                      border: quantityStyles.theme === 'outlined' ? `2px solid ${quantityStyles.buttonTextColor}` : 'none'
+                      border: quantityStyles.theme === 'outlined' ? `2px solid ${quantityStyles.buttonTextColor}` : quantityStyles.theme === 'default' ? '1px solid #d1d5db' : 'none'
                     }}
                   >
                     -
@@ -738,7 +906,7 @@ const ProductPageCard: React.FC<ProductPageCardProps> = ({
                       width: `${quantityStyles.buttonSize}px`,
                       height: `${quantityStyles.buttonSize}px`,
                       fontSize: `${quantityStyles.fontSize}px`,
-                      border: quantityStyles.theme === 'outlined' ? `2px solid ${quantityStyles.buttonTextColor}` : 'none'
+                      border: quantityStyles.theme === 'outlined' ? `2px solid ${quantityStyles.buttonTextColor}` : quantityStyles.theme === 'default' ? '1px solid #d1d5db' : 'none'
                     }}
                   >
                     +
@@ -825,19 +993,20 @@ const ProductPageCard: React.FC<ProductPageCardProps> = ({
         setShowDescription2Editor(false);
         setShowReviewEditor(false);
         setShowQuantityEditor(false);
+        setShowVariantEditor(false);
         setShowPriceEditor(false);
         setShowAddToCartEditor(false);
       }
     };
 
-    if (showDimensionsControl || showColorControl || showVisibilityControl || showDescriptionDimensionsControl || showProductNameEditor || showDescriptionEditor || showDescription2Editor || showReviewEditor || showQuantityEditor || showPriceEditor || showAddToCartEditor) {
+    if (showDimensionsControl || showColorControl || showVisibilityControl || showDescriptionDimensionsControl || showProductNameEditor || showDescriptionEditor || showDescription2Editor || showReviewEditor || showQuantityEditor || showVariantEditor || showPriceEditor || showAddToCartEditor) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [showDimensionsControl, showColorControl, showVisibilityControl, showDescriptionDimensionsControl, showProductNameEditor, showDescriptionEditor, showDescription2Editor, showReviewEditor, showQuantityEditor, showPriceEditor, showAddToCartEditor]);
+  }, [showDimensionsControl, showColorControl, showVisibilityControl, showDescriptionDimensionsControl, showProductNameEditor, showDescriptionEditor, showDescription2Editor, showReviewEditor, showQuantityEditor, showVariantEditor, showPriceEditor, showAddToCartEditor]);
 
   return (
     <div className="product-page-card" style={{ 
@@ -1779,244 +1948,20 @@ const ProductPageCard: React.FC<ProductPageCardProps> = ({
         </SystemDrawer>
 
         {/* Quantity Counter Editor Drawer */}
-        <SystemDrawer
+        <StyleQuantityCounterEditor
           isOpen={showQuantityEditor}
           onClose={() => setShowQuantityEditor(false)}
-          title="Quantity Counter Editor"
-          width={400}
-          position="right"
-          pushContent={true}
-        >
-          {/* Counter Types */}
-          <div className="drawer-section" onClick={(e) => e.stopPropagation()}>
-            <h4 className="drawer-section-title">Counter Types</h4>
-            <div className="theme-grid">
-              <button
-                className={`theme-card ${quantityStyles.theme === 'default' ? 'active' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setQuantityStyles({...quantityStyles, theme: 'default', buttonColor: '#ef4444', buttonTextColor: '#ffffff', textColor: '#374151', borderRadius: 8, buttonSize: 40});
-                }}
-              >
-                <div className="theme-preview">
-                  <div className="theme-counter">[- 1 +]</div>
-                  <div className="theme-text">Standard</div>
-                </div>
-              </button>
-              
-              <button
-                className={`theme-card ${quantityStyles.theme === 'rounded' ? 'active' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setQuantityStyles({...quantityStyles, theme: 'rounded', buttonColor: '#3b82f6', buttonTextColor: '#ffffff', textColor: '#1e40af', borderRadius: 20, buttonSize: 40});
-                }}
-              >
-                <div className="theme-preview">
-                  <div className="theme-counter">( 1 )</div>
-                  <div className="theme-text">Rounded</div>
-                </div>
-              </button>
-              
-              <button
-                className={`theme-card ${quantityStyles.theme === 'minimal' ? 'active' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setQuantityStyles({...quantityStyles, theme: 'minimal', buttonColor: '#f3f4f6', buttonTextColor: '#374151', textColor: '#374151', borderRadius: 4, buttonSize: 36});
-                }}
-              >
-                <div className="theme-preview">
-                  <div className="theme-counter">- 1 +</div>
-                  <div className="theme-text">Minimal</div>
-                </div>
-              </button>
-              
-              <button
-                className={`theme-card ${quantityStyles.theme === 'bold' ? 'active' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setQuantityStyles({...quantityStyles, theme: 'bold', buttonColor: '#1f2937', buttonTextColor: '#ffffff', textColor: '#1f2937', borderRadius: 8, buttonSize: 44, fontWeight: '700'});
-                }}
-              >
-                <div className="theme-preview">
-                  <div className="theme-counter">[- 1 +]</div>
-                  <div className="theme-text">Bold</div>
-                </div>
-              </button>
-              
-              <button
-                className={`theme-card ${quantityStyles.theme === 'outlined' ? 'active' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setQuantityStyles({...quantityStyles, theme: 'outlined', buttonColor: 'transparent', buttonTextColor: '#ef4444', textColor: '#374151', borderRadius: 8, buttonSize: 40});
-                }}
-              >
-                <div className="theme-preview">
-                  <div className="theme-counter">[- 1 +]</div>
-                  <div className="theme-text">Outlined</div>
-                </div>
-              </button>
-              
-              <button
-                className={`theme-card ${quantityStyles.theme === 'compact' ? 'active' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setQuantityStyles({...quantityStyles, theme: 'compact', buttonColor: '#ef4444', buttonTextColor: '#ffffff', textColor: '#374151', borderRadius: 6, buttonSize: 32, fontSize: 14});
-                }}
-              >
-                <div className="theme-preview">
-                  <div className="theme-counter">-1+</div>
-                  <div className="theme-text">Compact</div>
-                </div>
-              </button>
-            </div>
-          </div>
+          styles={quantityStyles}
+          onStylesChange={setQuantityStyles}
+        />
 
-          {/* Button Color Custom */}
-          <div className="drawer-section" onClick={(e) => e.stopPropagation()}>
-            <h4 className="drawer-section-title">Button Color</h4>
-            <div className="drawer-form-group">
-              <input
-                type="color"
-                value={quantityStyles.buttonColor}
-                onChange={(e) => setQuantityStyles({...quantityStyles, buttonColor: e.target.value})}
-                className="drawer-color-input" onClick={(e) => e.stopPropagation()}
-              />
-            </div>
-          </div>
-
-          {/* Button Text Color */}
-          <div className="drawer-section" onClick={(e) => e.stopPropagation()}>
-            <h4 className="drawer-section-title">Button Text Color</h4>
-            <div className="drawer-form-group">
-              <input
-                type="color"
-                value={quantityStyles.buttonTextColor}
-                onChange={(e) => setQuantityStyles({...quantityStyles, buttonTextColor: e.target.value})}
-                className="drawer-color-input" onClick={(e) => e.stopPropagation()}
-              />
-            </div>
-          </div>
-
-          {/* Text Color */}
-          <div className="drawer-section" onClick={(e) => e.stopPropagation()}>
-            <h4 className="drawer-section-title">Text Color</h4>
-            <div className="drawer-form-group">
-              <input
-                type="color"
-                value={quantityStyles.textColor}
-                onChange={(e) => setQuantityStyles({...quantityStyles, textColor: e.target.value})}
-                className="drawer-color-input" onClick={(e) => e.stopPropagation()}
-              />
-            </div>
-          </div>
-
-          {/* Font Size */}
-          <div className="drawer-section" onClick={(e) => e.stopPropagation()}>
-            <h4 className="drawer-section-title">Font Size</h4>
-            <div className="drawer-range-container">
-              <div className="drawer-range-label">
-                <span>Size</span>
-                <span className="drawer-range-value">{quantityStyles.fontSize}px</span>
-              </div>
-              <input
-                type="range"
-                min="12" max="24" value={quantityStyles.fontSize}
-                onChange={(e) => setQuantityStyles({...quantityStyles, fontSize: Number(e.target.value)})}
-                className="drawer-range" onClick={(e) => e.stopPropagation()}
-              />
-            </div>
-          </div>
-
-          {/* Font Weight */}
-          <div className="drawer-section" onClick={(e) => e.stopPropagation()}>
-            <h4 className="drawer-section-title">Font Weight</h4>
-            <div className="drawer-form-group">
-              <select
-                value={quantityStyles.fontWeight}
-                onChange={(e) => setQuantityStyles({...quantityStyles, fontWeight: e.target.value})}
-                className="drawer-select" onClick={(e) => e.stopPropagation()}
-              >
-                <option value="300">Light (300)</option>
-                <option value="400">Normal (400)</option>
-                <option value="500">Medium (500)</option>
-                <option value="600">Semi Bold (600)</option>
-                <option value="700">Bold (700)</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Border Radius */}
-          <div className="drawer-section" onClick={(e) => e.stopPropagation()}>
-            <h4 className="drawer-section-title">Border Radius</h4>
-            <div className="drawer-range-container">
-              <div className="drawer-range-label">
-                <span>Radius</span>
-                <span className="drawer-range-value">{quantityStyles.borderRadius}px</span>
-              </div>
-              <input
-                type="range"
-                min="0" max="20" value={quantityStyles.borderRadius}
-                onChange={(e) => setQuantityStyles({...quantityStyles, borderRadius: Number(e.target.value)})}
-                className="drawer-range" onClick={(e) => e.stopPropagation()}
-              />
-            </div>
-          </div>
-
-          {/* Button Size */}
-          <div className="drawer-section" onClick={(e) => e.stopPropagation()}>
-            <h4 className="drawer-section-title">Button Size</h4>
-            <div className="drawer-range-container">
-              <div className="drawer-range-label">
-                <span>Size</span>
-                <span className="drawer-range-value">{quantityStyles.buttonSize}px</span>
-              </div>
-              <input
-                type="range"
-                min="32" max="60" value={quantityStyles.buttonSize}
-                onChange={(e) => setQuantityStyles({...quantityStyles, buttonSize: Number(e.target.value)})}
-                className="drawer-range" onClick={(e) => e.stopPropagation()}
-              />
-            </div>
-          </div>
-
-          {/* Spacing */}
-          <div className="drawer-section" onClick={(e) => e.stopPropagation()}>
-            <h4 className="drawer-section-title">Spacing</h4>
-            <div className="drawer-range-container">
-              <div className="drawer-range-label">
-                <span>Gap</span>
-                <span className="drawer-range-value">{quantityStyles.spacing}px</span>
-              </div>
-              <input
-                type="range"
-                min="4" max="20" value={quantityStyles.spacing}
-                onChange={(e) => setQuantityStyles({...quantityStyles, spacing: Number(e.target.value)})}
-                className="drawer-range" onClick={(e) => e.stopPropagation()}
-              />
-            </div>
-          </div>
-
-          {/* Layout */}
-          <div className="drawer-section" onClick={(e) => e.stopPropagation()}>
-            <h4 className="drawer-section-title">Layout</h4>
-            <div className="layout-tabs">
-              <button
-                className={`layout-tab ${quantityStyles.layout === 'horizontal' ? 'active' : ''}`}
-                onClick={(e) => { e.stopPropagation(); setQuantityStyles({...quantityStyles, layout: 'horizontal'}); }}
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 7h18v2H3V7zm0 4h18v2H3v-2zm0 4h18v2H3v-2z"/></svg>
-                Horizontal
-              </button>
-              <button
-                className={`layout-tab ${quantityStyles.layout === 'vertical' ? 'active' : ''}`}
-                onClick={(e) => { e.stopPropagation(); setQuantityStyles({...quantityStyles, layout: 'vertical'}); }}
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3v18h2V3H7zm4 0v18h2V3h-2zm4 0v18h2V3h-2z"/></svg>
-                Vertical
-              </button>
-            </div>
-          </div>
-        </SystemDrawer>
+        {/* Variant Style Editor Drawer */}
+        <StyleVariantEditor
+          isOpen={showVariantEditor}
+          onClose={() => setShowVariantEditor(false)}
+          styles={variantStyles}
+          onStylesChange={setVariantStyles}
+        />
 
         {/* Price Editor Drawer */}
         <StylePriceEditor

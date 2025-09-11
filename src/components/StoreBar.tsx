@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React from 'react';
 import { HiCamera, HiCog } from 'react-icons/hi';
+import StyleUploadImageFunction from './StyleUploadImageFunction';
 import './StoreBar.css';
 import './SystemControlIcons.css';
 
@@ -130,11 +131,6 @@ const StoreBar: React.FC<StoreBarProps> = ({
   onGetTotalPrice,
   t
 }) => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleUploadClick = () => {
-    fileInputRef.current?.click();
-  };
 
   return (
     <div className="store-bar" style={{
@@ -160,9 +156,10 @@ const StoreBar: React.FC<StoreBarProps> = ({
                 <div className="logo-icon">🖼️</div>
               )}
             </div>
-            <button className="system-control-icon camera medium" onClick={handleUploadClick}>
-              <HiCamera />
-            </button>
+            <StyleUploadImageFunction
+              onImageUpload={onLogoUpload}
+              buttonTitle="Upload Store Logo"
+            />
             <button className="system-control-icon settings medium" onClick={onSettingsClick}>
               <HiCog />
             </button>
@@ -283,14 +280,6 @@ const StoreBar: React.FC<StoreBarProps> = ({
         </div>
       </div>
 
-      {/* Hidden File Input */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        onChange={onLogoUpload}
-        style={{ display: 'none' }}
-      />
 
       {/* Cart Drawer */}
       {showCartDrawer && (

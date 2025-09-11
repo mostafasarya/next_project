@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import CreateStoreForm from './CreateStoreForm';
 import StoreCard from './StoreCard';
+import StyleUploadImageFunction from './StyleUploadImageFunction';
 import './ProfilePage.css';
 
 interface Store {
@@ -27,8 +28,6 @@ const ProfilePage: React.FC = () => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [coverImage, setCoverImage] = useState<string | null>(null);
   const [currentLanguage, setCurrentLanguage] = useState('English');
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const coverFileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   // Translation dictionary
@@ -280,10 +279,6 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  const handleProfileImageClick = () => {
-    fileInputRef.current?.click();
-  };
-
   const handleCoverImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -295,10 +290,6 @@ const ProfilePage: React.FC = () => {
       };
       reader.readAsDataURL(file);
     }
-  };
-
-  const handleCoverImageClick = () => {
-    coverFileInputRef.current?.click();
   };
 
   if (!user) {
@@ -404,7 +395,13 @@ const ProfilePage: React.FC = () => {
       <div className="profile-header">
         <div className="cover-photo" style={{ backgroundImage: coverImage ? `url(${coverImage})` : undefined }}>
           <div className="cover-overlay"></div>
-          <button className="edit-cover-btn" onClick={handleCoverImageClick} title={t('edit_cover')}>📷</button>
+          <StyleUploadImageFunction
+            onImageUpload={handleCoverImageUpload}
+            buttonClassName="edit-cover-btn"
+            buttonTitle={t('edit_cover')}
+            buttonSize="medium"
+            icon="📷"
+          />
         </div>
         
         <div className="profile-info">
@@ -414,7 +411,13 @@ const ProfilePage: React.FC = () => {
             ) : (
               <div className="avatar">👤</div>
             )}
-            <button className="edit-profile-btn" onClick={handleProfileImageClick} title={t('edit_profile')}>📷</button>
+            <StyleUploadImageFunction
+              onImageUpload={handleProfileImageUpload}
+              buttonClassName="edit-profile-btn"
+              buttonTitle={t('edit_profile')}
+              buttonSize="medium"
+              icon="📷"
+            />
           </div>
           <div className="user-details">
             <h2>{user.name}</h2>
@@ -450,21 +453,6 @@ const ProfilePage: React.FC = () => {
         )}
       </div>
 
-      {/* Hidden File Inputs */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        onChange={handleProfileImageUpload}
-        style={{ display: 'none' }}
-      />
-      <input
-        ref={coverFileInputRef}
-        type="file"
-        accept="image/*"
-        onChange={handleCoverImageUpload}
-        style={{ display: 'none' }}
-      />
 
       {/* Create Store Form Modal */}
       {showCreateForm && (

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import VariantCreation from './VariantCreation';
+import StyleUploadImageFunction from './StyleUploadImageFunction';
 import './ProductsManagementPage.css';
 
 interface ProductVariant {
@@ -630,6 +631,48 @@ const ProductsManagementPage: React.FC = () => {
     setDeleteItem(null);
   };
 
+  // Helper function to format variant names for display
+  const formatVariantNames = (variants: ProductVariant[]) => {
+    if (!variants || variants.length === 0) return '';
+    
+    if (variants.length === 1) {
+      // Single variant: show parameter combinations
+      const variant = variants[0];
+      if (!variant || !variant.parameters) return '';
+      
+      const parameterEntries = Object.entries(variant.parameters);
+      if (parameterEntries.length === 0) return '';
+      
+      return parameterEntries
+        .map(([key, value]) => `${key}: ${value}`)
+        .join(', ');
+    } else {
+      // Multiple variants: show combinations in a compact way
+      const allParameters = new Set<string>();
+      variants.forEach(variant => {
+        if (variant && variant.parameters) {
+          Object.keys(variant.parameters).forEach(key => allParameters.add(key));
+        }
+      });
+      
+      const parameterKeys = Array.from(allParameters);
+      const combinations = variants
+        .filter(variant => variant && variant.parameters) // Filter out invalid variants
+        .map(variant => {
+          return parameterKeys
+            .map(key => variant.parameters[key] || '-')
+            .join(' × ');
+        });
+      
+      // Show first few combinations and "..." if more exist
+      if (combinations.length <= 3) {
+        return combinations.join(', ');
+      } else {
+        return `${combinations.slice(0, 2).join(', ')} +${combinations.length - 2} more`;
+      }
+    }
+  };
+
   const handleSubmitProduct = () => {
     const newId = (products.length + 1).toString();
     const productVariants: ProductVariant[] = newVariants;
@@ -752,10 +795,11 @@ const ProductsManagementPage: React.FC = () => {
           if ('type' in item && item.type === 'section') {
             const section = item as Section;
             const isFixedHeader = section.id === 'fixed-header-section';
+            const sectionKey = section.id || `section-${index}`;
             
             rows.push(
               <div 
-                key={section.id} 
+                key={sectionKey} 
                 className={`section-row ${isFixedHeader ? 'fixed-header-section' : 'regular-section'} ${draggedItem?.id === section.id ? 'dragging' : ''} ${dragOverItem?.id === section.id ? 'drag-over' : ''}`}
                 draggable={!isFixedHeader}
                 onDragStart={!isFixedHeader ? (e) => handleDragStart(e, { id: section.id, type: 'section', index }) : undefined}
@@ -832,11 +876,12 @@ const ProductsManagementPage: React.FC = () => {
           // Handle product items
           const product = item as Product;
           const currentProductNumber = globalProductNumber++;
+          const productKey = product.id || `product-${index}`;
           
           // Add main product row
           rows.push(
             <div 
-              key={product.id} 
+              key={productKey} 
               className={`product-row ${draggedItem?.id === product.id ? 'dragging' : ''} ${dragOverItem?.id === product.id ? 'drag-over' : ''}`}
               draggable
               onDragStart={(e) => handleDragStart(e, { id: product.id, type: 'product', index })}
@@ -866,12 +911,27 @@ const ProductsManagementPage: React.FC = () => {
                     <span className="product-image">{product.image}</span>
                   )}
                 </div>
-                <span 
-                  className="product-name clickable"
-                  onClick={() => router.push(`/product/${encodeURIComponent(product.name)}`)}
-                >
-                  {product.name}
-                </span>
+                <div className="product-name-container">
+                  <span 
+                    className="product-name clickable"
+                    onClick={() => router.push(`/product/${encodeURIComponent(product.name)}`)}
+                  >
+                    {product.name}
+                  </span>
+                  {product.variants && product.variants.length > 0 && (
+                    <span className="product-variants">
+                      {(() => {
+                        try {
+                          const formattedVariants = formatVariantNames(product.variants);
+                          return formattedVariants ? `(${formattedVariants})` : '';
+                        } catch (error) {
+                          console.warn('Error formatting variants for product:', product.name, error);
+                          return `(${product.variants.length} variant${product.variants.length > 1 ? 's' : ''})`;
+                        }
+                      })()}
+                    </span>
+                  )}
+                </div>
               </div>
               <div className="price-cell">
                 {product.variants.length > 0 ? (
@@ -957,11 +1017,12 @@ const ProductsManagementPage: React.FC = () => {
           );
           
           // Add variant rows as separate rows
-          product.variants.forEach((variant) => {
+          product.variants.forEach((variant, variantIndex) => {
             const variantNumber = globalProductNumber++;
+            const variantKey = variant.id || `${product.id}-variant-${variantIndex}`;
             rows.push(
               <div 
-                key={variant.id} 
+                key={variantKey} 
                 className={`variant-row ${draggedItem?.id === variant.id ? 'dragging' : ''} ${dragOverItem?.id === variant.id ? 'drag-over' : ''}`}
                 draggable
                 onDragStart={(e) => handleDragStart(e, { id: variant.id, type: 'product', index: variantNumber })}
@@ -980,7 +1041,17 @@ const ProductsManagementPage: React.FC = () => {
                 </div>
                 <div className="product-cell variant-cell">
                   <span className="product-number">{variant.id}</span>
-                  <span className="variant-name">{variant.name}</span>
+                  <div className="variant-info">
+                    <span className="variant-name">{variant.name}</span>
+                    {variant.parameters && typeof variant.parameters === 'object' && (
+                      <span className="variant-parameters">
+                        {Object.entries(variant.parameters)
+                          .filter(([key, value]) => key && value !== null && value !== undefined)
+                          .map(([key, value]) => `${key}: ${value}`)
+                          .join(', ')}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div className="price-cell">
                   <div className="price-info">
@@ -1149,18 +1220,20 @@ const ProductsManagementPage: React.FC = () => {
                   <div className="form-group">
                     <label>Product Images</label>
                     <div className="image-upload-container">
-                      <input
-                        type="file"
-                        multiple
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className="image-upload-input"
-                        id="image-upload"
+                      <StyleUploadImageFunction
+                        onImageUpload={handleImageUpload}
+                        acceptedFileTypes="image/*"
+                        buttonClassName="image-upload-label"
+                        buttonTitle="Upload Product Images"
+                        buttonSize="medium"
+                        multiple={true}
+                        icon={
+                          <div className="upload-content">
+                            <span className="upload-icon">📁</span>
+                            <span className="upload-text">Choose Images</span>
+                          </div>
+                        }
                       />
-                      <label htmlFor="image-upload" className="image-upload-label">
-                        <span className="upload-icon">📁</span>
-                        <span className="upload-text">Choose Images</span>
-                      </label>
                     </div>
                     {newProduct.images && newProduct.images.length > 0 && (
                       <div className="uploaded-images">

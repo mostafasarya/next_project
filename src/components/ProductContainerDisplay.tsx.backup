@@ -1,34 +1,17 @@
 'use client';
 
 import React, { useState } from 'react';
-import { HiStar, HiMinus, HiPlus, HiPencil, HiEye, HiChevronDown, HiViewBoards, HiArrowsExpand } from 'react-icons/hi';
+import { HiStar, HiMinus, HiPlus, HiPencil, HiEye, HiChevronDown, HiViewBoards, HiArrowsExpand, HiSelector } from 'react-icons/hi';
 import StyleTextUser from './StyleTextUser';
 import StyleButton, { ButtonStyles, defaultButtonStyles } from './StyleButton';
 import StyledButton from './StyledButton';
 import SystemDrawer from './SystemDrawer';
 import StylePriceEditor from './StylePriceEditor';
-import StyleQuantityCounterEditor from './StyleQuantityCounterEditor';
-import StyleVariantEditor from './StyleVariantEditor';
 import './ProductContainerDisplay.css';
 import './SystemControlIcons.css';
 
 interface ProductContainerDisplayProps {
   className?: string;
-  productData?: {
-    name: string;
-    price: number;
-    beforePrice?: number;
-    saveAmount?: number;
-    rating: number;
-    reviewCount: number;
-    description1: string;
-    description2: string;
-    image?: string;
-    variants: Array<{
-      name: string;
-      options: string[];
-    }>;
-  };
 }
 
 interface ProductData {
@@ -40,18 +23,18 @@ interface ProductData {
   description1: string;
   description2: string;
   imageUrl: string;
-  variants: Array<{
+  sizes: Array<{
+    id: string;
     name: string;
-    options: string[];
+    available: boolean;
   }>;
 }
 
 const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({ 
-  className = '',
-  productData
+  className = ''
 }) => {
-  // Default product data
-  const defaultProductData = {
+  // Product data
+  const [product] = useState<ProductData>({
     name: 'Julie Ø12 Planter & Saucer',
     price: 21.00,
     originalPrice: 28.00,
@@ -60,39 +43,33 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
     description1: 'Handcrafted ceramic planter with natural speckled finish',
     description2: 'Perfect for small plants and succulents. Includes matching saucer.',
     imageUrl: 'https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=457&h=457&fit=crop&crop=center&auto=format&q=80',
-    variants: [
-      { name: 'Color', options: ['Red', 'Blue', 'Green', 'Yellow'] },
-      { name: 'Size', options: ['XS', 'S', 'M', 'L', 'XL'] }
+    sizes: [
+      { id: 'small', name: 'Small', available: true },
+      { id: 'medium', name: 'Medium', available: true },
+      { id: 'large', name: 'Large', available: false }
     ]
-  };
-
-  // Product data - use external data if provided, otherwise use default
-  const [product] = useState<ProductData>({
-    name: productData?.name || defaultProductData.name,
-    price: productData?.price || defaultProductData.price,
-    originalPrice: productData?.beforePrice || defaultProductData.originalPrice,
-    rating: productData?.rating || defaultProductData.rating,
-    reviewCount: productData?.reviewCount || defaultProductData.reviewCount,
-    description1: productData?.description1 || defaultProductData.description1,
-    description2: productData?.description2 || defaultProductData.description2,
-    imageUrl: productData?.image || defaultProductData.imageUrl,
-    variants: productData?.variants || defaultProductData.variants
   });
 
   // Component state
   const [quantity, setQuantity] = useState(1);
-  const [selectedVariants, setSelectedVariants] = useState<{[key: string]: string}>({});
+  const [selectedSize, setSelectedSize] = useState(product.sizes[0]);
 
-  // Initialize selected variants with first option of each variant
-  React.useEffect(() => {
-    const initialVariants: {[key: string]: string} = {};
-    product.variants.forEach(variant => {
-      if (variant.options.length > 0) {
-        initialVariants[variant.name] = variant.options[0];
-      }
-    });
-    setSelectedVariants(initialVariants);
-  }, [product.variants]);
+  // Drag and Drop state
+  const [isDragging, setIsDragging] = useState(false);
+  const [draggedItem, setDraggedItem] = useState<string | null>(null);
+  const [dragOverItem, setDragOverItem] = useState<string | null>(null);
+  
+  // Define the order of elements
+  const [elementOrder, setElementOrder] = useState([
+    'productName',
+    'price', 
+    'rating',
+    'description1',
+    'description2',
+    'variants',
+    'quantity',
+    'addToCart'
+  ]);
 
   // Editor states  
   const [editableProductName, setEditableProductName] = useState(product.name);
@@ -125,21 +102,6 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
     bottomSpacing: 0,
     textAlign: 'left'
   });
-
-  // Drag and Drop state for all elements
-  const [isDragging, setIsDragging] = useState(false);
-  const [draggedItem, setDraggedItem] = useState<string | null>(null);
-  const [dragOverItem, setDragOverItem] = useState<string | null>(null);
-  const [elementOrder, setElementOrder] = useState([
-    'productName', 
-    'price', 
-    'rating', 
-    'description1', 
-    'description2', 
-    'quantity', 
-    'sizeVariants', 
-    'addToCartButton'
-  ]);
 
   const [showPriceEditor, setShowPriceEditor] = useState(false);
   const [priceStyles, setPriceStyles] = useState({
@@ -187,13 +149,13 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
   const [showQuantityEditor, setShowQuantityEditor] = useState(false);
   const [quantityStyles, setQuantityStyles] = useState({
     theme: 'default',
-    buttonColor: '#f3f4f6',
+    buttonColor: '#ffffff',
     buttonTextColor: '#374151',
-    textColor: '#374151',
-    fontSize: 16,
-    fontWeight: '500',
+    textColor: '#111827',
+    fontSize: 14,
+    fontWeight: '600',
     borderRadius: 4,
-    buttonSize: 40,
+    buttonSize: 28,
     spacing: 8,
     layout: 'horizontal',
     bottomSpacing: 0
@@ -213,32 +175,6 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
     padding: 8,
     spacing: 6,
     bottomSpacing: 0
-  });
-
-  // Variant editor state  
-  const [showVariantEditor, setShowVariantEditor] = useState(false);
-  const [variantStyles, setVariantStyles] = useState({
-    labelFontSize: 16,
-    labelFontWeight: '600',
-    labelColor: '#374151',
-    labelSpacing: 8,
-    optionFontSize: 10,
-    optionFontWeight: '400',
-    optionPadding: 4,
-    optionBorderRadius: 20,
-    optionSpacing: 8,
-    optionBackgroundColor: '#ffffff',
-    optionBorderColor: '#e5e7eb',
-    optionTextColor: '#374151',
-    selectedBackgroundColor: '#ef4444',
-    selectedBorderColor: '#ef4444',
-    selectedTextColor: '#ffffff',
-    hoverBorderColor: '#ef4444',
-    hoverBackgroundColor: '#ffffff',
-    layout: 'horizontal',
-    sectionSpacing: 8,
-    colorCircleSize: 24,
-    variantTypeSpacing: 16
   });
 
   const [showAddToCartEditor, setShowAddToCartEditor] = useState(false);
@@ -270,7 +206,7 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
     description2: true,
     sizeVariants: true,
     quantity: true,
-    addToCartButton: true
+    addToCart: true
   });
 
   // Card control state
@@ -304,16 +240,9 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
   const handleAddToCart = () => {
     console.log('Adding to cart:', {
       product: product.name,
-      quantity: quantity,
-      selectedVariants: selectedVariants
+      size: selectedSize.name,
+      quantity: quantity
     });
-  };
-
-  const handleVariantChange = (variantName: string, option: string) => {
-    setSelectedVariants(prev => ({
-      ...prev,
-      [variantName]: option
-    }));
   };
 
   const toggleElementVisibility = (elementKey: keyof typeof elementVisibility) => {
@@ -323,12 +252,7 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
     }));
   };
 
-  // Check if all elements in the product details section are hidden
-  const areAllElementsHidden = React.useMemo(() => {
-    return Object.values(elementVisibility).every(isVisible => !isVisible);
-  }, [elementVisibility]);
-
-  // Drag and Drop handlers for descriptions
+  // Drag and Drop handlers
   const handleDragStart = (e: React.DragEvent, elementId: string) => {
     setDraggedItem(elementId);
     setIsDragging(true);
@@ -372,17 +296,16 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
     setIsDragging(false);
   };
 
-  // Render individual draggable element
+  // Render element by type
   const renderElement = (elementType: string) => {
     const elementStyle = {
       opacity: draggedItem === elementType ? 0.5 : 1,
-      transform: dragOverItem === elementType ? 'scale(1.01)' : 'scale(1)',
+      transform: dragOverItem === elementType ? 'scale(1.02)' : 'scale(1)',
       transition: 'all 0.2s ease',
       border: dragOverItem === elementType ? '2px dashed #ef4444' : '2px solid transparent',
-      borderRadius: '4px',
+      borderRadius: '8px',
       position: 'relative' as const,
-      padding: '2px',
-      cursor: isDragging ? 'grabbing' : 'grab'
+      marginBottom: '8px'
     };
 
     const dragProps = {
@@ -397,241 +320,323 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
 
     switch (elementType) {
       case 'productName':
-        return (
-          <div 
-            {...dragProps}
-            className="draggable-element-item"
-          >
+        return elementVisibility.productName && (
+          <div key={elementType} {...dragProps} className="draggable-element">
             <div 
               className="product-name-container"
               style={{ marginBottom: `${productNameStyles.bottomSpacing}px` }}
             >
               <div 
-                className="product-name-display dynamic-text-style"
+                className="product-name-display"
                 style={{
-                  '--dynamic-font-size': `${productNameStyles.fontSize}px`,
-                  '--dynamic-font-family': productNameStyles.fontFamily,
-                  '--dynamic-color': productNameStyles.color,
-                  '--dynamic-font-weight': productNameStyles.fontWeight,
-                  '--dynamic-text-align': productNameStyles.textAlign,
+                  fontSize: `${productNameStyles.fontSize}px`,
+                  fontFamily: productNameStyles.fontFamily,
+                  color: productNameStyles.color,
+                  fontWeight: productNameStyles.fontWeight,
+                  textAlign: productNameStyles.textAlign as any,
                   userSelect: 'none',
                   cursor: 'default'
-                } as any}
+                }}
               >
                 {editableProductName}
               </div>
               <button 
                 className="product-name-edit-icon"
-                onClick={() => setShowProductNameEditor(!showProductNameEditor)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowProductNameEditor(!showProductNameEditor);
+                }}
                 title="Edit Product Name Style"
               >
                 <HiPencil />
               </button>
             </div>
+            <div className="drag-handle" title="Drag to reorder">
+              <HiSelector />
+            </div>
           </div>
         );
-        
+
       case 'price':
-        return (
-          <div 
-            {...dragProps}
-            className="draggable-element-item"
-          >
+        return elementVisibility.price && (
+          <div key={elementType} {...dragProps} className="draggable-element">
             <div 
               className="product-price-container"
               style={{ marginBottom: `${priceStyles.bottomSpacing}px` }}
             >
-              <div className="product-price-section">
+              <div 
+                className="product-price-section"
+                style={{
+                  gap: `${priceStyles.horizontalSpacing}px`,
+                  justifyContent: priceStyles.currentPrice.textAlign === 'center' ? 'center' : 
+                                 priceStyles.currentPrice.textAlign === 'right' ? 'flex-end' : 'flex-start'
+                }}
+              >
                 {priceStyles.currentPrice.show && (
-                  <span 
+                  <div 
                     className="product-price dynamic-price-current"
                     style={{
+                      fontSize: `${priceStyles.currentPrice.fontSize}px`,
+                      fontWeight: priceStyles.currentPrice.fontWeight,
+                      fontFamily: priceStyles.currentPrice.fontFamily,
+                      color: priceStyles.currentPrice.color,
+                      textAlign: priceStyles.currentPrice.textAlign as any,
                       '--dynamic-font-size': `${priceStyles.currentPrice.fontSize}px`,
+                      '--dynamic-font-weight': priceStyles.currentPrice.fontWeight,
                       '--dynamic-font-family': priceStyles.currentPrice.fontFamily,
                       '--dynamic-color': priceStyles.currentPrice.color,
-                      '--dynamic-font-weight': priceStyles.currentPrice.fontWeight
                     } as any}
                   >
-                    ${editablePrice}
-                  </span>
+                    ${editablePrice.toFixed(2)}
+                  </div>
                 )}
                 {priceStyles.beforePrice.show && (
-                  <span 
+                  <div 
                     className="product-before-price dynamic-price-before"
                     style={{
+                      fontSize: `${priceStyles.beforePrice.fontSize}px`,
+                      fontWeight: priceStyles.beforePrice.fontWeight,
+                      fontFamily: priceStyles.beforePrice.fontFamily,
+                      color: priceStyles.beforePrice.color,
+                      textAlign: priceStyles.beforePrice.textAlign as any,
                       '--dynamic-font-size': `${priceStyles.beforePrice.fontSize}px`,
+                      '--dynamic-font-weight': priceStyles.beforePrice.fontWeight,
                       '--dynamic-font-family': priceStyles.beforePrice.fontFamily,
                       '--dynamic-color': priceStyles.beforePrice.color,
-                      '--dynamic-font-weight': priceStyles.beforePrice.fontWeight
                     } as any}
                   >
                     ${(editablePrice * 1.2).toFixed(2)}
-                  </span>
+                  </div>
                 )}
                 {priceStyles.save.show && (
-                  <span 
+                  <div 
                     className="product-save dynamic-price-save"
                     style={{
+                      fontSize: `${priceStyles.save.fontSize}px`,
+                      fontWeight: priceStyles.save.fontWeight,
+                      fontFamily: priceStyles.save.fontFamily,
+                      color: priceStyles.save.color,
+                      textAlign: priceStyles.save.textAlign as any,
                       '--dynamic-font-size': `${priceStyles.save.fontSize}px`,
+                      '--dynamic-font-weight': priceStyles.save.fontWeight,
                       '--dynamic-font-family': priceStyles.save.fontFamily,
                       '--dynamic-color': priceStyles.save.color,
-                      '--dynamic-font-weight': priceStyles.save.fontWeight
                     } as any}
                   >
                     Save ${((editablePrice * 1.2) - editablePrice).toFixed(2)}
-                  </span>
+                  </div>
                 )}
               </div>
               <button 
                 className="product-price-edit-icon"
-                onClick={() => setShowPriceEditor(!showPriceEditor)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowPriceEditor(!showPriceEditor);
+                }}
                 title="Edit Price Style"
               >
                 <HiPencil />
               </button>
             </div>
+            <div className="drag-handle" title="Drag to reorder">
+              <HiSelector />
+            </div>
           </div>
         );
-        
+
       case 'rating':
-        return (
-          <div 
-            {...dragProps}
-            className="draggable-element-item"
-          >
+        return elementVisibility.rating && (
+          <div key={elementType} {...dragProps} className="draggable-element">
             <div 
               className="product-rating-container"
               style={{ marginBottom: `${reviewStyles.bottomSpacing}px` }}
             >
-              <div className="product-rating" style={{ fontSize: `${reviewStyles.fontSize}px` }}>
-                {renderStars(product.rating)}
-                <span style={{ marginLeft: '8px', color: '#6b7280' }}>
-                  {product.rating} ({product.reviewCount} reviews)
+              <div className="product-rating">
+                <div className="stars">
+                  {renderStars(product.rating)}
+                </div>
+                <span 
+                  className="review-count"
+                  style={{
+                    color: reviewStyles.textColor,
+                    fontSize: `${reviewStyles.fontSize}px`,
+                    fontWeight: reviewStyles.fontWeight,
+                    marginLeft: `${reviewStyles.spacing}px`
+                  }}
+                >
+                  ({product.reviewCount})
                 </span>
               </div>
               <button 
-                className="product-rating-edit-icon"
-                onClick={() => setShowReviewEditor(!showReviewEditor)}
-                title="Edit Rating Style"
+                className="product-review-edit-icon"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowReviewEditor(!showReviewEditor);
+                }}
+                title="Edit Review Style"
               >
                 <HiPencil />
               </button>
             </div>
+            <div className="drag-handle" title="Drag to reorder">
+              <HiSelector />
+            </div>
           </div>
         );
-        
+
       case 'description1':
-        return (
-          <div 
-            {...dragProps}
-            className="draggable-element-item"
-          >
+        return elementVisibility.description1 && (
+          <div key={elementType} {...dragProps} className="draggable-element">
             <div 
               className="product-description-container"
               style={{ marginBottom: `${descriptionStyles.bottomSpacing}px` }}
             >
               <div 
-                className="product-description-display primary dynamic-text-style"
+                className="product-description-display primary"
                 style={{
-                  '--dynamic-font-size': `${descriptionStyles.fontSize}px`,
-                  '--dynamic-font-family': descriptionStyles.fontFamily,
-                  '--dynamic-color': descriptionStyles.color,
-                  '--dynamic-font-weight': descriptionStyles.fontWeight,
-                  '--dynamic-text-align': descriptionStyles.textAlign,
+                  fontSize: `${descriptionStyles.fontSize}px`,
+                  fontFamily: descriptionStyles.fontFamily,
+                  color: descriptionStyles.color,
+                  fontWeight: descriptionStyles.fontWeight,
+                  textAlign: descriptionStyles.textAlign as any,
                   userSelect: 'none',
                   cursor: 'default'
-                } as any}
+                }}
               >
                 {editableDescription1}
               </div>
               <button 
                 className="product-description-edit-icon"
-                onClick={() => setShowDescriptionEditor(!showDescriptionEditor)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowDescriptionEditor(!showDescriptionEditor);
+                }}
                 title="Edit Description Style"
               >
                 <HiPencil />
               </button>
             </div>
+            <div className="drag-handle" title="Drag to reorder">
+              <HiSelector />
+            </div>
           </div>
         );
-        
+
       case 'description2':
-        return (
-          <div 
-            {...dragProps}
-            className="draggable-element-item"
-          >
+        return elementVisibility.description2 && (
+          <div key={elementType} {...dragProps} className="draggable-element">
             <div 
               className="product-description-container"
               style={{ marginBottom: `${description2Styles.bottomSpacing}px` }}
             >
               <div 
-                className="product-description-display secondary dynamic-text-style"
+                className="product-description-display secondary"
                 style={{
-                  '--dynamic-font-size': `${description2Styles.fontSize}px`,
-                  '--dynamic-font-family': description2Styles.fontFamily,
-                  '--dynamic-color': description2Styles.color,
-                  '--dynamic-font-weight': description2Styles.fontWeight,
-                  '--dynamic-text-align': description2Styles.textAlign,
+                  fontSize: `${description2Styles.fontSize}px`,
+                  fontFamily: description2Styles.fontFamily,
+                  color: description2Styles.color,
+                  fontWeight: description2Styles.fontWeight,
+                  textAlign: description2Styles.textAlign as any,
                   userSelect: 'none',
                   cursor: 'default'
-                } as any}
+                }}
               >
                 {editableDescription2}
               </div>
               <button 
                 className="product-description2-edit-icon"
-                onClick={() => setShowDescription2Editor(!showDescription2Editor)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowDescription2Editor(!showDescription2Editor);
+                }}
                 title="Edit Description 2 Style"
               >
                 <HiPencil />
               </button>
             </div>
+            <div className="drag-handle" title="Drag to reorder">
+              <HiSelector />
+            </div>
           </div>
         );
-        
-      case 'quantity':
-        return (
-          <div 
-            {...dragProps}
-            className="draggable-element-item"
-          >
+
+      case 'variants':
+        return elementVisibility.sizeVariants && (
+          <div key={elementType} {...dragProps} className="draggable-element">
             <div 
-              className="product-quantity-container"
+              className="product-sizes-container"
+              style={{ marginBottom: `${sizeStyles.bottomSpacing}px` }}
+            >
+              <div className="product-sizes">
+                <h4 className="sizes-title">Size</h4>
+                <div 
+                  className="sizes-list"
+                  style={{ gap: `${sizeStyles.spacing}px` }}
+                >
+                  {product.sizes.map((size) => (
+                    <button
+                      key={size.id}
+                      className={`size-option ${selectedSize.id === size.id ? 'selected' : ''} ${!size.available ? 'unavailable' : ''}`}
+                      onClick={() => size.available && setSelectedSize(size)}
+                      disabled={!size.available}
+                      style={{
+                        fontSize: `${sizeStyles.fontSize}px`,
+                        fontWeight: sizeStyles.fontWeight,
+                        backgroundColor: selectedSize.id === size.id ? sizeStyles.selectedColor : sizeStyles.buttonColor,
+                        color: selectedSize.id === size.id ? sizeStyles.selectedTextColor : sizeStyles.textColor,
+                        borderColor: selectedSize.id === size.id ? sizeStyles.selectedBorderColor : sizeStyles.borderColor,
+                        borderRadius: `${sizeStyles.borderRadius}px`,
+                        padding: `${sizeStyles.padding}px ${sizeStyles.padding * 1.5}px`
+                      }}
+                    >
+                      {size.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <button 
+                className="product-size-edit-icon"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowSizeEditor(!showSizeEditor);
+                }}
+                title="Edit Size Style"
+              >
+                <HiPencil />
+              </button>
+            </div>
+            <div className="drag-handle" title="Drag to reorder">
+              <HiSelector />
+            </div>
+          </div>
+        );
+
+      case 'quantity':
+        return elementVisibility.quantity && (
+          <div key={elementType} {...dragProps} className="draggable-element">
+            <div 
+              className="quantity-container-editor"
               style={{ marginBottom: `${quantityStyles.bottomSpacing}px` }}
             >
-              <div 
-                className="quantity-section"
-                style={{
-                  flexDirection: quantityStyles.layout === 'vertical' ? 'column' : 'row',
-                  gap: `${quantityStyles.spacing}px`
-                }}
-              >
-                <label 
-                  className="quantity-label"
-                  style={{
-                    color: quantityStyles.textColor,
-                    fontSize: `${quantityStyles.fontSize}px`,
-                    fontWeight: quantityStyles.fontWeight
-                  }}
+              <div className="quantity-container">
+                <h4 className="quantity-title">Quantity</h4>
+                <div 
+                  className="quantity-controls"
+                  style={{ gap: `${quantityStyles.spacing}px` }}
                 >
-                  Quantity:
-                </label>
-                <div className="quantity-counter">
                   <button 
-                    className="quantity-btn"
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="quantity-btn minus"
+                    onClick={() => handleQuantityChange(-1)}
+                    disabled={quantity <= 1}
                     style={{
-                      backgroundColor: quantityStyles.buttonColor,
-                      color: quantityStyles.buttonTextColor,
-                      borderRadius: `${quantityStyles.borderRadius}px`,
                       width: `${quantityStyles.buttonSize}px`,
                       height: `${quantityStyles.buttonSize}px`,
-                      fontSize: `${quantityStyles.fontSize}px`,
-                      border: quantityStyles.theme === 'outlined' ? `2px solid ${quantityStyles.buttonTextColor}` : quantityStyles.theme === 'default' ? '1px solid #d1d5db' : 'none'
+                      borderRadius: `${quantityStyles.borderRadius}px`,
+                      backgroundColor: quantityStyles.buttonColor,
+                      color: quantityStyles.buttonTextColor
                     }}
                   >
-                    -
+                    <HiMinus />
                   </button>
                   <span 
                     className="quantity-value"
@@ -644,172 +649,63 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
                     {quantity}
                   </span>
                   <button 
-                    className="quantity-btn"
-                    onClick={() => setQuantity(quantity + 1)}
+                    className="quantity-btn plus"
+                    onClick={() => handleQuantityChange(1)}
                     style={{
-                      backgroundColor: quantityStyles.buttonColor,
-                      color: quantityStyles.buttonTextColor,
-                      borderRadius: `${quantityStyles.borderRadius}px`,
                       width: `${quantityStyles.buttonSize}px`,
                       height: `${quantityStyles.buttonSize}px`,
-                      fontSize: `${quantityStyles.fontSize}px`,
-                      border: quantityStyles.theme === 'outlined' ? `2px solid ${quantityStyles.buttonTextColor}` : quantityStyles.theme === 'default' ? '1px solid #d1d5db' : 'none'
+                      borderRadius: `${quantityStyles.borderRadius}px`,
+                      backgroundColor: quantityStyles.buttonColor,
+                      color: quantityStyles.buttonTextColor
                     }}
                   >
-                    +
+                    <HiPlus />
                   </button>
                 </div>
               </div>
               <button 
-                className="product-quantity-edit-icon"
-                onClick={() => setShowQuantityEditor(!showQuantityEditor)}
+                className="quantity-edit-icon"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowQuantityEditor(!showQuantityEditor);
+                }}
                 title="Edit Quantity Style"
               >
                 <HiPencil />
               </button>
             </div>
-          </div>
-        );
-        
-      case 'sizeVariants':
-        return (
-          <div 
-            {...dragProps}
-            className="draggable-element-item"
-          >
-            <div 
-              className="product-variants-container"
-              style={{ 
-                marginBottom: `${variantStyles.sectionSpacing}px`,
-                position: 'relative'
-              }}
-            >
-              <button 
-                className="system-control-icon edit small variant-edit-icon-positioned"
-                onClick={() => setShowVariantEditor(!showVariantEditor)}
-                title="Edit Variant Style"
-              >
-                <HiPencil />
-              </button>
-              {product.variants.map((variant, variantIndex) => (
-                <div 
-                  key={variantIndex}
-                  className="variant-section"
-                  style={{
-                    marginBottom: variantIndex === product.variants.length - 1 ? `${variantStyles.sectionSpacing}px` : `${variantStyles.variantTypeSpacing}px`,
-                    flexDirection: variantStyles.layout === 'vertical' ? 'column' : 'row',
-                    alignItems: variantStyles.layout === 'vertical' ? 'flex-start' : 'center',
-                    gap: variantStyles.layout === 'vertical' ? `${variantStyles.labelSpacing}px` : `${variantStyles.optionSpacing}px`
-                  }}
-                >
-                  <label 
-                    className="variant-label"
-                    style={{ 
-                      fontSize: `${variantStyles.labelFontSize}px`,
-                      fontWeight: variantStyles.labelFontWeight,
-                      color: variantStyles.labelColor,
-                      marginBottom: variantStyles.layout === 'horizontal' ? '0' : `${variantStyles.labelSpacing}px`,
-                      marginRight: variantStyles.layout === 'horizontal' ? `${variantStyles.labelSpacing}px` : '0',
-                      display: 'block'
-                    }}
-                  >
-                    {variant.name}:
-                  </label>
-                  <div 
-                    className="variant-options"
-                    style={{
-                      gap: `${variantStyles.optionSpacing}px`,
-                      flexDirection: variantStyles.layout === 'vertical' ? 'column' : 'row',
-                      alignItems: variantStyles.layout === 'vertical' ? 'flex-start' : 'center'
-                    }}
-                  >
-                    {variant.options.map((option) => {
-                      const isColor = isColorVariant(variant.name);
-                      const colorValue = isColor ? getColorValue(option) : null;
-                      
-                      return (
-                        <button
-                          key={option}
-                          className={`variant-option ${isColor ? 'color-variant' : ''} ${selectedVariants[variant.name] === option ? 'selected' : ''}`}
-                          onClick={() => handleVariantChange(variant.name, option)}
-                          title={option}
-                          style={{
-                            fontSize: isColor ? '0' : `${variantStyles.optionFontSize}px`,
-                            fontWeight: variantStyles.optionFontWeight,
-                            padding: isColor ? '0' : `${variantStyles.optionPadding}px ${variantStyles.optionPadding * 2}px`,
-                            borderRadius: isColor ? '50%' : `${variantStyles.optionBorderRadius}px`,
-                            width: isColor ? `${variantStyles.colorCircleSize}px` : 'auto',
-                            height: isColor ? `${variantStyles.colorCircleSize}px` : 'auto',
-                            backgroundColor: isColor ? (colorValue || variantStyles.optionBackgroundColor) : (selectedVariants[variant.name] === option 
-                              ? variantStyles.selectedBackgroundColor 
-                              : variantStyles.optionBackgroundColor),
-                            borderColor: selectedVariants[variant.name] === option 
-                              ? variantStyles.selectedBorderColor 
-                              : variantStyles.optionBorderColor,
-                            borderWidth: selectedVariants[variant.name] === option ? '3px' : '2px',
-                            color: isColor ? 'transparent' : (selectedVariants[variant.name] === option 
-                              ? variantStyles.selectedTextColor 
-                              : variantStyles.optionTextColor),
-                            boxShadow: isColor && selectedVariants[variant.name] === option 
-                              ? `0 0 0 2px ${variantStyles.selectedBorderColor}` 
-                              : 'none',
-                            cursor: 'pointer',
-                            border: `2px solid ${selectedVariants[variant.name] === option 
-                              ? variantStyles.selectedBorderColor 
-                              : variantStyles.optionBorderColor}`
-                          }}
-                          onMouseEnter={(e) => {
-                            if (selectedVariants[variant.name] !== option && !isColor) {
-                              e.currentTarget.style.borderColor = variantStyles.hoverBorderColor;
-                              e.currentTarget.style.backgroundColor = variantStyles.hoverBackgroundColor;
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (selectedVariants[variant.name] !== option && !isColor) {
-                              e.currentTarget.style.borderColor = variantStyles.optionBorderColor;
-                              e.currentTarget.style.backgroundColor = variantStyles.optionBackgroundColor;
-                            }
-                          }}
-                        >
-                          {isColor ? '' : option}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
+            <div className="drag-handle" title="Drag to reorder">
+              <HiSelector />
             </div>
           </div>
         );
-        
-      case 'addToCartButton':
-        return (
-          <div 
-            {...dragProps}
-            className="draggable-element-item"
-          >
-            <div 
-              className="add-to-cart-container"
-              style={{ marginBottom: '0px' }}
-            >
-              <StyledButton 
-                onClick={handleAddToCart}
+
+      case 'addToCart':
+        return elementVisibility.addToCart && (
+          <div key={elementType} {...dragProps} className="draggable-element">
+            <div className="add-to-cart-container">
+              <StyledButton
                 styles={buttonStyles}
-                className="add-to-cart-btn"
-              >
-                Add to Cart
-              </StyledButton>
+                onClick={handleAddToCart}
+                className="add-to-cart-styled-btn"
+              />
               <button 
                 className="add-to-cart-edit-icon"
-                onClick={() => setShowAddToCartEditor(!showAddToCartEditor)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowAddToCartEditor(!showAddToCartEditor);
+                }}
                 title="Edit Button Style"
               >
                 <HiPencil />
               </button>
             </div>
+            <div className="drag-handle" title="Drag to reorder">
+              <HiSelector />
+            </div>
           </div>
         );
-        
+
       default:
         return null;
     }
@@ -824,69 +720,6 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
 
   const handleImageHeightChange = (height: number) => {
     setImageHeight(Math.max(200, Math.min(800, height)));
-  };
-
-  // Helper function to determine if a variant is a color variant
-  const isColorVariant = (variantName: string) => {
-    return variantName.toLowerCase().includes('color') || variantName.toLowerCase().includes('colour');
-  };
-
-  // Helper function to get color value from color name
-  const getColorValue = (colorName: string) => {
-    const colorMap: { [key: string]: string } = {
-      // Basic colors
-      'red': '#ef4444',
-      'blue': '#3b82f6',
-      'green': '#10b981',
-      'yellow': '#f59e0b',
-      'orange': '#f97316',
-      'purple': '#8b5cf6',
-      'pink': '#ec4899',
-      'gray': '#6b7280',
-      'grey': '#6b7280',
-      'black': '#000000',
-      'white': '#ffffff',
-      'brown': '#92400e',
-      'beige': '#f5f5dc',
-      'navy': '#1e3a8a',
-      'teal': '#14b8a6',
-      'lime': '#84cc16',
-      'indigo': '#6366f1',
-      'cyan': '#06b6d4',
-      'rose': '#f43f5e',
-      'amber': '#f59e0b',
-      'emerald': '#059669',
-      'violet': '#7c3aed',
-      'fuchsia': '#d946ef',
-      'sky': '#0ea5e9',
-      'slate': '#64748b',
-      'zinc': '#71717a',
-      'neutral': '#737373',
-      'stone': '#78716c',
-      // Specific shades
-      'light gray': '#d1d5db',
-      'dark gray': '#374151',
-      'light blue': '#93c5fd',
-      'dark blue': '#1e40af',
-      'light green': '#86efac',
-      'dark green': '#047857',
-      'maroon': '#7f1d1d',
-      'olive': '#65a30d',
-      'silver': '#c0c0c0',
-      'gold': '#fbbf24',
-      'coral': '#ff7f50',
-      'salmon': '#fa8072',
-      'khaki': '#f0e68c',
-      'plum': '#dda0dd',
-      'turquoise': '#40e0d0',
-      'crimson': '#dc143c',
-      'ivory': '#fffff0',
-      'azure': '#f0ffff',
-      'lavender': '#e6e6fa'
-    };
-    
-    const lowerColorName = colorName.toLowerCase().trim();
-    return colorMap[lowerColorName] || colorName; // Return original if not found
   };
 
   const renderStars = (rating: number) => {
@@ -981,33 +814,338 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
           </div>
         </div>
 
-        {/* Product Details Section - Only show if at least one element is visible */}
-        {!areAllElementsHidden && (
-          <div className="product-details-section">
-            
-            
-            
-            {/* Draggable Elements - Rendered Based on Order */}
-            <div 
-              className="elements-drag-container"
-              style={{ 
-                userSelect: isDragging ? 'none' : 'auto',
-                pointerEvents: isDragging ? 'none' : 'auto'
-              }}
-            >
-              {elementOrder
-                .filter(elementType => elementVisibility[elementType as keyof typeof elementVisibility])
-                .map((elementType) => (
-                  <div key={elementType} className="element-wrapper">
-                    {renderElement(elementType)}
-                  </div>
-                ))}
+        {/* Product Details Section - Drag and Drop Enabled */}
+        <div className="product-details-section" style={{ userSelect: isDragging ? 'none' : 'auto' }}>
+          {/* Draggable Elements - Rendered Based on Order */}
+          {elementOrder.map((elementType) => renderElement(elementType))}
+        </div>
+      </div>
+
+      {/* Price Editor Drawer */}
+      <StylePriceEditor
+        isOpen={showPriceEditor}
+        onClose={() => setShowPriceEditor(false)}
+        priceStyles={priceStyles}
+        onStylesChange={setPriceStyles}
+        title="Price Style Editor"
+        width={400}
+        position="right"
+        pushContent={true}
+      />
+
+      {/* Review Editor Drawer */}
+                  color: productNameStyles.color,
+                  fontWeight: productNameStyles.fontWeight,
+                  textAlign: productNameStyles.textAlign as any,
+                  userSelect: 'none',
+                  cursor: 'default'
+                }}
+              >
+                {editableProductName}
+              </div>
+              <button 
+                className="product-name-edit-icon"
+                onClick={() => setShowProductNameEditor(!showProductNameEditor)}
+                title="Edit Product Name Style"
+              >
+                <HiPencil />
+              </button>
             </div>
-            
-            
-            
-          </div>
-        )}
+          )}
+          
+          {/* Price with Editor */}
+          {elementVisibility.price && (
+            <div 
+              className="product-price-container"
+              style={{ marginBottom: `${priceStyles.bottomSpacing}px` }}
+            >
+              <div 
+                className="product-price-section"
+                style={{
+                  gap: `${priceStyles.horizontalSpacing}px`,
+                  justifyContent: priceStyles.currentPrice.textAlign === 'center' ? 'center' : 
+                                 priceStyles.currentPrice.textAlign === 'right' ? 'flex-end' : 'flex-start'
+                }}
+              >
+                {priceStyles.currentPrice.show && (
+                  <div 
+                    className="product-price dynamic-price-current"
+                    style={{
+                      fontSize: `${priceStyles.currentPrice.fontSize}px`,
+                      fontWeight: priceStyles.currentPrice.fontWeight,
+                      fontFamily: priceStyles.currentPrice.fontFamily,
+                      color: priceStyles.currentPrice.color,
+                      textAlign: priceStyles.currentPrice.textAlign as any,
+                      '--dynamic-font-size': `${priceStyles.currentPrice.fontSize}px`,
+                      '--dynamic-font-weight': priceStyles.currentPrice.fontWeight,
+                      '--dynamic-font-family': priceStyles.currentPrice.fontFamily,
+                      '--dynamic-color': priceStyles.currentPrice.color,
+                    } as any}
+                  >
+                    ${editablePrice.toFixed(2)}
+                  </div>
+                )}
+                {priceStyles.beforePrice.show && (
+                  <div 
+                    className="product-before-price dynamic-price-before"
+                    style={{
+                      fontSize: `${priceStyles.beforePrice.fontSize}px`,
+                      fontWeight: priceStyles.beforePrice.fontWeight,
+                      fontFamily: priceStyles.beforePrice.fontFamily,
+                      color: priceStyles.beforePrice.color,
+                      textAlign: priceStyles.beforePrice.textAlign as any,
+                      '--dynamic-font-size': `${priceStyles.beforePrice.fontSize}px`,
+                      '--dynamic-font-weight': priceStyles.beforePrice.fontWeight,
+                      '--dynamic-font-family': priceStyles.beforePrice.fontFamily,
+                      '--dynamic-color': priceStyles.beforePrice.color,
+                    } as any}
+                  >
+                    ${(editablePrice * 1.2).toFixed(2)}
+                  </div>
+                )}
+                {priceStyles.save.show && (
+                  <div 
+                    className="product-save dynamic-price-save"
+                    style={{
+                      fontSize: `${priceStyles.save.fontSize}px`,
+                      fontWeight: priceStyles.save.fontWeight,
+                      fontFamily: priceStyles.save.fontFamily,
+                      color: priceStyles.save.color,
+                      textAlign: priceStyles.save.textAlign as any,
+                      '--dynamic-font-size': `${priceStyles.save.fontSize}px`,
+                      '--dynamic-font-weight': priceStyles.save.fontWeight,
+                      '--dynamic-font-family': priceStyles.save.fontFamily,
+                      '--dynamic-color': priceStyles.save.color,
+                    } as any}
+                  >
+                    Save ${((editablePrice * 1.2) - editablePrice).toFixed(2)}
+                  </div>
+                )}
+              </div>
+              <button 
+                className="product-price-edit-icon"
+                onClick={() => setShowPriceEditor(!showPriceEditor)}
+                title="Edit Price Style"
+              >
+                <HiPencil />
+              </button>
+            </div>
+          )}
+          
+          {/* Rating with Editor */}
+          {elementVisibility.rating && (
+            <div 
+              className="product-rating-container"
+              style={{ marginBottom: `${reviewStyles.bottomSpacing}px` }}
+            >
+              <div className="product-rating">
+                <div className="stars">
+                  {renderStars(product.rating)}
+                </div>
+                <span 
+                  className="review-count"
+                  style={{
+                    color: reviewStyles.textColor,
+                    fontSize: `${reviewStyles.fontSize}px`,
+                    fontWeight: reviewStyles.fontWeight,
+                    marginLeft: `${reviewStyles.spacing}px`
+                  }}
+                >
+                  ({product.reviewCount})
+                </span>
+              </div>
+              <button 
+                className="product-review-edit-icon"
+                onClick={() => setShowReviewEditor(!showReviewEditor)}
+                title="Edit Review Style"
+              >
+                <HiPencil />
+              </button>
+            </div>
+          )}
+          
+          {/* Description 1 with Editor */}
+          {elementVisibility.description1 && (
+            <div 
+              className="product-description-container"
+              style={{ marginBottom: `${descriptionStyles.bottomSpacing}px` }}
+            >
+              <div 
+                className="product-description-display primary"
+                style={{
+                  fontSize: `${descriptionStyles.fontSize}px`,
+                  fontFamily: descriptionStyles.fontFamily,
+                  color: descriptionStyles.color,
+                  fontWeight: descriptionStyles.fontWeight,
+                  textAlign: descriptionStyles.textAlign as any,
+                  userSelect: 'none',
+                  cursor: 'default'
+                }}
+              >
+                {editableDescription1}
+              </div>
+              <button 
+                className="product-description-edit-icon"
+                onClick={() => setShowDescriptionEditor(!showDescriptionEditor)}
+                title="Edit Description Style"
+              >
+                <HiPencil />
+              </button>
+            </div>
+          )}
+          
+          {/* Description 2 with Editor */}
+          {elementVisibility.description2 && (
+            <div 
+              className="product-description-container"
+              style={{ marginBottom: `${description2Styles.bottomSpacing}px` }}
+            >
+              <div 
+                className="product-description-display secondary"
+                style={{
+                  fontSize: `${description2Styles.fontSize}px`,
+                  fontFamily: description2Styles.fontFamily,
+                  color: description2Styles.color,
+                  fontWeight: description2Styles.fontWeight,
+                  textAlign: description2Styles.textAlign as any,
+                  userSelect: 'none',
+                  cursor: 'default'
+                }}
+              >
+                {editableDescription2}
+              </div>
+              <button 
+                className="product-description2-edit-icon"
+                onClick={() => setShowDescription2Editor(!showDescription2Editor)}
+                title="Edit Description 2 Style"
+              >
+                <HiPencil />
+              </button>
+            </div>
+          )}
+          
+          {/* Size Variants with Editor */}
+          {elementVisibility.sizeVariants && (
+            <div 
+              className="product-sizes-container"
+              style={{ marginBottom: `${sizeStyles.bottomSpacing}px` }}
+            >
+              <div className="product-sizes">
+                <h4 className="sizes-title">Size</h4>
+                <div 
+                  className="sizes-list"
+                  style={{ gap: `${sizeStyles.spacing}px` }}
+                >
+                  {product.sizes.map((size) => (
+                    <button
+                      key={size.id}
+                      className={`size-option ${selectedSize.id === size.id ? 'selected' : ''} ${!size.available ? 'unavailable' : ''}`}
+                      onClick={() => size.available && setSelectedSize(size)}
+                      disabled={!size.available}
+                      style={{
+                        fontSize: `${sizeStyles.fontSize}px`,
+                        fontWeight: sizeStyles.fontWeight,
+                        backgroundColor: selectedSize.id === size.id ? sizeStyles.selectedColor : sizeStyles.buttonColor,
+                        color: selectedSize.id === size.id ? sizeStyles.selectedTextColor : sizeStyles.textColor,
+                        borderColor: selectedSize.id === size.id ? sizeStyles.selectedBorderColor : sizeStyles.borderColor,
+                        borderRadius: `${sizeStyles.borderRadius}px`,
+                        padding: `${sizeStyles.padding}px ${sizeStyles.padding * 1.5}px`
+                      }}
+                    >
+                      {size.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <button 
+                className="product-size-edit-icon"
+                onClick={() => setShowSizeEditor(!showSizeEditor)}
+                title="Edit Size Style"
+              >
+                <HiPencil />
+              </button>
+            </div>
+          )}
+          
+          {/* Quantity Counter with Editor */}
+          {elementVisibility.quantity && (
+            <div 
+              className="quantity-container-editor"
+              style={{ marginBottom: `${quantityStyles.bottomSpacing}px` }}
+            >
+              <div className="quantity-container">
+                <h4 className="quantity-title">Quantity</h4>
+                <div 
+                  className="quantity-controls"
+                  style={{ gap: `${quantityStyles.spacing}px` }}
+                >
+                  <button 
+                    className="quantity-btn minus"
+                    onClick={() => handleQuantityChange(-1)}
+                    disabled={quantity <= 1}
+                    style={{
+                      width: `${quantityStyles.buttonSize}px`,
+                      height: `${quantityStyles.buttonSize}px`,
+                      borderRadius: `${quantityStyles.borderRadius}px`,
+                      backgroundColor: quantityStyles.buttonColor,
+                      color: quantityStyles.buttonTextColor
+                    }}
+                  >
+                    <HiMinus />
+                  </button>
+                  <span 
+                    className="quantity-value"
+                    style={{
+                      color: quantityStyles.textColor,
+                      fontSize: `${quantityStyles.fontSize}px`,
+                      fontWeight: quantityStyles.fontWeight
+                    }}
+                  >
+                    {quantity}
+                  </span>
+                  <button 
+                    className="quantity-btn plus"
+                    onClick={() => handleQuantityChange(1)}
+                    style={{
+                      width: `${quantityStyles.buttonSize}px`,
+                      height: `${quantityStyles.buttonSize}px`,
+                      borderRadius: `${quantityStyles.borderRadius}px`,
+                      backgroundColor: quantityStyles.buttonColor,
+                      color: quantityStyles.buttonTextColor
+                    }}
+                  >
+                    <HiPlus />
+                  </button>
+                </div>
+              </div>
+              <button 
+                className="quantity-edit-icon"
+                onClick={() => setShowQuantityEditor(!showQuantityEditor)}
+                title="Edit Quantity Style"
+              >
+                <HiPencil />
+              </button>
+            </div>
+          )}
+          
+          {/* Add to Cart Button with Editor */}
+          {elementVisibility.addToCart && (
+            <div className="add-to-cart-container">
+              <StyledButton
+                styles={buttonStyles}
+                onClick={handleAddToCart}
+                className="add-to-cart-styled-btn"
+              />
+              <button 
+                className="add-to-cart-edit-icon"
+                onClick={() => setShowAddToCartEditor(!showAddToCartEditor)}
+                title="Edit Button Style"
+              >
+                <HiPencil />
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Price Editor Drawer */}
@@ -1129,20 +1267,138 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
       </SystemDrawer>
 
       {/* Quantity Editor Drawer */}
-      <StyleQuantityCounterEditor
+      <SystemDrawer
         isOpen={showQuantityEditor}
         onClose={() => setShowQuantityEditor(false)}
-        styles={quantityStyles}
-        onStylesChange={setQuantityStyles}
-      />
+        title="Quantity Style Editor"
+        width={350}
+        position="right"
+        pushContent={true}
+      >
+        <div className="drawer-section">
+          <h4 className="drawer-section-title">Button Settings</h4>
+          <div className="drawer-range-container">
+            <div className="drawer-range-label">
+              <span>Button Size</span>
+              <span className="drawer-range-value">{quantityStyles.buttonSize}px</span>
+            </div>
+            <input
+              type="range"
+              min="24" max="48"
+              value={quantityStyles.buttonSize}
+              onChange={(e) => setQuantityStyles({
+                ...quantityStyles,
+                buttonSize: Number(e.target.value)
+              })}
+              className="drawer-range"
+            />
+          </div>
+          <div className="drawer-form-group">
+            <label className="drawer-form-label">Button Color</label>
+            <input
+              type="color"
+              value={quantityStyles.buttonColor}
+              onChange={(e) => setQuantityStyles({
+                ...quantityStyles,
+                buttonColor: e.target.value
+              })}
+              className="drawer-form-input"
+            />
+          </div>
+          <div className="drawer-form-group">
+            <label className="drawer-form-label">Button Text Color</label>
+            <input
+              type="color"
+              value={quantityStyles.buttonTextColor}
+              onChange={(e) => setQuantityStyles({
+                ...quantityStyles,
+                buttonTextColor: e.target.value
+              })}
+              className="drawer-form-input"
+            />
+          </div>
+          <div className="drawer-range-container">
+            <div className="drawer-range-label">
+              <span>Border Radius</span>
+              <span className="drawer-range-value">{quantityStyles.borderRadius}px</span>
+            </div>
+            <input
+              type="range"
+              min="0" max="16"
+              value={quantityStyles.borderRadius}
+              onChange={(e) => setQuantityStyles({
+                ...quantityStyles,
+                borderRadius: Number(e.target.value)
+              })}
+              className="drawer-range"
+            />
+          </div>
+        </div>
 
-      {/* Variant Style Editor Drawer */}
-      <StyleVariantEditor
-        isOpen={showVariantEditor}
-        onClose={() => setShowVariantEditor(false)}
-        styles={variantStyles}
-        onStylesChange={setVariantStyles}
-      />
+        <div className="drawer-section">
+          <h4 className="drawer-section-title">Text Settings</h4>
+          <div className="drawer-range-container">
+            <div className="drawer-range-label">
+              <span>Font Size</span>
+              <span className="drawer-range-value">{quantityStyles.fontSize}px</span>
+            </div>
+            <input
+              type="range"
+              min="12" max="20"
+              value={quantityStyles.fontSize}
+              onChange={(e) => setQuantityStyles({
+                ...quantityStyles,
+                fontSize: Number(e.target.value)
+              })}
+              className="drawer-range"
+            />
+          </div>
+          <div className="drawer-form-group">
+            <label className="drawer-form-label">Text Color</label>
+            <input
+              type="color"
+              value={quantityStyles.textColor}
+              onChange={(e) => setQuantityStyles({
+                ...quantityStyles,
+                textColor: e.target.value
+              })}
+              className="drawer-form-input"
+            />
+          </div>
+          <div className="drawer-range-container">
+            <div className="drawer-range-label">
+              <span>Spacing</span>
+              <span className="drawer-range-value">{quantityStyles.spacing}px</span>
+            </div>
+            <input
+              type="range"
+              min="4" max="16"
+              value={quantityStyles.spacing}
+              onChange={(e) => setQuantityStyles({
+                ...quantityStyles,
+                spacing: Number(e.target.value)
+              })}
+              className="drawer-range"
+            />
+          </div>
+          <div className="drawer-range-container">
+            <div className="drawer-range-label">
+              <span>Bottom Spacing</span>
+              <span className="drawer-range-value">{quantityStyles.bottomSpacing}px</span>
+            </div>
+            <input
+              type="range"
+              min="0" max="32"
+              value={quantityStyles.bottomSpacing}
+              onChange={(e) => setQuantityStyles({
+                ...quantityStyles,
+                bottomSpacing: Number(e.target.value)
+              })}
+              className="drawer-range"
+            />
+          </div>
+        </div>
+      </SystemDrawer>
 
       {/* Size Editor Drawer */}
       <SystemDrawer
@@ -1696,7 +1952,7 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
             </div>
             
             <div className="drawer-form-group">
-              <label className="drawer-form-label">Variants</label>
+              <label className="drawer-form-label">Size Variants</label>
               <div className="drawer-toggle-container">
                 <label className="drawer-toggle">
                   <input
@@ -1735,13 +1991,13 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
                 <label className="drawer-toggle">
                   <input
                     type="checkbox"
-                    checked={elementVisibility.addToCartButton}
-                    onChange={() => toggleElementVisibility('addToCartButton')}
+                    checked={elementVisibility.addToCart}
+                    onChange={() => toggleElementVisibility('addToCart')}
                   />
                   <span className="toggle-slider"></span>
                 </label>
-                <span className={`toggle-label ${elementVisibility.addToCartButton ? 'active' : ''}`}>
-                  {elementVisibility.addToCartButton ? 'Visible' : 'Hidden'}
+                <span className={`toggle-label ${elementVisibility.addToCart ? 'active' : ''}`}>
+                  {elementVisibility.addToCart ? 'Visible' : 'Hidden'}
                 </span>
               </div>
             </div>

@@ -362,7 +362,7 @@ const StoreStepper: React.FC<StoreStepperProps> = ({ onClose, onComplete, storeN
       setCurrentStep(currentStep + 1);
     } else {
       onComplete();
-      router.push('/design');
+      router.push('/Store-homepage');
     }
   };
 

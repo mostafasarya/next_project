@@ -1,0 +1,394 @@
+/* ======================================================================
+   TEXT POSTER DESIGN COMPONENT STYLES
+   ====================================================================== */
+
+.comp-textposter-design {
+  max-width: 800px;
+  margin: 20px auto;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.comp-textposter-design:hover {
+  transform: translateY(-2px);
+}
+
+/* Controls Panel */
+.poster-controls {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  width: 300px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+}
+
+.poster-controls.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.controls-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.controls-header h4 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.close-controls {
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.close-controls:hover {
+  background: #dc2626;
+  transform: scale(1.1);
+}
+
+.controls-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.control-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.control-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.control-group select,
+.control-group input[type="url"] {
+  padding: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.control-group select:focus,
+.control-group input[type="url"]:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.control-group input[type="color"] {
+  width: 100%;
+  height: 40px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.control-group input[type="color"]:hover {
+  border-color: #3b82f6;
+}
+
+/* Poster Display */
+.text-poster {
+  position: relative;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  margin: 20px 0;
+}
+
+.text-poster:hover {
+  transform: scale(1.02);
+}
+
+.show-controls-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.show-controls-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Text Containers */
+.poster-text-container,
+.poster-subtext-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.poster-main-text,
+.poster-sub-text {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 8px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.poster-main-text.editable:hover,
+.poster-sub-text.editable:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.02);
+}
+
+.text-input {
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid #3b82f6;
+  border-radius: 8px;
+  padding: 8px 12px;
+  outline: none;
+  backdrop-filter: blur(10px);
+  color: #1f2937 !important;
+}
+
+.main-text-input {
+  width: 90%;
+  text-align: inherit;
+  font-family: inherit;
+}
+
+.sub-text-input {
+  width: 90%;
+  text-align: inherit;
+  font-family: inherit;
+  resize: vertical;
+}
+
+/* Edit Buttons */
+.edit-text-btn {
+  position: absolute;
+  background: rgba(59, 130, 246, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.poster-text-container:hover .edit-text-btn,
+.poster-subtext-container:hover .edit-text-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.main-edit {
+  top: -10px;
+  right: -10px;
+}
+
+.sub-edit {
+  top: -10px;
+  right: -10px;
+}
+
+.edit-text-btn:hover {
+  background: rgba(37, 99, 235, 1);
+  transform: scale(1.1);
+}
+
+/* Accent Elements */
+.accent-elements {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+}
+
+.accent-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-bottom: 8px;
+}
+
+.accent-line {
+  width: 60px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.bold-elements {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+.bold-stripe {
+  height: 8px;
+  width: 100%;
+}
+
+/* Poster Style Variations */
+.text-poster.modern {
+  background-attachment: fixed;
+}
+
+.text-poster.classic {
+  background-attachment: scroll;
+}
+
+.text-poster.bold {
+  background-attachment: fixed;
+  position: relative;
+}
+
+.text-poster.bold::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+  pointer-events: none;
+}
+
+.text-poster.minimal {
+  background-attachment: scroll;
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .comp-textposter-design {
+    margin: 15px;
+  }
+
+  .poster-controls {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    width: auto;
+    max-width: 90vw;
+  }
+
+  .controls-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .text-poster {
+    margin: 15px 0;
+    border-radius: 16px !important;
+  }
+
+  .show-controls-btn {
+    top: 15px;
+    right: 15px;
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+
+  .poster-main-text {
+    font-size: 28px !important;
+  }
+
+  .poster-sub-text {
+    font-size: 16px !important;
+  }
+
+  .main-text-input,
+  .sub-text-input {
+    width: 95%;
+  }
+
+  .accent-elements {
+    top: 20px;
+    left: 20px;
+  }
+
+  .accent-dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  .accent-line {
+    width: 40px;
+    height: 2px;
+  }
+}
+
+@media (max-width: 480px) {
+  .text-poster {
+    padding: 40px 20px !important;
+    min-height: 250px;
+  }
+
+  .poster-main-text {
+    font-size: 24px !important;
+  }
+
+  .poster-sub-text {
+    font-size: 14px !important;
+  }
+
+
+  .controls-header h4 {
+    font-size: 14px;
+  }
+
+  .control-group label {
+    font-size: 11px;
+  }
+}

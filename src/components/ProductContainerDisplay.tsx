@@ -828,11 +828,13 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
 
   // Helper function to determine if a variant is a color variant
   const isColorVariant = (variantName: string) => {
+    if (!variantName) return false;
     return variantName.toLowerCase().includes('color') || variantName.toLowerCase().includes('colour');
   };
 
   // Helper function to get color value from color name
   const getColorValue = (colorName: string) => {
+    if (!colorName) return null;
     const colorMap: { [key: string]: string } = {
       // Basic colors
       'red': '#ef4444',
@@ -908,7 +910,8 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
     <div 
       className={`product-container-display ${className}`}
       style={{
-        width: `${cardSettings.width}px`,
+        // width: `${cardSettings.width}px`,
+        width: '100%',
         padding: `${cardSettings.padding}px`,
       }}
     >

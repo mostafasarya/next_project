@@ -128,7 +128,7 @@ const InvoicePage: React.FC = () => {
   };
 
   const handleBackToStore = () => {
-    router.push('/design');
+    router.push('/Store-homepage');
   };
 
   const handleTrackOrder = () => {

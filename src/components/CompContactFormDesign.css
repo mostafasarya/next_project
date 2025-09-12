@@ -1,0 +1,235 @@
+/* ======================================================================
+   CONTACT FORM DESIGN COMPONENT STYLES
+   ====================================================================== */
+
+.contact-form-design-comp {
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.contact-form-design-comp:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Header Section */
+.contact-form-header {
+  padding: 40px 40px 20px 40px;
+  text-align: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.contact-form-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  color: white !important;
+}
+
+.contact-form-subtitle {
+  font-size: 16px;
+  margin: 0;
+  opacity: 0.9;
+  line-height: 1.6;
+  color: white !important;
+}
+
+/* Form Container */
+.contact-form-container {
+  padding: 40px;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.submit-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  align-self: flex-start;
+}
+
+.submit-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.submit-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Spinner Animation */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Success Message */
+.success-message {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.success-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.success-message h3 {
+  color: #059669;
+  font-size: 24px;
+  margin: 0 0 8px 0;
+}
+
+.success-message p {
+  color: #6b7280;
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Footer Section */
+.contact-form-footer {
+  padding: 30px 40px;
+  background-color: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+}
+
+.contact-info {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.contact-icon {
+  font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .contact-form-header {
+    padding: 30px 20px 15px 20px;
+  }
+  
+  .contact-form-title {
+    font-size: 28px;
+  }
+  
+  .contact-form-subtitle {
+    font-size: 15px;
+  }
+  
+  .contact-form-container {
+    padding: 30px 20px;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .contact-form-footer {
+    padding: 20px;
+  }
+  
+  .contact-info {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .submit-button {
+    align-self: stretch;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-form-header {
+    padding: 20px 15px 10px 15px;
+  }
+  
+  .contact-form-title {
+    font-size: 24px;
+  }
+  
+  .contact-form-container {
+    padding: 20px 15px;
+  }
+  
+  .contact-form-footer {
+    padding: 15px;
+  }
+}

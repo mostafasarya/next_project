@@ -7,8 +7,10 @@ import StoreBar from './StoreBar';
 import EditorBarDrawer from './EditorBarDrawer';
 import PlatformBar from './PlatformBar';
 import Footer from './Footer';
+import HomePageCard from './HomePageCard';
 import './StoreHomePage.css';
 import './SystemControlIcons.css';
+
 
 const StoreHomePage: React.FC = () => {
   const router = useRouter();
@@ -1444,30 +1446,15 @@ const StoreHomePage: React.FC = () => {
 
 
 
-      {/* Main Content */}
-      <div 
-        className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}
-        style={{
-          marginTop: `${180 + (verticalPadding * 2)}px`,
-          marginLeft: showLogoSettings ? '300px' : '0',
-          transition: 'margin-left 0.3s ease'
-        }}
-      >
-        <div className="content-area">
-          <div className="content-body">
-            {/* Sample Store Content */}
-            <div className="store-content">
-              <h1 style={{ fontSize: '32px', color: '#333', marginBottom: '20px', textAlign: 'center' }}>
-                {t('welcome_title')}
-              </h1>
-              <p style={{ fontSize: '18px', color: '#666', textAlign: 'center', maxWidth: '600px', lineHeight: '1.6', marginBottom: '30px' }}>
-                {t('welcome_description')}
-              </p>
-              
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Main Content - Homepage Card with Design System */}
+      <HomePageCard
+        verticalPadding={verticalPadding}
+        horizontalPadding={horizontalPadding}
+        showLogoSettings={showLogoSettings}
+        showDesignSystem={true}
+        placeholderTitle="Store Homepage Content"
+        placeholderDescription="This white card extends from the store bar to the footer with the same layout structure."
+      />
 
 
 
@@ -1487,6 +1474,7 @@ const StoreHomePage: React.FC = () => {
         translations={translations}
         t={t}
       />
+
 
     </div>
   );

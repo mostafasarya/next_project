@@ -1,0 +1,125 @@
+/**
+ * HOMEPAGE CARD CSS DOCUMENTATION
+ * ===============================
+ * 
+ * This file contains all styles for the HomePageCard component, which serves as
+ * a reusable white card layout that can be used across different pages.
+ * 
+ * COMPONENT STRUCTURE:
+ * ├── .homepage-card (Main container)
+ * └── .homepage-card-content (Content wrapper)
+ *     └── .homepage-placeholder (Optional placeholder content)
+ * 
+ * FEATURES:
+ * - Responsive design that adapts to different screen sizes
+ * - Consistent padding and margins that match StoreBar layout
+ * - Flexible content area for custom components
+ * - Optional placeholder content for empty states
+ * - Smooth transitions for dynamic margin changes
+ * 
+ * USAGE:
+ * This component is designed to be reused across multiple pages that need
+ * a consistent white card layout extending from the store bar to footer.
+ */
+
+/* ======================================================================
+   HOMEPAGE CARD STYLES
+   ====================================================================== */
+
+.homepage-card {
+  background-color: #ffffff;
+  border-radius: 0;
+  box-shadow: none;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  /* Ensure it extends to footer */
+  margin-bottom: 0;
+}
+
+.homepage-card-content {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.homepage-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  opacity: 0.7;
+}
+
+/* ======================================================================
+   RESPONSIVE DESIGN
+   ====================================================================== */
+
+/* Responsive adjustments for homepage card */
+@media (max-width: 768px) {
+  .homepage-card {
+    margin-left: 0 !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .homepage-placeholder h2 {
+    font-size: 20px !important;
+  }
+
+  .homepage-placeholder p {
+    font-size: 14px !important;
+  }
+}
+
+/* ======================================================================
+   UTILITY CLASSES
+   ====================================================================== */
+
+/* Additional spacing utilities for content */
+.homepage-card .content-section {
+  margin-bottom: 32px;
+}
+
+.homepage-card .content-section:last-child {
+  margin-bottom: 0;
+}
+
+/* Text alignment utilities */
+.homepage-card .text-center {
+  text-align: center;
+}
+
+.homepage-card .text-left {
+  text-align: left;
+}
+
+.homepage-card .text-right {
+  text-align: right;
+}
+
+/* Spacing utilities */
+.homepage-card .mb-16 {
+  margin-bottom: 16px;
+}
+
+.homepage-card .mb-24 {
+  margin-bottom: 24px;
+}
+
+.homepage-card .mb-32 {
+  margin-bottom: 32px;
+}
+
+.homepage-card .mt-16 {
+  margin-top: 16px;
+}
+
+.homepage-card .mt-24 {
+  margin-top: 24px;
+}
+
+.homepage-card .mt-32 {
+  margin-top: 32px;
+}

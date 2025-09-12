@@ -2,10 +2,10 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import DesignStorePage from '../../components/DesignStorePage';
+import StoreHomePage from '../../components/StoreHomePage';
 
 const DesignPage: React.FC = () => {
-  return <DesignStorePage />;
+  return <StoreHomePage />;
 };
 
 export default DesignPage;

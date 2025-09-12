@@ -136,7 +136,7 @@ const CatalogManagementPage: React.FC = () => {
         <div className="header-content">
           <button 
             className="back-btn"
-            onClick={() => router.push('/design')}
+            onClick={() => router.push('/Store-homepage')}
           >
             <span className="back-icon">←</span>
             Back to Design

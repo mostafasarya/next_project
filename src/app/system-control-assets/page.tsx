@@ -299,7 +299,7 @@ const SystemControlAssets: React.FC = () => {
            PAGE HEADER
            ====================================================================== */}
       <div className="page-header">
-        <button className="back-btn" onClick={() => router.push('/design')}>
+        <button className="back-btn" onClick={() => router.push('/Store-homepage')}>
           <span className="back-icon">←</span>
           Back to Design
         </button>

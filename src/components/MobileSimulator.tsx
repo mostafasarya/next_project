@@ -20,7 +20,7 @@ const MobileSimulator: React.FC<MobileSimulatorProps> = ({
   translations,
   storeName = 'yourstore'
 }) => {
-  const storeUrl = `/design?mobile=true`;
+  const storeUrl = `/Store-homepage?mobile=true`;
 
   const t = (key: string) => {
     return translations[currentLanguage]?.[key] || translations['English'][key] || key;

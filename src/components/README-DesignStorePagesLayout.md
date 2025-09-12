@@ -45,7 +45,7 @@ const MyPage: React.FC = () => {
     <DesignStorePagesLayout 
       title="My Custom Page"
       showBackButton={true}
-      backUrl="/design"
+      backUrl="/Store-homepage"
     >
       <div>
         <h1>My Page Content</h1>
@@ -160,7 +160,7 @@ The layout uses utility classes for consistent styling:
 Visit `/example-layout` to see a working example of the layout component.
 
 ### Design Store Page
-The original `/design` page now uses this layout internally.
+The original `/Store-homepage` page now uses this layout internally.
 
 ## Responsive Design
 

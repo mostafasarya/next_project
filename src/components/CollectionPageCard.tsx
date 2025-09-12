@@ -27,12 +27,16 @@ interface CollectionPageCardProps {
   collectionId: string;
   collectionName?: string;
   collectionDescription?: string;
+  verticalPadding?: number;
+  horizontalPadding?: number;
 }
 
 const CollectionPageCard: React.FC<CollectionPageCardProps> = ({ 
   collectionId,
   collectionName = `Collection ${collectionId}`,
-  collectionDescription = "Parent card layout ready. Children cards and controls will be added in the next step."
+  collectionDescription = "Parent card layout ready. Children cards and controls will be added in the next step.",
+  verticalPadding = 16,
+  horizontalPadding = 16
 }) => {
   // Control states similar to ProductPageCard
   const [showDimensionsControl, setShowDimensionsControl] = React.useState(false);
@@ -72,7 +76,7 @@ const CollectionPageCard: React.FC<CollectionPageCardProps> = ({
   const [showVisibilityControl, setShowVisibilityControl] = React.useState(false);
   const [cardVisibility, setCardVisibility] = React.useState({
     headerCard: true,
-    filterCard: true,
+    filterCard: false,
     productsCard: true
   });
   
@@ -173,6 +177,7 @@ const CollectionPageCard: React.FC<CollectionPageCardProps> = ({
         } else {
           // Create dummy products for demonstration
           // @ts-ignore - Temporary for dummy products with mixed types
+          // @ts-ignore - Temporary ignore for type mismatches in dummy data
           const dummyProducts: Product[] = [
             {
               id: '1',
@@ -194,11 +199,11 @@ const CollectionPageCard: React.FC<CollectionPageCardProps> = ({
               category: 'Electronics',
               image: '🎧',
               description: 'High-quality wireless headphones with noise cancellation',
-              price: 149.99,
-              beforePrice: 199.99,
-              saveAmount: 50.00,
+              price: '$149.99',
+              beforePrice: '$199.99',
+              saveAmount: '$50.00',
               variants: [
-                { name: 'Color', options: ['Black', 'White', 'Silver'] }
+                { type: 'Color', options: ['Black', 'White', 'Silver'] }
               ]
             },
             {
@@ -207,12 +212,12 @@ const CollectionPageCard: React.FC<CollectionPageCardProps> = ({
               category: 'Clothing',
               image: '👖',
               description: 'Premium denim jeans with a classic fit',
-              price: 79.99,
-              beforePrice: 99.99,
-              saveAmount: 20.00,
+              price: '$79.99',
+              beforePrice: '$99.99',
+              saveAmount: '$20.00',
               variants: [
-                { name: 'Size', options: ['28', '30', '32', '34', '36'] },
-                { name: 'Wash', options: ['Light Blue', 'Dark Blue', 'Black'] }
+                { type: 'Size', options: ['28', '30', '32', '34', '36'] },
+                { type: 'Wash', options: ['Light Blue', 'Dark Blue', 'Black'] }
               ]
             },
             {
@@ -372,11 +377,26 @@ const CollectionPageCard: React.FC<CollectionPageCardProps> = ({
   }, [showDimensionsControl, showColorControl, showHeaderDimensionsControl, showHeaderTextEditor, showVisibilityControl]);
 
   return (
-    <div className="collection-page-card" style={{ 
-      width: `${cardWidth}%`, 
-      minHeight: `${cardHeight}vh`,
-      backgroundColor: parentCardColor 
-    }}>
+    <div 
+      className="collection-page-container" 
+      style={{
+        backgroundColor: '#ffffff',
+        minHeight: 'calc(100vh - 400px)',
+        paddingLeft: `${horizontalPadding}px`,
+        paddingRight: `${horizontalPadding}px`,
+        paddingTop: '40px',
+        paddingBottom: '40px',
+        position: 'relative',
+        width: '100%',
+        boxSizing: 'border-box',
+        margin: 0
+      }}
+    >
+      <div className="collection-page-card" style={{ 
+        width: `${cardWidth}%`, 
+        minHeight: `${cardHeight}vh`,
+        backgroundColor: parentCardColor 
+      }}>
         {/* System Control Buttons */}
         <div className="system-control-buttons">
           <button 
@@ -974,6 +994,7 @@ const CollectionPageCard: React.FC<CollectionPageCardProps> = ({
             )}
           </div>
         </SystemDrawer>
+      </div>
     </div>
   );
 };

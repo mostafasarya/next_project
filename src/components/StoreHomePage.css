@@ -2,7 +2,7 @@
  * DESIGN STORE PAGE CSS DOCUMENTATION
  * ===================================
  * 
- * This file contains all styles for the DesignStorePage component, which serves as
+ * This file contains all styles for the StoreHomePage component, which serves as
  * the main design interface for creating and customizing online stores.
  * 
  * COMPONENT STRUCTURE:
@@ -1376,7 +1376,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px;
+  padding: 0px;
 }
 
 /* ==========================================================================
@@ -1571,3 +1571,4 @@
     height: 24px;
   }
 }
+

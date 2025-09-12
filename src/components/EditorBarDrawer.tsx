@@ -118,7 +118,7 @@ const EditorBarDrawer: React.FC<EditorBarDrawerProps> = ({
           <h3>{t('store_pages')}</h3>
         </div>
         <div className="sidebar-menu">
-          <div className="menu-item active">
+          <div className="menu-item active" onClick={() => router.push('/Store-homepage')}>
             <span className="menu-icon">🏠</span>
             <span className="menu-text">{t('home')}</span>
           </div>

@@ -1,3 +1,15 @@
+/* Collection Page Card Container - Stretched Layout */
+.collection-page-container {
+  /* Match HomePageCard layout for full-page stretch */
+  background-color: #ffffff;
+  border-radius: 0;
+  box-shadow: none;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 0;
+}
+
 /* Collection Page Card */
 .collection-page-card {
   position: relative;
@@ -172,7 +184,7 @@
 
 /* Collection Page Content with Children Cards */
 .collection-page-card-content {
-  padding: 60px 24px 24px 24px;
+  padding: 0px 0px 0px 0px;
   height: calc(100% - 60px);
   min-height: calc(100vh - 280px); /* Ensure minimum height for percentage calculations */
   display: flex;
@@ -363,7 +375,7 @@
 
 
 .header-card-content {
-  padding: 24px;
+  padding: 0;
   height: 100%;
   display: flex;
   align-items: center;
@@ -1533,4 +1545,17 @@
 .column-item.double {
   width: 18px;
   height: 18px;
+}
+
+/* =======================================================================
+   RESPONSIVE DESIGN - HOMEPAGE CARD LAYOUT MATCHING
+   ======================================================================= */
+
+/* Mobile responsive adjustments to match HomePageCard behavior */
+@media (max-width: 768px) {
+  .collection-page-container {
+    margin-left: 0 !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
 }

@@ -190,7 +190,7 @@ const statusText = t(store.status); // 'active' or 'inactive'
 ```
 src/
 ├── components/
-│   ├── DesignStorePage.tsx          # Main translation hub
+│   ├── StoreHomePage.tsx            # Main translation hub
 │   ├── EditorBarDrawer.tsx          # Uses t() function
 │   ├── StoreBar.tsx                 # Language selector
 │   ├── LandingPage.tsx              # Landing page translations
@@ -312,7 +312,7 @@ return key; // Last resort
 
 Keep translation logic centralized:
 ```typescript
-// In DesignStorePage.tsx (main hub)
+// In StoreHomePage.tsx (main hub)
 const translations = { /* all translations */ };
 const t = (key: string) => { /* translation logic */ };
 

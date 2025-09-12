@@ -248,7 +248,7 @@ const CollectionsPagesManagement: React.FC = () => {
       {/* Header */}
       <div className="collections-header">
         <div className="header-left">
-          <button className="back-btn" onClick={() => router.push('/design')}>
+          <button className="back-btn" onClick={() => router.push('/Store-homepage')}>
             <span className="back-icon">←</span>
             Back to Design
           </button>

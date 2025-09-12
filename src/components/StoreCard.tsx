@@ -396,7 +396,7 @@ const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
   };
 
   const handleDesignStore = () => {
-    router.push('/design');
+    router.push('/Store-homepage');
   };
 
   return (

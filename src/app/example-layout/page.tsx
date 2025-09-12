@@ -7,7 +7,7 @@ const ExampleLayoutPage: React.FC = () => {
   return (
     <DesignStorePagesLayout 
       showBackButton={true}
-      backUrl="/design"
+      backUrl="/Store-homepage"
     >
       <div className="content-wrapper fade-in">
         <div className="page-header">

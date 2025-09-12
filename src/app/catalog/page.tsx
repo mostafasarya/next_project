@@ -195,7 +195,7 @@ const CatalogPage: React.FC = () => {
     <DesignStorePagesLayout 
       title="Product Catalog"
       showBackButton={true}
-      backUrl="/design"
+      backUrl="/Store-homepage"
     >
       <div className="catalog-page">
         {/* Hero Section with Image Container */}

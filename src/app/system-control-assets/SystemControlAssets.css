@@ -35,7 +35,7 @@
  * These variables are controlled by the React component state
  */
 :root {
-  --icon-size-dynamic: 48px;  /* Base size for all system control icons */
+  --icon-size-dynamic: 48movepx;  /* Base size for all system control icons */
 }
 
 /**
@@ -504,11 +504,11 @@
 /* Tab System */
 .tab-container {
   display: flex;
-  background: #f8fafc;
+  background: #ffffff;
   border-radius: 12px;
   padding: 4px;
   gap: 4px;
-  border: 1px solid #e2e8f0;
+  border: 0px solid #e2e8f0;
 }
 
 .system-tab {

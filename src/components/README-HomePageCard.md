@@ -31,7 +31,7 @@ A reusable white card component that provides a consistent layout structure for 
 ### Basic Usage with Custom Content
 
 ```tsx
-import HomePageCard from '../components/HomePageCard';
+import HomePageCard from '../components/StoreBasicTheme/HomePageCardComponents/HomePageCard';
 
 const MyPage: React.FC = () => {
   return (
@@ -48,7 +48,7 @@ const MyPage: React.FC = () => {
 ### With Store Bar Integration
 
 ```tsx
-import HomePageCard from '../components/HomePageCard';
+import HomePageCard from '../components/StoreBasicTheme/HomePageCardComponents/HomePageCard';
 
 const MyStorePage: React.FC = () => {
   const [verticalPadding, setVerticalPadding] = useState(16);
@@ -73,7 +73,7 @@ const MyStorePage: React.FC = () => {
 ### With Placeholder Content
 
 ```tsx
-import HomePageCard from '../components/HomePageCard';
+import HomePageCard from '../components/StoreBasicTheme/HomePageCardComponents/HomePageCard';
 
 const EmptyPage: React.FC = () => {
   return (
@@ -89,7 +89,7 @@ const EmptyPage: React.FC = () => {
 ### With Custom Styling
 
 ```tsx
-import HomePageCard from '../components/HomePageCard';
+import HomePageCard from '../components/StoreBasicTheme/HomePageCardComponents/HomePageCard';
 
 const CustomStyledPage: React.FC = () => {
   return (

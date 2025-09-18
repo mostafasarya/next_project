@@ -2,14 +2,15 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import MobileSimulator from './MobileSimulator';
-import StoreBar from './StoreBar';
-import EditorBarDrawer from './EditorBarDrawer';
+import MobileSimulator from './EditorControls/MobileSimulator';
+import StoreBar from './StoreBasicTheme/StoreBar/StoreBar';
+import EditorBarDrawer from './EditorControls/EditorBarDrawer';
+import { StoreBarElementsPositionsProvider } from './EditorControls/StoreBarElementsPositions';
 import PlatformBar from './PlatformBar';
-import Footer from './Footer';
-import HomePageCard from './HomePageCard';
+import Footer from './StoreBasicTheme/Footer/Footer';
+import HomePageCard from './StoreBasicTheme/HomePageCardComponents/HomePageCard';
 import './StoreHomePage.css';
-import './SystemControlIcons.css';
+import './EditorControls/SystemControlIcons.css';
 
 
 const StoreHomePage: React.FC = () => {
@@ -41,6 +42,10 @@ const StoreHomePage: React.FC = () => {
   };
   const [horizontalPadding, setHorizontalPadding] = useState(16);
   const [verticalPadding, setVerticalPadding] = useState(16);
+  const [backgroundType, setBackgroundType] = useState<'solid' | 'gradient'>('solid');
+  const [solidColor, setSolidColor] = useState('#ffffff');
+  const [gradientStart, setGradientStart] = useState('#ff6b9d');
+  const [gradientEnd, setGradientEnd] = useState('#c44569');
   const [showLanguageSettings, setShowLanguageSettings] = useState(false);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>(['English']);
   const [showLanguageSelector, setShowLanguageSelector] = useState(false);
@@ -60,6 +65,21 @@ const StoreHomePage: React.FC = () => {
     avatar?: string;
   } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Tab Navigation States
+  const [activeTab, setActiveTab] = useState('home');
+  
+  // Tab Navigation Handler
+  const handleTabChange = (tabId: string, subTabId?: string) => {
+    if (subTabId) {
+      setActiveTab(`${tabId}-${subTabId}`);
+    } else {
+      setActiveTab(tabId);
+    }
+    
+    // Handle navigation based on tab type
+    console.log('Tab changed:', { tabId, subTabId });
+  };
 
   // Load store name from localStorage if available
   useEffect(() => {
@@ -1350,7 +1370,8 @@ const StoreHomePage: React.FC = () => {
   }, []);
 
   return (
-    <div className="design-store-page">
+    <StoreBarElementsPositionsProvider>
+      <div className="design-store-page">
       {/* Top App Bar */}
       <PlatformBar />
 
@@ -1365,11 +1386,19 @@ const StoreHomePage: React.FC = () => {
         logoHeight={logoHeight}
         horizontalPadding={horizontalPadding}
         verticalPadding={verticalPadding}
+        backgroundType={backgroundType}
+        solidColor={solidColor}
+        gradientStart={gradientStart}
+        gradientEnd={gradientEnd}
         onLogoShapeChange={handleLogoShapeChange}
         onLogoWidthChange={handleLogoWidthChange}
         onLogoHeightChange={setLogoHeight}
         onHorizontalPaddingChange={setHorizontalPadding}
         onVerticalPaddingChange={setVerticalPadding}
+        onBackgroundTypeChange={setBackgroundType}
+        onSolidColorChange={setSolidColor}
+        onGradientStartChange={setGradientStart}
+        onGradientEndChange={setGradientEnd}
         showLogoSettings={showLogoSettings}
         onCloseLogoSettings={handleCloseSettings}
         onUpdateLogoSettings={handleUpdateSettings}
@@ -1391,6 +1420,10 @@ const StoreHomePage: React.FC = () => {
         logoHeight={logoHeight}
         horizontalPadding={horizontalPadding}
         verticalPadding={verticalPadding}
+        backgroundType={backgroundType}
+        solidColor={solidColor}
+        gradientStart={gradientStart}
+        gradientEnd={gradientEnd}
         isLoggedIn={isLoggedIn}
         userData={userData}
         cartItems={cartItems}
@@ -1440,6 +1473,8 @@ const StoreHomePage: React.FC = () => {
         onAddToCart={addToCart}
         onGetTotalPrice={getTotalPrice}
         t={t}
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
       />
 
 
@@ -1476,7 +1511,8 @@ const StoreHomePage: React.FC = () => {
       />
 
 
-    </div>
+      </div>
+    </StoreBarElementsPositionsProvider>
   );
 };
 

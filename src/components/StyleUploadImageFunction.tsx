@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import { HiCamera } from 'react-icons/hi';
-import './SystemControlIcons.css';
+import './EditorControls/SystemControlIcons.css';
 
 interface StyleUploadImageFunctionProps {
   onImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;

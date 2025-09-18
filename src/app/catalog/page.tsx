@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import DesignStorePagesLayout from '../../components/DesignStorePagesLayout';
+import DesignStorePagesLayout from '../../components/StoreBasicTheme/Layout/DesignStorePagesLayout';
 import './CatalogPage.css';
 
 interface Product {

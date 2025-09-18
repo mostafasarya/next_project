@@ -21,7 +21,7 @@ A reusable layout component that provides a complete design store interface with
 ### Basic Usage
 
 ```tsx
-import DesignStorePagesLayout from '../components/DesignStorePagesLayout';
+import DesignStorePagesLayout from '../components/StoreBasicTheme/Layout/DesignStorePagesLayout';
 
 const MyPage: React.FC = () => {
   return (
@@ -38,7 +38,7 @@ const MyPage: React.FC = () => {
 ### With Custom Title and Back Button
 
 ```tsx
-import DesignStorePagesLayout from '../components/DesignStorePagesLayout';
+import DesignStorePagesLayout from '../components/StoreBasicTheme/Layout/DesignStorePagesLayout';
 
 const MyPage: React.FC = () => {
   return (
@@ -59,7 +59,7 @@ const MyPage: React.FC = () => {
 ### With Custom Back Handler
 
 ```tsx
-import DesignStorePagesLayout from '../components/DesignStorePagesLayout';
+import DesignStorePagesLayout from '../components/StoreBasicTheme/Layout/DesignStorePagesLayout';
 import { useRouter } from 'next/navigation';
 
 const MyPage: React.FC = () => {

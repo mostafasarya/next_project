@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import DesignStorePagesLayout from '../../../components/DesignStorePagesLayout';
-import CollectionPageCard from '../../../components/CollectionPageCard';
+import DesignStorePagesLayout from '../../../components/StoreBasicTheme/Layout/DesignStorePagesLayout';
+import CollectionPageCard from '../../../components/StoreBasicTheme/CollectionPageCard/CollectionPageCard';
 import './CollectionDetailPage.css';
 
 interface Collection {

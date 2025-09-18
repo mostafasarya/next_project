@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import DesignStorePagesLayout from '../../components/DesignStorePagesLayout';
+import DesignStorePagesLayout from '../../components/StoreBasicTheme/Layout/DesignStorePagesLayout';
 
 const ExampleLayoutPage: React.FC = () => {
   return (

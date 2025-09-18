@@ -31,11 +31,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import SystemDrawer from '../../components/SystemDrawer';
-import StyleTextUser from '../../components/StyleTextUser';
-import StyleButton, { ButtonStyles, defaultButtonStyles } from '../../components/StyleButton';
+import SystemDrawer from '../../components/EditorControls/SystemDrawer';
+import StyleTextUser from '../../components/EditorControls/StyleTextUser';
+import StyleButton, { ButtonStyles, defaultButtonStyles } from '../../components/EditorControls/StyleButton';
 import StyledButton from '../../components/StyledButton';
-import ProductContainerDisplay from '../../components/ProductContainerDisplay';
+import ProductContainerDisplay from '../../components/StoreBasicTheme/ProductContainer/ProductContainerDisplay';
 import './SystemControlAssets.css';
 
 // React Icons imports - Heroicons library for consistent iconography

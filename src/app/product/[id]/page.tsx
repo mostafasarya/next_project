@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { useParams } from 'next/navigation';
-import DesignStorePagesLayout from '../../../components/DesignStorePagesLayout';
-import ProductPageCard from '../../../components/ProductPageCard';
+import DesignStorePagesLayout from '../../../components/StoreBasicTheme/Layout/DesignStorePagesLayout';
+import ProductPageCard from '../../../components/StoreBasicTheme/ProductPageCard/ProductPageCard';
 
 const ProductPage: React.FC = () => {
   const params = useParams();

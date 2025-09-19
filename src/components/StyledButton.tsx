@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ButtonStyles } from './EditorControls/StyleButton';
+import { ButtonStyles } from './EditorControls/PropertiesManagement/StyleButton';
 
 export interface StyledButtonProps {
   styles: ButtonStyles;

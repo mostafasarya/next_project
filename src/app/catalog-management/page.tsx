@@ -1,3 +1,3 @@
-import CatalogManagement from '../../components/EditorControls/ManagementComponents/CatalogManagement';
+import CatalogManagement from '../../components/EditorControls/PagesManagementComponents/CatalogManagement';
 
 export default CatalogManagement;

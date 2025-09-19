@@ -2,7 +2,7 @@
 
 import React from 'react';
 import SystemDrawer from './SystemDrawer';
-import SearchDropdown from '../SearchDropdown';
+import SearchDropdown from '../../SearchDropdown';
 
 export interface ButtonStyles {
   type: 'text' | 'icon' | 'text-icon';

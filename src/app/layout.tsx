@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { GlobalDrawerProvider } from "../components/EditorControls/GlobalDrawerProvider";
+import { GlobalDrawerProvider } from "../components/EditorControls/PropertiesManagement/GlobalDrawerProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

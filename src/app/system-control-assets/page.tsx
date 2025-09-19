@@ -31,9 +31,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import SystemDrawer from '../../components/EditorControls/SystemDrawer';
-import StyleTextUser from '../../components/EditorControls/StyleTextUser';
-import StyleButton, { ButtonStyles, defaultButtonStyles } from '../../components/EditorControls/StyleButton';
+import SystemDrawer from '../../components/EditorControls/PropertiesManagement/SystemDrawer';
+import StyleTextUser from '../../components/EditorControls/PropertiesManagement/StyleTextUser';
+import StyleButton, { ButtonStyles, defaultButtonStyles } from '../../components/EditorControls/PropertiesManagement/StyleButton';
 import StyledButton from '../../components/StyledButton';
 import ProductContainerDisplay from '../../components/StoreBasicTheme/ProductContainer/ProductContainerDisplay';
 import './SystemControlAssets.css';

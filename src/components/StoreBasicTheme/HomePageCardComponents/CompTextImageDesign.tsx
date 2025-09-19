@@ -2,8 +2,8 @@
 
 import React, { useState, useRef } from 'react';
 import { HiCamera, HiTrash, HiPencil, HiPhotograph, HiSelector, HiRefresh } from 'react-icons/hi';
-import StyleTextUser from '../../EditorControls/StyleTextUser';
-import '../../EditorControls/SystemControlIcons.css';
+import StyleTextUser from '../../EditorControls/PropertiesManagement/StyleTextUser';
+import '../../EditorControls/PropertiesManagement/SystemControlIcons.css';
 import '../../../app/system-control-assets/SystemControlAssets.css';
 import './CompTextImageDesign.css';
 

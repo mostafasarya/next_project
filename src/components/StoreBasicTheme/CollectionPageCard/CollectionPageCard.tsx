@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { HiArrowsExpand, HiCamera, HiX, HiTrash, HiPencil, HiEye, HiPlus, HiViewGrid } from 'react-icons/hi';
-import SystemDrawer from '../../EditorControls/SystemDrawer';
-import StyleTextUser from '../../EditorControls/StyleTextUser';
+import SystemDrawer from '../../EditorControls/PropertiesManagement/SystemDrawer';
+import StyleTextUser from '../../EditorControls/PropertiesManagement/StyleTextUser';
 import ProductContainerDisplay from '../ProductContainer/ProductContainerDisplay';
 import ProductsGrid from './ProductsGrid';
 import './CollectionPageCard.css';

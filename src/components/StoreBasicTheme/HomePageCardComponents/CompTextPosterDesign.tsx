@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import StyleTextUser from '../../EditorControls/StyleTextUser';
-import '../../EditorControls/SystemControlIcons.css';
+import StyleTextUser from '../../EditorControls/PropertiesManagement/StyleTextUser';
+import '../../EditorControls/PropertiesManagement/SystemControlIcons.css';
 import './CompTextPosterDesign.css';
 
 interface CompTextPosterDesignProps {

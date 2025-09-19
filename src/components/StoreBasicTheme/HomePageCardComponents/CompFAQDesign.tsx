@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { HiPencil, HiTrash, HiPlus } from 'react-icons/hi';
-import '../../EditorControls/SystemControlIcons.css';
+import '../../EditorControls/PropertiesManagement/SystemControlIcons.css';
 import '../../../app/system-control-assets/SystemControlAssets.css';
 import './CompFAQDesign.css';
 

@@ -3,11 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import WebsitOuterNavigationBar from './WebsitOuterNavigationBar';
+import { useTranslation } from './EditorControls/TranslationComponent';
 import './LandingPage.css';
 
 const LandingPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [currentLanguage, setCurrentLanguage] = useState('English');
+  // Use the centralized translation system
+  const { t, currentLanguage, changeLanguage } = useTranslation();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -16,7 +18,8 @@ const LandingPage: React.FC = () => {
   });
   const router = useRouter();
 
-  // Translation dictionary
+  // Translation functionality is now handled by the TranslationComponent
+  /*
   const translations = {
     'English': {
       'welcome_title': 'Welcome to Online Store',
@@ -212,48 +215,7 @@ const LandingPage: React.FC = () => {
     '中文': 'Chinese',
     '한국어': 'Korean'
   };
-
-  // Translation function
-  const t = (key: string) => {
-    // First try the current language directly (for native script names like 'العربية')
-    let currentLangTranslations = translations[currentLanguage as keyof typeof translations];
-    
-    // If not found, try the mapped language (for English names like 'Arabic')
-    if (!currentLangTranslations) {
-      const mappedLanguage = languageMapping[currentLanguage] || currentLanguage;
-      currentLangTranslations = translations[mappedLanguage as keyof typeof translations];
-    }
-    
-    const englishTranslations = translations['English'];
-    
-    if (currentLangTranslations && currentLangTranslations[key as keyof typeof currentLangTranslations]) {
-      return currentLangTranslations[key as keyof typeof currentLangTranslations];
-    }
-    
-    if (englishTranslations && englishTranslations[key as keyof typeof englishTranslations]) {
-      return englishTranslations[key as keyof typeof englishTranslations];
-    }
-    
-    return key;
-  };
-
-  // Load saved language and listen for changes
-  useEffect(() => {
-    const savedLanguage = localStorage.getItem('websiteLanguage');
-    if (savedLanguage) {
-      setCurrentLanguage(savedLanguage);
-    }
-
-    const handleLanguageChange = (event: CustomEvent) => {
-      setCurrentLanguage(event.detail.language);
-    };
-
-    window.addEventListener('languageChanged', handleLanguageChange as EventListener);
-    
-    return () => {
-      window.removeEventListener('languageChanged', handleLanguageChange as EventListener);
-    };
-  }, []);
+  */
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({

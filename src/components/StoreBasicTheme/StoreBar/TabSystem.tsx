@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { HiPlus, HiX, HiChevronDown, HiPencil } from 'react-icons/hi';
-import { useGlobalDrawer } from '../../EditorControls/GlobalDrawerProvider';
+import { useGlobalDrawer } from '../../EditorControls/PropertiesManagement/GlobalDrawerProvider';
 
 export type TabType = 'home' | 'collection' | 'catalog' | 'blank';
 

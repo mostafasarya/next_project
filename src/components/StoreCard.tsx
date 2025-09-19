@@ -399,6 +399,26 @@ const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
     router.push('/Store-homepage');
   };
 
+  const handlePaymentMethods = () => {
+    router.push(`/payment-methods/${store.id}`);
+  };
+
+  const handleInventory = () => {
+    router.push('/products-management');
+  };
+
+  const handleStorePermissions = () => {
+    router.push(`/store-permissions?storeId=${store.id}`);
+  };
+
+  const handleMessages = () => {
+    router.push(`/store-client-messages?storeId=${store.id}`);
+  };
+
+  const handleMarketing = () => {
+    router.push(`/marketing-hub?storeId=${store.id}`);
+  };
+
   return (
     <div className="store-card">
       <div className="store-header">
@@ -446,7 +466,15 @@ const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
           <div 
             key={index} 
             className={`feature-card ${feature.name === t('design_your_store') ? 'design-feature' : ''}`}
-            onClick={feature.name === t('design_your_store') ? handleDesignStore : undefined}
+            onClick={
+              feature.name === t('design_your_store') ? handleDesignStore :
+              feature.name === t('payment_method') ? handlePaymentMethods :
+              feature.name === t('inventory') ? handleInventory :
+              feature.name === t('store_permissions') ? handleStorePermissions :
+              feature.name === t('messages') ? handleMessages :
+              feature.name === t('marketing') ? handleMarketing :
+              undefined
+            }
           >
             <div 
               className="feature-icon"

@@ -5,10 +5,11 @@ import { HiCamera, HiCog, HiMenuAlt3 } from 'react-icons/hi';
 import StyleUploadImageFunction from '../../StyleUploadImageFunction';
 import StoreBarIcons from './StoreBarIcons';
 import TabsStoreBar from './TabsStoreBar';
-import { useGlobalDrawer } from '../../EditorControls/GlobalDrawerProvider';
-import { useStoreBarElementsPositions } from '../../EditorControls/StoreBarElementsPositions';
+import Cart from './Cart';
+import { useGlobalDrawer } from '../../EditorControls/PropertiesManagement/GlobalDrawerProvider';
+import { useStoreBarElementsPositions } from '../../EditorControls/PropertiesManagement/StoreBarElementsPositions';
 import './StoreBar.css';
-import '../../EditorControls/SystemControlIcons.css';
+import '../../EditorControls/PropertiesManagement/SystemControlIcons.css';
 
 interface StoreBarProps {
   storeLogo: string | null;
@@ -469,75 +470,13 @@ const StoreBar: React.FC<StoreBarProps> = ({
 
 
       {/* Cart Drawer */}
-      {showCartDrawer && (
-        <div className="cart-drawer-overlay" onClick={onCartDrawerClose}>
-          <div className="cart-drawer" onClick={(e) => e.stopPropagation()}>
-            <div className="cart-drawer-header">
-              <h3>Shopping Cart</h3>
-              <button className="close-cart-btn" onClick={onCartDrawerClose}>✕</button>
-            </div>
-            
-            <div className="cart-drawer-content">
-              {cartItems.length === 0 ? (
-                <div className="empty-cart">
-                  <span className="empty-cart-icon">
-                    <StoreBarIcons iconType="empty-cart" />
-                  </span>
-                  <p>Your cart is empty</p>
-                  <button className="start-shopping-btn" onClick={() => {
-                    onCartDrawerClose();
-                    window.location.href = '/products-management';
-                  }}>
-                    Start Shopping
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <div className="cart-items">
-                    {cartItems.map(item => (
-                      <div key={item.id} className="cart-item">
-                        <div className="cart-item-image">{item.image}</div>
-                        <div className="cart-item-details">
-                          <h4>{item.name}</h4>
-                          <p className="cart-item-price">${item.price}</p>
-                        </div>
-                        <div className="cart-item-quantity">
-                          <button 
-                            className="quantity-btn"
-                            onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
-                          >
-                            -
-                          </button>
-                          <span className="quantity-value">{item.quantity}</span>
-                          <button 
-                            className="quantity-btn"
-                            onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
-                          >
-                            +
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <div className="cart-drawer-footer">
-                    <div className="cart-total">
-                      <span>Total:</span>
-                      <span className="total-price">${onGetTotalPrice().toFixed(2)}</span>
-                    </div>
-                    <button className="checkout-btn" onClick={() => {
-                      onCartDrawerClose();
-                      window.location.href = '/checkout';
-                    }}>
-                      Checkout
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+      <Cart
+        showCartDrawer={showCartDrawer}
+        cartItems={cartItems}
+        onCartDrawerClose={onCartDrawerClose}
+        onUpdateQuantity={onUpdateQuantity}
+        onGetTotalPrice={onGetTotalPrice}
+      />
 
       {/* Wishlist Drawer */}
       {showWishlistDrawer && (

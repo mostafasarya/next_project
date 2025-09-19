@@ -1,3 +1,3 @@
-import CustomPageManagement from '../../components/EditorControls/ManagementComponents/CustomPageManagement';
+import CustomPageManagement from '../../components/EditorControls/PagesManagementComponents/CustomPageManagement';
 
 export default CustomPageManagement;

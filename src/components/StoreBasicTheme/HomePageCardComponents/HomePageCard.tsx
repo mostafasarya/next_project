@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { HiSparkles, HiLightBulb } from 'react-icons/hi';
-import SystemDrawer from '../../EditorControls/SystemDrawer';
-import '../../EditorControls/SystemControlIcons.css';
+import SystemDrawer from '../../EditorControls/PropertiesManagement/SystemDrawer';
+import '../../EditorControls/PropertiesManagement/SystemControlIcons.css';
 import CompContactFormDesign from './CompContactFormDesign';
 import CompFeaturedProductDesign from './CompFeaturedProductDesign';
 import CompEmailSubscriptionDesign from './CompEmailSubscriptionDesign';

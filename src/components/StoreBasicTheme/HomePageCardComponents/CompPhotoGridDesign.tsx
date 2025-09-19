@@ -3,9 +3,9 @@
 import React, { useState, useRef } from 'react';
 import { HiPlus, HiCamera, HiCog, HiTrash, HiSelector } from 'react-icons/hi';
 import { HiViewfinderCircle } from 'react-icons/hi2';
-import SystemDrawer from '../../EditorControls/SystemDrawer';
-import StyleTextUser from '../../EditorControls/StyleTextUser';
-import '../../EditorControls/SystemControlIcons.css';
+import SystemDrawer from '../../EditorControls/PropertiesManagement/SystemDrawer';
+import StyleTextUser from '../../EditorControls/PropertiesManagement/StyleTextUser';
+import '../../EditorControls/PropertiesManagement/SystemControlIcons.css';
 import './CompPhotoGridDesign.css';
 
 interface PhotoItem {

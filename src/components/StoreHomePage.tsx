@@ -2,46 +2,44 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import MobileSimulator from './EditorControls/MobileSimulator';
+import MobileSimulator from './EditorControls/PropertiesManagement/MobileSimulator';
 import StoreBar from './StoreBasicTheme/StoreBar/StoreBar';
-import EditorBarDrawer from './EditorControls/EditorBarDrawer';
-import { StoreBarElementsPositionsProvider } from './EditorControls/StoreBarElementsPositions';
+import EditorBarDrawer from './EditorControls/PropertiesManagement/EditorBarDrawer';
+import { StoreBarElementsPositionsProvider } from './EditorControls/PropertiesManagement/StoreBarElementsPositions';
 import PlatformBar from './PlatformBar';
 import Footer from './StoreBasicTheme/Footer/Footer';
 import HomePageCard from './StoreBasicTheme/HomePageCardComponents/HomePageCard';
+import { useLogoControls } from './StoreBasicTheme/StoreBar/LogoControls';
+import { useCart } from './StoreBasicTheme/StoreBar/Cart';
+import { useTranslation } from './EditorControls/TranslationComponent';
 import './StoreHomePage.css';
-import './EditorControls/SystemControlIcons.css';
+import './EditorControls/PropertiesManagement/SystemControlIcons.css';
 
 
 const StoreHomePage: React.FC = () => {
   const router = useRouter();
   const [isMobileMode, setIsMobileMode] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [storeLogo, setStoreLogo] = useState<string | null>(null);
-  const [showLogoSettings, setShowLogoSettings] = useState(false);
-  const [logoShape, setLogoShape] = useState<'circle' | 'rectangle'>('circle');
-  const [logoWidth, setLogoWidth] = useState(64);
-  const [logoHeight, setLogoHeight] = useState(64);
-
-  // Custom function to handle logo shape changes
-  const handleLogoShapeChange = (shape: 'circle' | 'rectangle') => {
-    setLogoShape(shape);
-    // When switching to circle, sync height with width
-    if (shape === 'circle') {
-      setLogoHeight(logoWidth);
-    }
-  };
-
-  // Custom function to handle logo width changes
-  const handleLogoWidthChange = (width: number) => {
-    setLogoWidth(width);
-    // When in circle mode, sync height with width
-    if (logoShape === 'circle') {
-      setLogoHeight(width);
-    }
-  };
-  const [horizontalPadding, setHorizontalPadding] = useState(16);
-  const [verticalPadding, setVerticalPadding] = useState(16);
+  
+  // Use the extracted logo controls hook
+  const {
+    storeLogo,
+    logoShape,
+    logoWidth,
+    logoHeight,
+    horizontalPadding,
+    verticalPadding,
+    showLogoSettings,
+    handleLogoShapeChange,
+    handleLogoWidthChange,
+    handleLogoHeightChange,
+    handleHorizontalPaddingChange,
+    handleVerticalPaddingChange,
+    handleCloseSettings,
+    handleUpdateSettings,
+    handleSettingsClick,
+    setStoreLogo,
+  } = useLogoControls();
   const [backgroundType, setBackgroundType] = useState<'solid' | 'gradient'>('solid');
   const [solidColor, setSolidColor] = useState('#ffffff');
   const [gradientStart, setGradientStart] = useState('#ff6b9d');
@@ -49,10 +47,20 @@ const StoreHomePage: React.FC = () => {
   const [showLanguageSettings, setShowLanguageSettings] = useState(false);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>(['English']);
   const [showLanguageSelector, setShowLanguageSelector] = useState(false);
-  const [currentLanguage, setCurrentLanguage] = useState('English');
+  // Use the centralized translation system
+  const { t, currentLanguage, changeLanguage, translations } = useTranslation();
   const [showMobileSimulator, setShowMobileSimulator] = useState(false);
   const [storeName, setStoreName] = useState('yourstore');
-  const [showCartDrawer, setShowCartDrawer] = useState(false);
+  // Use the extracted cart controls hook
+  const {
+    cartItems,
+    showCartDrawer,
+    updateQuantity,
+    getTotalPrice,
+    openCartDrawer,
+    closeCartDrawer,
+    addToCart,
+  } = useCart();
   const [showWishlistDrawer, setShowWishlistDrawer] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -91,44 +99,7 @@ const StoreHomePage: React.FC = () => {
     }
   }, []);
 
-  // Cart data and functions
-  const [cartItems, setCartItems] = useState([
-    {
-      id: '1',
-      name: 'Hat',
-      price: 29.99,
-      quantity: 2,
-      image: '🦴'
-    },
-    {
-      id: '2',
-      name: 'Shirt',
-      price: 34.99,
-      quantity: 1,
-      image: '👕'
-    },
-    {
-      id: '3',
-      name: 'Trouser',
-      price: 49.99,
-      quantity: 1,
-      image: '👖'
-    }
-  ]);
-
-  const updateQuantity = (id: string, newQuantity: number) => {
-    if (newQuantity <= 0) {
-      setCartItems(prev => prev.filter(item => item.id !== id));
-    } else {
-      setCartItems(prev => prev.map(item => 
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      ));
-    }
-  };
-
-  const getTotalPrice = () => {
-    return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
-  };
+  // Cart functionality is now handled by the useCart hook
 
   // Wishlist data and functions
   const [wishlistItems, setWishlistItems] = useState([
@@ -166,20 +137,10 @@ const StoreHomePage: React.FC = () => {
     setWishlistItems(prev => prev.filter(item => item.id !== id));
   };
 
-  const addToCart = (wishlistItem: any) => {
-    // Add item to cart
-    setCartItems(prev => {
-      const existingItem = prev.find(item => item.id === wishlistItem.id);
-      if (existingItem) {
-        return prev.map(item => 
-          item.id === wishlistItem.id 
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      } else {
-        return [...prev, { ...wishlistItem, quantity: 1 }];
-      }
-    });
+  const addToCartFromWishlist = (wishlistItem: any) => {
+    // Add item to cart using the Cart hook
+    addToCart(wishlistItem);
+    
     // Remove from wishlist
     removeFromWishlist(wishlistItem.id);
   };
@@ -366,7 +327,8 @@ const StoreHomePage: React.FC = () => {
     setAuthForm({ name: '', email: '', password: '', confirmPassword: '', rememberMe: false });
   };
 
-  // Translation dictionary
+  // Translation functionality is now handled by the TranslationComponent
+  /*
   const translations = {
     'English': {
       'subscribe_title': 'Subscribe to our emails',
@@ -1227,47 +1189,7 @@ const StoreHomePage: React.FC = () => {
       'publish': '게시'
     }
   };
-
-  // Language mapping from native script names to English names
-  const languageMapping: { [key: string]: string } = {
-    'English': 'English',
-    'العربية': 'Arabic',
-    'Español': 'Spanish',
-    'Français': 'French',
-    'Deutsch': 'German',
-    'Português': 'Portuguese',
-    'Türkçe': 'Turkish',
-    'हिन्दी': 'Hindi',
-    'Italiano': 'Italian',
-    'Русский': 'Russian',
-    '日本語': 'Japanese',
-    '中文': 'Chinese',
-    '한국어': 'Korean'
-  };
-
-  // Translation function
-  const t = (key: string) => {
-    // First try the current language directly (for native script names like 'العربية')
-    let currentLangTranslations = translations[currentLanguage as keyof typeof translations];
-    
-    // If not found, try the mapped language (for English names like 'Arabic')
-    if (!currentLangTranslations) {
-      const mappedLanguage = languageMapping[currentLanguage] || currentLanguage;
-      currentLangTranslations = translations[mappedLanguage as keyof typeof translations];
-    }
-    
-    const englishTranslations = translations['English'];
-    
-    if (currentLangTranslations && currentLangTranslations[key as keyof typeof currentLangTranslations]) {
-      return currentLangTranslations[key as keyof typeof currentLangTranslations];
-    }
-    
-    if (englishTranslations && englishTranslations[key as keyof typeof englishTranslations]) {
-      return englishTranslations[key as keyof typeof englishTranslations];
-    }
-    
-    return key;
-  };
+  */
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -1290,43 +1212,9 @@ const StoreHomePage: React.FC = () => {
     fileInputRef.current?.click();
   };
 
-  const handleSettingsClick = () => {
-    setShowLogoSettings(true);
-  };
-
-  const handleCloseSettings = () => {
-    setShowLogoSettings(false);
-  };
-
-  const handleUpdateSettings = () => {
-    // Save settings to localStorage or state
-    localStorage.setItem('logoSettings', JSON.stringify({
-      shape: logoShape,
-      width: logoWidth,
-      height: logoHeight,
-      horizontalPadding,
-      verticalPadding
-    }));
-    setShowLogoSettings(false);
-  };
 
   useEffect(() => {
-    // Load saved logo from localStorage
-    const savedLogo = localStorage.getItem('storeLogo');
-    if (savedLogo) {
-      setStoreLogo(savedLogo);
-    }
-
-    // Load saved settings from localStorage
-    const savedSettings = localStorage.getItem('logoSettings');
-    if (savedSettings) {
-      const settings = JSON.parse(savedSettings);
-      setLogoShape(settings.shape);
-      setLogoWidth(settings.width);
-      setLogoHeight(settings.height);
-      setHorizontalPadding(settings.horizontalPadding);
-      setVerticalPadding(settings.verticalPadding);
-    }
+    // Logo settings are now handled by the useLogoControls hook
 
     // Load saved languages from localStorage
     const savedLanguages = localStorage.getItem('storeLanguages');
@@ -1340,34 +1228,10 @@ const StoreHomePage: React.FC = () => {
       }
     }
 
-    // Load current language from localStorage
-    const savedCurrentLanguage = localStorage.getItem('currentLanguage');
-    if (savedCurrentLanguage) {
-      setCurrentLanguage(savedCurrentLanguage);
-    } else {
-      // If no saved current language, use the language selected from landing page
-      const websiteLanguage = localStorage.getItem('websiteLanguage');
-      if (websiteLanguage) {
-        setCurrentLanguage(websiteLanguage);
-      }
-    }
+    // Language loading is now handled by TranslationComponent
   }, []);
 
-  // Listen for language changes from EditorBarDrawer
-  useEffect(() => {
-    const handleLanguageChange = (event: CustomEvent) => {
-      const newLanguage = event.detail.language;
-      setCurrentLanguage(newLanguage);
-      localStorage.setItem('currentLanguage', newLanguage);
-      localStorage.setItem('websiteLanguage', newLanguage);
-    };
-
-    window.addEventListener('languageChanged', handleLanguageChange as EventListener);
-    
-    return () => {
-      window.removeEventListener('languageChanged', handleLanguageChange as EventListener);
-    };
-  }, []);
+  // Language change handling is now managed by TranslationComponent
 
   return (
     <StoreBarElementsPositionsProvider>
@@ -1392,9 +1256,9 @@ const StoreHomePage: React.FC = () => {
         gradientEnd={gradientEnd}
         onLogoShapeChange={handleLogoShapeChange}
         onLogoWidthChange={handleLogoWidthChange}
-        onLogoHeightChange={setLogoHeight}
-        onHorizontalPaddingChange={setHorizontalPadding}
-        onVerticalPaddingChange={setVerticalPadding}
+        onLogoHeightChange={handleLogoHeightChange}
+        onHorizontalPaddingChange={handleHorizontalPaddingChange}
+        onVerticalPaddingChange={handleVerticalPaddingChange}
         onBackgroundTypeChange={setBackgroundType}
         onSolidColorChange={setSolidColor}
         onGradientStartChange={setGradientStart}
@@ -1444,23 +1308,16 @@ const StoreHomePage: React.FC = () => {
         onSettingsClick={handleSettingsClick}
         onAuthModalOpen={() => setShowAuthModal(true)}
         onAuthModalClose={() => setShowAuthModal(false)}
-        onCartDrawerOpen={() => setShowCartDrawer(true)}
-        onCartDrawerClose={() => setShowCartDrawer(false)}
+        onCartDrawerOpen={openCartDrawer}
+        onCartDrawerClose={closeCartDrawer}
         onWishlistDrawerOpen={() => setShowWishlistDrawer(true)}
         onWishlistDrawerClose={() => setShowWishlistDrawer(false)}
         onSearchBarOpen={() => setShowSearchBar(true)}
         onSearchBarClose={handleSearchClose}
         onLanguageSelectorToggle={() => setShowLanguageSelector(!showLanguageSelector)}
         onLanguageChange={(language) => {
-          setCurrentLanguage(language);
+          changeLanguage(language);
           setShowLanguageSelector(false);
-          localStorage.setItem('currentLanguage', language);
-          // Also update the website language to affect design pages
-          localStorage.setItem('websiteLanguage', language);
-          // Dispatch custom event for other components to listen
-          window.dispatchEvent(new CustomEvent('languageChanged', { 
-            detail: { language } 
-          }));
         }}
         onSearchTermChange={setSearchTerm}
         onSearchSubmit={handleSearchSubmit}
@@ -1470,7 +1327,7 @@ const StoreHomePage: React.FC = () => {
         onLogout={handleLogout}
         onUpdateQuantity={updateQuantity}
         onRemoveFromWishlist={removeFromWishlist}
-        onAddToCart={addToCart}
+        onAddToCart={addToCartFromWishlist}
         onGetTotalPrice={getTotalPrice}
         t={t}
         activeTab={activeTab}

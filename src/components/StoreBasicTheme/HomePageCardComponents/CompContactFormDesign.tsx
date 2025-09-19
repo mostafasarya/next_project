@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { HiMail, HiPhone, HiLocationMarker } from 'react-icons/hi';
-import '../../EditorControls/SystemControlIcons.css';
+import '../../EditorControls/PropertiesManagement/SystemControlIcons.css';
 import './CompContactFormDesign.css';
 
 interface CompContactFormDesignProps {

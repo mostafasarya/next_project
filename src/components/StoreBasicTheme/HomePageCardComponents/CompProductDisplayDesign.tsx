@@ -2,10 +2,10 @@
 
 import React, { useState } from 'react';
 import { HiCog, HiViewfinderCircle, HiSelector } from 'react-icons/hi';
-import SystemDrawer from '../../EditorControls/SystemDrawer';
+import SystemDrawer from '../../EditorControls/PropertiesManagement/SystemDrawer';
 import ProductContainerDisplay from '../ProductContainer/ProductContainerDisplay';
-import StyleTextUser from '../../EditorControls/StyleTextUser';
-import '../../EditorControls/SystemControlIcons.css';
+import StyleTextUser from '../../EditorControls/PropertiesManagement/StyleTextUser';
+import '../../EditorControls/PropertiesManagement/SystemControlIcons.css';
 import './CompProductDisplayDesign.css';
 
 interface ProductDisplaySettings {

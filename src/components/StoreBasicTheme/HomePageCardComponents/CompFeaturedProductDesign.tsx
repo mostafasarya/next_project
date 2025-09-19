@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { HiSelector } from 'react-icons/hi';
 import { HiShoppingBag } from 'react-icons/hi2';
 import ProductContainerDisplay from '../ProductContainer/ProductContainerDisplay';
-import '../../EditorControls/SystemControlIcons.css';
+import '../../EditorControls/PropertiesManagement/SystemControlIcons.css';
 import './CompFeaturedProductDesign.css';
 
 interface Product {

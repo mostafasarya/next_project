@@ -3,9 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { HiPlus, HiX, HiPencil, HiTrash, HiShoppingBag, HiCog, HiCamera, HiArrowsExpand } from 'react-icons/hi';
 import ProductContainerDisplay from '../ProductContainer/ProductContainerDisplay';
-import SystemDrawer from '../../EditorControls/SystemDrawer';
-import StyleTextUser from '../../EditorControls/StyleTextUser';
-import { useGlobalDrawer } from '../../EditorControls/GlobalDrawerProvider';
+import SystemDrawer from '../../EditorControls/PropertiesManagement/SystemDrawer';
+import StyleTextUser from '../../EditorControls/PropertiesManagement/StyleTextUser';
+import { useGlobalDrawer } from '../../EditorControls/PropertiesManagement/GlobalDrawerProvider';
 import './CatalogPage.css';
 
 interface AllProduct {

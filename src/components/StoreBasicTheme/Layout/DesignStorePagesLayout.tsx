@@ -2,12 +2,15 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import MobileSimulator from '../../EditorControls/MobileSimulator';
+import MobileSimulator from '../../EditorControls/PropertiesManagement/MobileSimulator';
 import StoreBar from '../StoreBar/StoreBar';
-import EditorBarDrawer from '../../EditorControls/EditorBarDrawer';
-import { StoreBarElementsPositionsProvider } from '../../EditorControls/StoreBarElementsPositions';
+import EditorBarDrawer from '../../EditorControls/PropertiesManagement/EditorBarDrawer';
+import { StoreBarElementsPositionsProvider } from '../../EditorControls/PropertiesManagement/StoreBarElementsPositions';
 import PlatformBar from '../../PlatformBar';
 import Footer from '../Footer/Footer';
+import { useLogoControls } from '../StoreBar/LogoControls';
+import { useCart } from '../StoreBar/Cart';
+import { useTranslation } from '../../EditorControls/TranslationComponent';
 import './DesignStorePagesLayout.css';
 
 interface DesignStorePagesLayoutProps {
@@ -29,13 +32,26 @@ const DesignStorePagesLayout: React.FC<DesignStorePagesLayoutProps> = ({
   
   // State management for all layout components
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [storeLogo, setStoreLogo] = useState<string | null>(null);
-  const [showLogoSettings, setShowLogoSettings] = useState(false);
-  const [logoShape, setLogoShape] = useState<'circle' | 'rectangle'>('circle');
-  const [logoWidth, setLogoWidth] = useState(64);
-  const [logoHeight, setLogoHeight] = useState(64);
-  const [horizontalPadding, setHorizontalPadding] = useState(16);
-  const [verticalPadding, setVerticalPadding] = useState(16);
+  
+  // Use the extracted logo controls hook
+  const {
+    storeLogo,
+    logoShape,
+    logoWidth,
+    logoHeight,
+    horizontalPadding,
+    verticalPadding,
+    showLogoSettings,
+    handleLogoShapeChange,
+    handleLogoWidthChange,
+    handleLogoHeightChange,
+    handleHorizontalPaddingChange,
+    handleVerticalPaddingChange,
+    handleCloseSettings,
+    handleUpdateSettings,
+    handleSettingsClick,
+    setStoreLogo,
+  } = useLogoControls();
   const [backgroundType, setBackgroundType] = useState<'solid' | 'gradient'>('solid');
   const [solidColor, setSolidColor] = useState('#ffffff');
   const [gradientStart, setGradientStart] = useState('#ff6b9d');
@@ -43,10 +59,20 @@ const DesignStorePagesLayout: React.FC<DesignStorePagesLayoutProps> = ({
   const [showLanguageSettings, setShowLanguageSettings] = useState(false);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>(['English']);
   const [showLanguageSelector, setShowLanguageSelector] = useState(false);
-  const [currentLanguage, setCurrentLanguage] = useState('English');
+  // Use the centralized translation system
+  const { t, currentLanguage, changeLanguage, translations } = useTranslation();
   const [showMobileSimulator, setShowMobileSimulator] = useState(false);
   const [storeName, setStoreName] = useState('yourstore');
-  const [showCartDrawer, setShowCartDrawer] = useState(false);
+  // Use the extracted cart controls hook
+  const {
+    cartItems,
+    showCartDrawer,
+    updateQuantity,
+    getTotalPrice,
+    openCartDrawer,
+    closeCartDrawer,
+    addToCart,
+  } = useCart();
   const [showWishlistDrawer, setShowWishlistDrawer] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -80,44 +106,7 @@ const DesignStorePagesLayout: React.FC<DesignStorePagesLayoutProps> = ({
     }
   }, []);
 
-  // Cart data and functions
-  const [cartItems, setCartItems] = useState([
-    {
-      id: '1',
-      name: 'Hat',
-      price: 29.99,
-      quantity: 2,
-      image: '🦴'
-    },
-    {
-      id: '2',
-      name: 'Shirt',
-      price: 34.99,
-      quantity: 1,
-      image: '👕'
-    },
-    {
-      id: '3',
-      name: 'Trouser',
-      price: 49.99,
-      quantity: 1,
-      image: '👖'
-    }
-  ]);
-
-  const updateQuantity = (id: string, newQuantity: number) => {
-    if (newQuantity <= 0) {
-      setCartItems(prev => prev.filter(item => item.id !== id));
-    } else {
-      setCartItems(prev => prev.map(item => 
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      ));
-    }
-  };
-
-  const getTotalPrice = () => {
-    return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
-  };
+  // Cart functionality is now handled by the useCart hook
 
   // Wishlist data and functions
   const [wishlistItems, setWishlistItems] = useState([
@@ -155,20 +144,10 @@ const DesignStorePagesLayout: React.FC<DesignStorePagesLayoutProps> = ({
     setWishlistItems(prev => prev.filter(item => item.id !== id));
   };
 
-  const addToCart = (wishlistItem: any) => {
-    // Add item to cart
-    setCartItems(prev => {
-      const existingItem = prev.find(item => item.id === wishlistItem.id);
-      if (existingItem) {
-        return prev.map(item => 
-          item.id === wishlistItem.id 
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      } else {
-        return [...prev, { ...wishlistItem, quantity: 1 }];
-      }
-    });
+  const addToCartFromWishlist = (wishlistItem: any) => {
+    // Add item to cart using the Cart hook
+    addToCart(wishlistItem);
+    
     // Remove from wishlist
     removeFromWishlist(wishlistItem.id);
   };
@@ -216,27 +195,6 @@ const DesignStorePagesLayout: React.FC<DesignStorePagesLayoutProps> = ({
     }
   };
 
-  const handleSettingsClick = () => {
-    setShowLogoSettings(true);
-  };
-
-  // Custom function to handle logo shape changes
-  const handleLogoShapeChange = (shape: 'circle' | 'rectangle') => {
-    setLogoShape(shape);
-    // When switching to circle, sync height with width
-    if (shape === 'circle') {
-      setLogoHeight(logoWidth);
-    }
-  };
-
-  // Custom function to handle logo width changes
-  const handleLogoWidthChange = (width: number) => {
-    setLogoWidth(width);
-    // When in circle mode, sync height with width
-    if (logoShape === 'circle') {
-      setLogoHeight(width);
-    }
-  };
 
   // Search and auth functions
   const handleSearchClose = () => {
@@ -268,7 +226,8 @@ const DesignStorePagesLayout: React.FC<DesignStorePagesLayoutProps> = ({
     setUserData(null);
   };
 
-  // Translation system
+  // Translation functionality is now handled by the TranslationComponent
+  /*
   const translations = {
     English: {
       store_pages: 'Store Pages',
@@ -661,10 +620,7 @@ const DesignStorePagesLayout: React.FC<DesignStorePagesLayoutProps> = ({
       start_return_exchange: '返品/交換を開始'
     }
   };
-
-  const t = (key: string) => {
-    return translations[currentLanguage]?.[key] || translations['English'][key] || key;
-  };
+  */
 
   return (
     <StoreBarElementsPositionsProvider>
@@ -693,16 +649,16 @@ const DesignStorePagesLayout: React.FC<DesignStorePagesLayoutProps> = ({
         gradientEnd={gradientEnd}
         onLogoShapeChange={handleLogoShapeChange}
         onLogoWidthChange={handleLogoWidthChange}
-        onLogoHeightChange={setLogoHeight}
-        onHorizontalPaddingChange={setHorizontalPadding}
-        onVerticalPaddingChange={setVerticalPadding}
+        onLogoHeightChange={handleLogoHeightChange}
+        onHorizontalPaddingChange={handleHorizontalPaddingChange}
+        onVerticalPaddingChange={handleVerticalPaddingChange}
         onBackgroundTypeChange={setBackgroundType}
         onSolidColorChange={setSolidColor}
         onGradientStartChange={setGradientStart}
         onGradientEndChange={setGradientEnd}
         showLogoSettings={showLogoSettings}
-        onCloseLogoSettings={() => setShowLogoSettings(false)}
-        onUpdateLogoSettings={() => setShowLogoSettings(false)}
+        onCloseLogoSettings={handleCloseSettings}
+        onUpdateLogoSettings={handleUpdateSettings}
         showLanguageSettings={showLanguageSettings}
         onOpenLanguageSettings={() => setShowLanguageSettings(true)}
         onCloseLanguageSettings={() => setShowLanguageSettings(false)}
@@ -751,17 +707,16 @@ const DesignStorePagesLayout: React.FC<DesignStorePagesLayoutProps> = ({
         onSettingsClick={handleSettingsClick}
         onAuthModalOpen={() => setShowAuthModal(true)}
         onAuthModalClose={() => setShowAuthModal(false)}
-        onCartDrawerOpen={() => setShowCartDrawer(true)}
-        onCartDrawerClose={() => setShowCartDrawer(false)}
+        onCartDrawerOpen={openCartDrawer}
+        onCartDrawerClose={closeCartDrawer}
         onWishlistDrawerOpen={() => setShowWishlistDrawer(true)}
         onWishlistDrawerClose={() => setShowWishlistDrawer(false)}
         onSearchBarOpen={() => setShowSearchBar(true)}
         onSearchBarClose={handleSearchClose}
         onLanguageSelectorToggle={() => setShowLanguageSelector(!showLanguageSelector)}
         onLanguageChange={(language) => {
-          setCurrentLanguage(language);
+          changeLanguage(language);
           setShowLanguageSelector(false);
-          localStorage.setItem('currentLanguage', language);
         }}
         onSearchTermChange={setSearchTerm}
         onSearchSubmit={handleSearchSubmit}
@@ -771,7 +726,7 @@ const DesignStorePagesLayout: React.FC<DesignStorePagesLayoutProps> = ({
         onLogout={handleLogout}
         onUpdateQuantity={updateQuantity}
         onRemoveFromWishlist={removeFromWishlist}
-        onAddToCart={addToCart}
+        onAddToCart={addToCartFromWishlist}
         onGetTotalPrice={getTotalPrice}
         t={t}
         activeTab={activeTab}

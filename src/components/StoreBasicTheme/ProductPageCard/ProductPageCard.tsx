@@ -2,12 +2,12 @@
 
 import React from 'react';
 import { HiArrowsExpand, HiRefresh, HiEye, HiPencil } from 'react-icons/hi';
-import SystemDrawer from '../../EditorControls/SystemDrawer';
-import StyleButton, { ButtonStyles, defaultButtonStyles } from '../../EditorControls/StyleButton';
+import SystemDrawer from '../../EditorControls/PropertiesManagement/SystemDrawer';
+import StyleButton, { ButtonStyles, defaultButtonStyles } from '../../EditorControls/PropertiesManagement/StyleButton';
 import StyledButton from '../../StyledButton';
-import StylePriceEditor from '../../EditorControls/StylePriceEditor';
-import StyleQuantityCounterEditor from '../../EditorControls/StyleQuantityCounterEditor';
-import StyleVariantEditor from '../../EditorControls/StyleVariantEditor';
+import StylePriceEditor from '../../EditorControls/PropertiesManagement/StylePriceEditor';
+import StyleQuantityCounterEditor from '../../EditorControls/PropertiesManagement/StyleQuantityCounterEditor';
+import StyleVariantEditor from '../../EditorControls/PropertiesManagement/StyleVariantEditor';
 import './ProductPageCard.css';
 
 interface ProductPageCardProps {

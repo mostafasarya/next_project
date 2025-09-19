@@ -2,16 +2,16 @@
 
 import React, { useState } from 'react';
 import { HiStar, HiMinus, HiPlus, HiPencil, HiEye, HiChevronDown, HiViewBoards, HiArrowsExpand } from 'react-icons/hi';
-import StyleTextUser from '../../EditorControls/StyleTextUser';
-import StyleButton, { ButtonStyles, defaultButtonStyles } from '../../EditorControls/StyleButton';
+import StyleTextUser from '../../EditorControls/PropertiesManagement/StyleTextUser';
+import StyleButton, { ButtonStyles, defaultButtonStyles } from '../../EditorControls/PropertiesManagement/StyleButton';
 import StyledButton from '../../StyledButton';
-import SystemDrawer from '../../EditorControls/SystemDrawer';
-import StylePriceEditor from '../../EditorControls/StylePriceEditor';
-import StyleQuantityCounterEditor from '../../EditorControls/StyleQuantityCounterEditor';
-import StyleVariantEditor from '../../EditorControls/StyleVariantEditor';
-import { useGlobalDrawer } from '../../EditorControls/GlobalDrawerProvider';
+import SystemDrawer from '../../EditorControls/PropertiesManagement/SystemDrawer';
+import StylePriceEditor from '../../EditorControls/PropertiesManagement/StylePriceEditor';
+import StyleQuantityCounterEditor from '../../EditorControls/PropertiesManagement/StyleQuantityCounterEditor';
+import StyleVariantEditor from '../../EditorControls/PropertiesManagement/StyleVariantEditor';
+import { useGlobalDrawer } from '../../EditorControls/PropertiesManagement/GlobalDrawerProvider';
 import './ProductContainerDisplay.css';
-import '../../EditorControls/SystemControlIcons.css';
+import '../../EditorControls/PropertiesManagement/SystemControlIcons.css';
 
 interface ProductContainerDisplayProps {
   className?: string;

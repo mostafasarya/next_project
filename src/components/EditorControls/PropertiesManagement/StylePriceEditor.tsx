@@ -3,7 +3,7 @@
 import React from 'react';
 import SystemDrawer from './SystemDrawer';
 import './StylePriceEditor.css';
-import '../../app/system-control-assets/SystemControlAssets.css';
+import '../../../app/system-control-assets/SystemControlAssets.css';
 
 interface PriceStyles {
   currentPrice: {

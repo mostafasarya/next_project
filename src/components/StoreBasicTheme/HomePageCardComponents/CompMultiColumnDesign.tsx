@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { HiPencil, HiTrash, HiPlus, HiLightBulb, HiX } from 'react-icons/hi';
-import StyleTextUser from '../../EditorControls/StyleTextUser';
-import '../../EditorControls/SystemControlIcons.css';
+import StyleTextUser from '../../EditorControls/PropertiesManagement/StyleTextUser';
+import '../../EditorControls/PropertiesManagement/SystemControlIcons.css';
 import '../../../app/system-control-assets/SystemControlAssets.css';
 import './CompMultiColumnDesign.css';
 

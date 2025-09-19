@@ -3,7 +3,7 @@
 import React from 'react';
 import { HiX, HiViewGrid, HiPlus } from 'react-icons/hi';
 import ProductContainerDisplay from '../ProductContainer/ProductContainerDisplay';
-import SystemDrawer from '../../EditorControls/SystemDrawer';
+import SystemDrawer from '../../EditorControls/PropertiesManagement/SystemDrawer';
 import './ProductsGrid.css';
 
 // Product interface

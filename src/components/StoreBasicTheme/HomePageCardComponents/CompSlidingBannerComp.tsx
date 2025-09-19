@@ -3,9 +3,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { HiPlus, HiCamera, HiCog, HiTrash, HiLink, HiSelector } from 'react-icons/hi';
 import { HiViewfinderCircle } from 'react-icons/hi2';
-import SystemDrawer from '../../EditorControls/SystemDrawer';
+import SystemDrawer from '../../EditorControls/PropertiesManagement/SystemDrawer';
 import './CompSlidingBannerComp.css';
-import '../../EditorControls/SystemControlIcons.css';
+import '../../EditorControls/PropertiesManagement/SystemControlIcons.css';
 
 interface BannerImage {
   id: string;

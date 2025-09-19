@@ -3,10 +3,10 @@
 import React, { useState } from 'react';
 import { HiPlus, HiCog, HiTrash, HiX, HiSelector } from 'react-icons/hi';
 import { HiShoppingBag } from 'react-icons/hi2';
-import SystemDrawer from '../../EditorControls/SystemDrawer';
-import StyleTextUser from '../../EditorControls/StyleTextUser';
+import SystemDrawer from '../../EditorControls/PropertiesManagement/SystemDrawer';
+import StyleTextUser from '../../EditorControls/PropertiesManagement/StyleTextUser';
 import ProductContainerDisplay from '../ProductContainer/ProductContainerDisplay';
-import '../../EditorControls/SystemControlIcons.css';
+import '../../EditorControls/PropertiesManagement/SystemControlIcons.css';
 import './CompNavigationBarwithProductsDesign.css';
 
 interface ProductData {

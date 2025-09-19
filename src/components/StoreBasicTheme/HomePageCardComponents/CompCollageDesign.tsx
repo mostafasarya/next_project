@@ -4,7 +4,7 @@ import React, { useState, useRef } from 'react';
 import { HiCamera, HiTrash, HiPencil, HiSwitchHorizontal, HiSelector } from 'react-icons/hi';
 import { HiShoppingBag } from 'react-icons/hi2';
 import ProductContainerDisplay from '../ProductContainer/ProductContainerDisplay';
-import '../../EditorControls/SystemControlIcons.css';
+import '../../EditorControls/PropertiesManagement/SystemControlIcons.css';
 import './CompCollageDesign.css';
 
 interface CompCollageDesignProps {

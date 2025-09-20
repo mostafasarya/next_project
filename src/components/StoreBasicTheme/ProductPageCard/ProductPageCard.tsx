@@ -231,7 +231,7 @@ const ProductPageCard: React.FC<ProductPageCardProps> = ({
   const getColorValue = (colorName: string) => {
     const colorMap: { [key: string]: string } = {
       // Basic colors
-      'red': '#ef4444',
+      'red': '#a81313',
       'blue': '#3b82f6',
       'green': '#10b981',
       'yellow': '#f59e0b',
@@ -1030,7 +1030,7 @@ const ProductPageCard: React.FC<ProductPageCardProps> = ({
         >
           <svg viewBox="0 0 24 24" fill="currentColor">
             <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2"/>
-            <circle cx="8" cy="8" r="2" fill="#ef4444"/>
+            <circle cx="8" cy="8" r="2" fill="#a81313"/>
             <circle cx="16" cy="8" r="2" fill="#3b82f6"/>
             <circle cx="8" cy="16" r="2" fill="#10b981"/>
             <circle cx="16" cy="16" r="2" fill="#f59e0b"/>
@@ -1780,12 +1780,12 @@ const ProductPageCard: React.FC<ProductPageCardProps> = ({
                 className={`theme-card ${reviewStyles.theme === 'red' ? 'active' : ''}`}
                 onClick={(e) => {
                   e.stopPropagation();
-                  setReviewStyles({...reviewStyles, theme: 'red', starColor: '#ef4444', textColor: '#dc2626'});
+                  setReviewStyles({...reviewStyles, theme: 'red', starColor: '#a81313', textColor: '#a81313'});
                 }}
               >
                 <div className="theme-preview">
-                  <div className="theme-stars" style={{color: '#ef4444'}}>★★★★★</div>
-                  <div className="theme-text" style={{color: '#dc2626'}}>Red</div>
+                  <div className="theme-stars" style={{color: '#a81313'}}>★★★★★</div>
+                  <div className="theme-text" style={{color: '#a81313'}}>Red</div>
                 </div>
               </button>
               

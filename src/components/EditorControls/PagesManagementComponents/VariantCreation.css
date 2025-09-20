@@ -116,7 +116,7 @@
 }
 
 .step.active {
-  background: #dc2626;
+  background: #a81313;
   color: white;
 }
 
@@ -142,7 +142,7 @@
 }
 
 .variant-creation-error button {
-  background: #dc2626;
+  background: #a81313;
   color: white;
   border: none;
   padding: 8px 16px;
@@ -172,7 +172,7 @@
 }
 
 .proceed-btn {
-  background: #dc2626;
+  background: #a81313;
   color: white;
   border: none;
   padding: 12px 24px;
@@ -237,7 +237,7 @@
 .parameter-checkbox input[type="checkbox"] {
   width: 16px;
   height: 16px;
-  accent-color: #dc2626;
+  accent-color: #a81313;
   cursor: pointer;
 }
 
@@ -282,7 +282,7 @@
 }
 
 .mode-card:hover {
-  border-color: #dc2626;
+  border-color: #a81313;
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(220, 38, 38, 0.1);
 }
@@ -415,7 +415,7 @@
 
 .table-cell select:focus {
   outline: none;
-  border-color: #dc2626;
+  border-color: #a81313;
   box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
 }
 
@@ -507,18 +507,18 @@
 .value-option input[type="checkbox"] {
   width: 16px;
   height: 16px;
-  accent-color: #dc2626;
+  accent-color: #a81313;
 }
 
 .value-option input[type="checkbox"]:checked + span {
   font-weight: 600;
-  color: #dc2626;
+  color: #a81313;
 }
 
 .value-option:has(input[type="checkbox"]:checked) {
   background: #fef2f2;
   border-color: #fecaca;
-  color: #dc2626;
+  color: #a81313;
 }
 
 .generate-section {
@@ -579,7 +579,7 @@
 
 .parameter-values select:focus {
   outline: none;
-  border-color: #dc2626;
+  border-color: #a81313;
   ring: 2px;
   ring-color: rgba(220, 38, 38, 0.2);
 }
@@ -606,7 +606,7 @@
 }
 
 .create-variant-btn.single {
-  background: #dc2626;
+  background: #a81313;
   color: white;
 }
 
@@ -700,7 +700,7 @@
 
 .variant-input:focus {
   outline: none;
-  border-color: #dc2626;
+  border-color: #a81313;
   box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
 }
 
@@ -718,7 +718,7 @@
 
 .variant-select:focus {
   outline: none;
-  border-color: #dc2626;
+  border-color: #a81313;
   box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
 }
 

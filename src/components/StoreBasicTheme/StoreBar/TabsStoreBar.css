@@ -6,13 +6,34 @@
   gap: 8px;
   height: 100%;
   overflow: visible;
+  min-height: 48px;
+  padding-right: 80px; /* Make space for control icons */
 }
 
-/* Controls */
+/* Controls - Now positioned absolutely at top right */
 .tabs-controls {
   display: flex;
   gap: 4px;
-  margin-right: 8px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 6px;
+  padding: 2px;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 2px 8px rgba(168, 19, 19, 0.1);
+}
+
+/* Enhance the overall tabs container appearance */
+.tabs-store-bar {
+  border: 1px solid rgba(168, 19, 19, 0.2) !important;
+  transition: border-color 0.3s ease;
+}
+
+.tabs-store-bar:hover {
+  border-color: rgba(168, 19, 19, 0.3) !important;
 }
 
 /* SystemControlAssets-style icons */
@@ -30,7 +51,7 @@
   overflow: hidden;
   width: 32px;
   height: 32px;
-  color: #ef4444;
+  color: #a81313;
 }
 
 .system-control-icon:hover {
@@ -57,7 +78,7 @@
 /* Apply unified red theme to specific icons */
 .system-control-icon.settings,
 .system-control-icon.edit {
-  color: #ef4444;
+  color: #a81313;
   background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
   border-color: #fecaca;
 }
@@ -65,7 +86,7 @@
 .system-control-icon.settings:hover,
 .system-control-icon.edit:hover {
   border-color: #fca5a5;
-  color: #dc2626;
+  color: #a81313;
 }
 
 /* Tabs Container */
@@ -299,17 +320,20 @@
   flex-direction: column;
   align-items: flex-start;
   height: auto;
+  min-height: 60px;
+  padding-top: 32px; /* Make space for controls at top */
 }
 
 .tabs-store-bar.double-row .tabs-controls {
   position: absolute;
-  top: -8px;
-  right: 0;
+  top: 8px;
+  right: 8px;
   margin: 0;
 }
 
 .tabs-store-bar.double-row .tabs-container {
-  margin-top: 4px;
+  margin-top: 8px;
+  width: 100%;
 }
 
 /* Mobile View */
@@ -852,9 +876,33 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+  /* Adjust control icons for smaller screens */
+  .tabs-controls {
+    gap: 2px;
+    padding: 1px;
+  }
+  
+  .tabs-store-bar {
+    padding-right: 70px; /* Reduce space for controls */
+  }
+}
+
 @media (max-width: 768px) {
   .tabs-store-bar:not(.mobile-view) {
     display: none;
+  }
+  
+  /* Make controls more compact on tablet */
+  .tabs-controls {
+    top: 6px;
+    right: 6px;
+    background: rgba(255, 255, 255, 0.95);
+  }
+  
+  .tabs-store-bar {
+    padding-right: 60px;
+    min-height: 44px;
   }
   
   .modal-overlay {

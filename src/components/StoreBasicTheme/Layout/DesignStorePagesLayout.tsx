@@ -51,6 +51,7 @@ const DesignStorePagesLayout: React.FC<DesignStorePagesLayoutProps> = ({
     handleUpdateSettings,
     handleSettingsClick,
     setStoreLogo,
+    setShowLogoSettings,
   } = useLogoControls();
   const [backgroundType, setBackgroundType] = useState<'solid' | 'gradient'>('solid');
   const [solidColor, setSolidColor] = useState('#ffffff');
@@ -657,6 +658,7 @@ const DesignStorePagesLayout: React.FC<DesignStorePagesLayoutProps> = ({
         onGradientStartChange={setGradientStart}
         onGradientEndChange={setGradientEnd}
         showLogoSettings={showLogoSettings}
+        onOpenLogoSettings={() => setShowLogoSettings(true)}
         onCloseLogoSettings={handleCloseSettings}
         onUpdateLogoSettings={handleUpdateSettings}
         showLanguageSettings={showLanguageSettings}

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import VariantCreation from '../../VariantCreation';
+import VariantCreation from './VariantCreation';
 import StyleUploadImageFunction from '../../StyleUploadImageFunction';
 import './ProductsManagement.css';
 
@@ -17,6 +17,7 @@ interface ProductVariant {
   ifSoldOut: 'keep selling' | 'stop selling';
   isTracking: boolean;
   parameters: { [key: string]: string };
+  badge: string;
 }
 
 interface Product {
@@ -34,6 +35,7 @@ interface Product {
   editCount: number;
   ifSoldOut: 'keep selling' | 'stop selling';
   isTracking: boolean;
+  badge: string;
 }
 
 interface Section {
@@ -99,6 +101,7 @@ const ProductsManagementPage: React.FC = () => {
         editCount: 0,
         ifSoldOut: 'stop selling',
         isTracking: true,
+        badge: '',
         variants: []
       },
       {
@@ -115,6 +118,7 @@ const ProductsManagementPage: React.FC = () => {
         editCount: 0,
         ifSoldOut: 'stop selling',
         isTracking: true,
+        badge: '',
         variants: []
       },
       {
@@ -131,6 +135,7 @@ const ProductsManagementPage: React.FC = () => {
         editCount: 0,
         ifSoldOut: 'keep selling',
         isTracking: true,
+        badge: '',
         variants: [
           {
             id: '3-1',
@@ -142,7 +147,8 @@ const ProductsManagementPage: React.FC = () => {
             editCount: 0,
             ifSoldOut: 'keep selling',
             isTracking: true,
-            parameters: { size: 'S' }
+            parameters: { size: 'S' },
+            badge: ''
           },
           {
             id: '3-2',
@@ -154,7 +160,8 @@ const ProductsManagementPage: React.FC = () => {
             editCount: 0,
             ifSoldOut: 'keep selling',
             isTracking: true,
-            parameters: { size: 'M' }
+            parameters: { size: 'M' },
+            badge: ''
           }
         ]
       }
@@ -303,6 +310,30 @@ const ProductsManagementPage: React.FC = () => {
           } else {
             // Toggle main product tracking
             return { ...product, isTracking: !product.isTracking };
+          }
+        }
+        return product;
+      })
+    );
+  };
+
+  const handleBadgeChange = (productId: string, value: string, type: 'product' | 'variant', variantId?: string) => {
+    setProducts(prevProducts => 
+      prevProducts.map(product => {
+        if (product.id === productId) {
+          if (type === 'variant' && variantId) {
+            // Update variant badge
+            return {
+              ...product,
+              variants: product.variants.map(variant => 
+                variant.id === variantId 
+                  ? { ...variant, badge: value }
+                  : variant
+              )
+            };
+          } else {
+            // Update product badge
+            return { ...product, badge: value };
           }
         }
         return product;
@@ -765,6 +796,10 @@ const ProductsManagementPage: React.FC = () => {
             <span className="add-icon">📋</span>
             ADD section
           </button>
+          <button className="variants-table-btn" onClick={() => router.push('/manage-variants')}>
+            <span className="variants-icon">🎨</span>
+            Variants Table
+          </button>
           <button className="add-product-btn" onClick={handleAddProduct}>
             <span className="add-icon">+</span>
             Add Product
@@ -781,10 +816,12 @@ const ProductsManagementPage: React.FC = () => {
             }} />
           </div>
           <div className="header-cell product-col sortable">Product</div>
+          <div className="header-cell design-col">Design</div>
           <div className="header-cell price-col sortable">Price</div>
           <div className="header-cell count-col sortable">Count</div>
           <div className="header-cell edit-col">Edit Count</div>
           <div className="header-cell sold-out-col">If Sold Out</div>
+          <div className="header-cell badge-col">Badge</div>
           <div className="header-cell actions-col">Actions</div>
         </div>
 
@@ -933,6 +970,18 @@ const ProductsManagementPage: React.FC = () => {
                   )}
                 </div>
               </div>
+              <div className="design-cell">
+                <button 
+                  className="design-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push(`/product/${encodeURIComponent(product.name)}`);
+                  }}
+                  title="Design Product Page"
+                >
+                  🎨
+                </button>
+              </div>
               <div className="price-cell">
                 {product.variants.length > 0 ? (
                   <span className="variants-indicator">Manage via variants</span>
@@ -999,7 +1048,16 @@ const ProductsManagementPage: React.FC = () => {
                   </>
                 )}
               </div>
-                              <div className="actions-cell">
+              <div className="badge-cell">
+                <input
+                  type="text"
+                  value={product.badge || ''}
+                  onChange={(e) => handleBadgeChange(product.id, e.target.value, 'product')}
+                  className="badge-input"
+                  placeholder="Enter badge text"
+                />
+              </div>
+              <div className="actions-cell">
                   <div className="action-icons">
                     <button className="edit-icon" title="Edit Product">
                       ✏️
@@ -1053,6 +1111,9 @@ const ProductsManagementPage: React.FC = () => {
                     )}
                   </div>
                 </div>
+                <div className="design-cell">
+                  {/* Empty for variants */}
+                </div>
                 <div className="price-cell">
                   <div className="price-info">
                     <span className="current-price">${variant.price}</span>
@@ -1098,6 +1159,15 @@ const ProductsManagementPage: React.FC = () => {
                   >
                     {variant.isTracking ? 'Keep tracking' : 'Stop tracking'}
                   </button>
+                </div>
+                <div className="badge-cell">
+                  <input
+                    type="text"
+                    value={variant.badge || ''}
+                    onChange={(e) => handleBadgeChange(product.id, e.target.value, 'variant', variant.id)}
+                    className="badge-input"
+                    placeholder="Enter badge text"
+                  />
                 </div>
                 <div className="actions-cell">
                   <div className="action-icons">

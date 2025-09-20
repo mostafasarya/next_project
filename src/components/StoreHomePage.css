@@ -51,16 +51,14 @@
    ========================================================================== */
 
 /**
- * Store Bar - Fixed positioning below EditorBar
+ * Store Bar - Relative positioning in document flow
  * Contains store logo, upload controls, and action buttons
- * Position: Fixed at top: 120px (below PlatformBar + EditorBar)
+ * Position: Relative (follows document flow)
  * Z-index: 998 (below EditorBar modals but above main content)
  */
 .store-bar {
-  position: fixed;
-  top: 120px;
-  left: 0;
-  right: 0;
+  position: relative;
+  width: 100%;
   background: white;
   border-bottom: 1px solid #e1e5e9;
   display: flex;
@@ -1330,17 +1328,16 @@
 
 /**
  * Main Content Container
- * Central design area below the fixed bars
- * Flex: 1 to take remaining space after fixed bars
- * Margin-top: 180px to account for fixed bars above
+ * Central design area below the relative bars
+ * Flex: 1 to take remaining space
+ * No margin-top needed with relative positioning
  * Smooth transitions for sidebar open/close states
  * Light gray background for content separation
  */
 .main-content {
   flex: 1;
-  margin-top: 180px;
   margin-left: 0;
-  transition: margin-left 0.3s ease, margin-top 0.3s ease;
+  transition: margin-left 0.3s ease;
   background: #ecf0f1;
   position: relative;
 }

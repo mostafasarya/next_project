@@ -98,7 +98,7 @@
 }
 
 .header-image-btn.remove-btn {
-  color: #ef4444;
+  color: #a81313;
 }
 
 .header-image-btn.dimensions-btn {
@@ -222,7 +222,7 @@
 
 .tab-control-btn.remove-tab:hover {
   background: #fecaca;
-  color: #dc2626;
+  color: #a81313;
   border-color: #fca5a5;
 }
 
@@ -533,8 +533,8 @@
   position: absolute;
   top: -8px;
   right: -8px;
-  background: #ef4444;
-  border: 1px solid #ef4444;
+  background: #a81313;
+  border: 1px solid #a81313;
   color: #ffffff;
   width: 24px;
   height: 24px;
@@ -548,8 +548,8 @@
 }
 
 .remove-product-btn:hover {
-  background: #dc2626;
-  border-color: #dc2626;
+  background: #a81313;
+  border-color: #a81313;
 }
 
 .product-info {

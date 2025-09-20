@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { HiCamera, HiCog, HiMenuAlt3 } from 'react-icons/hi';
+import { HiCamera, HiCog, HiMenuAlt3, HiViewGrid } from 'react-icons/hi';
 import StyleUploadImageFunction from '../../StyleUploadImageFunction';
 import StoreBarIcons from './StoreBarIcons';
 import TabsStoreBar from './TabsStoreBar';
@@ -94,6 +94,7 @@ interface StoreBarProps {
   // Navigation tabs props
   activeTab: string;
   onTabChange: (tabId: string, subTabId?: string) => void;
+  isCustomerView?: boolean;
 }
 
 const StoreBar: React.FC<StoreBarProps> = ({
@@ -147,19 +148,22 @@ const StoreBar: React.FC<StoreBarProps> = ({
   onGetTotalPrice,
   t,
   activeTab,
-  onTabChange
+  onTabChange,
+  isCustomerView = false
 }) => {
   const [showMobileDrawer, setShowMobileDrawer] = useState(false);
   const { openDrawer, closeDrawer } = useGlobalDrawer();
   
   
   // Get layout controls from the global provider (with fallback)
-  let layoutControls, currentLayout;
+  let layoutControls, currentLayout, openLayoutControls;
   try {
     const layoutControlsData = useStoreBarElementsPositions();
     layoutControls = layoutControlsData.layoutControls;
+    openLayoutControls = layoutControlsData.openLayoutControls;
   } catch (error) {
     // Fallback to default layout if provider is not available
+    openLayoutControls = () => console.log('Layout controls not available');
     layoutControls = {
       desktop: {
         logoPosition: 10,    // Logo on the left
@@ -270,13 +274,17 @@ const StoreBar: React.FC<StoreBarProps> = ({
                 <div className="logo-icon">🖼️</div>
               )}
             </div>
-            <StyleUploadImageFunction
-              onImageUpload={onLogoUpload}
-              buttonTitle="Upload Store Logo"
-            />
-            <button className="system-control-icon settings medium" onClick={onSettingsClick}>
-              <HiCog />
-            </button>
+            {!isCustomerView && (
+              <>
+                <StyleUploadImageFunction
+                  onImageUpload={onLogoUpload}
+                  buttonTitle="Upload Store Logo"
+                />
+                <button className="system-control-icon settings medium" onClick={onSettingsClick}>
+                  <HiCog />
+                </button>
+              </>
+            )}
           </div>
         </div>
         
@@ -464,6 +472,24 @@ const StoreBar: React.FC<StoreBarProps> = ({
             }}
           >
             <span>{getIconEmoji(currentLayout.search.iconType, 'search')}</span>
+          </button>
+        )}
+
+        {/* Layout Settings Button - Hidden in customer view */}
+        {!isCustomerView && (
+          <button 
+            className="store-action-btn layout-btn" 
+            onClick={openLayoutControls}
+            title="Layout Settings"
+            style={{
+              position: 'absolute',
+              right: '10px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              zIndex: 11
+            }}
+          >
+            <HiViewGrid />
           </button>
         )}
       </div>

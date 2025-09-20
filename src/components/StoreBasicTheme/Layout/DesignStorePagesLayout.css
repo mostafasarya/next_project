@@ -49,17 +49,16 @@
 
 /**
  * Main Content Container
- * Central content area below the fixed bars
- * Flex: 1 to take remaining space after fixed bars
- * Margin-top: 180px to account for fixed bars above
+ * Central content area below the relative bars
+ * Flex: 1 to take remaining space
+ * No margin-top needed with relative positioning
  * Smooth transitions for sidebar open/close states
  * Light gray background for content separation
  */
 .main-content {
   flex: 1;
-  margin-top: 180px;
   margin-left: 0;
-  transition: margin-left 0.3s ease, margin-top 0.3s ease;
+  transition: margin-left 0.3s ease;
   background: #ecf0f1;
   position: relative;
 }
@@ -122,10 +121,6 @@
 }
 
 @media (max-width: 480px) {
-  .main-content {
-    margin-top: 120px; /* Further reduced margin for small mobile */
-  }
-  
   .content-body {
     padding: 16px; /* Minimal padding for small mobile */
   }

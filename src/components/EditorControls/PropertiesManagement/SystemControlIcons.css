@@ -10,7 +10,7 @@
 /* Base System Control Icon Class */
 .system-control-icon {
   background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
-  color: #ef4444;
+  color: #a81313;
   border: 2px solid #fecaca;
   border-radius: 50%;
   cursor: pointer;
@@ -27,7 +27,7 @@
 
 .system-control-icon:hover {
   border-color: #fca5a5;
-  color: #dc2626;
+  color: #a81313;
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
@@ -119,7 +119,7 @@
 .system-control-icon.left-arrow,
 .system-control-icon.right-arrow {
   background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
-  color: #ef4444;
+  color: #a81313;
   border-color: #fecaca;
 }
 
@@ -139,7 +139,7 @@
 .system-control-icon.left-arrow:hover,
 .system-control-icon.right-arrow:hover {
   border-color: #fca5a5;
-  color: #dc2626;
+  color: #a81313;
 }
 
 /* ==========================================================================
@@ -162,7 +162,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #dc2626;
+  background: #a81313;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
   transition: all 0.2s ease;
@@ -178,7 +178,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #dc2626;
+  background: #a81313;
   cursor: pointer;
   border: none;
   box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
@@ -198,7 +198,7 @@
 }
 
 .system-control-toggle.active {
-  background: #dc2626;
+  background: #a81313;
   box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
 }
 
@@ -256,7 +256,7 @@
 }
 
 .system-control-tab.active {
-  background: #ef4444;
+  background: #a81313;
   color: white;
   box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
 }
@@ -303,7 +303,7 @@
 
 .alignment-tab.active {
   background: #ffffff;
-  color: #ef4444;
+  color: #a81313;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   font-weight: 600;
 }
@@ -329,7 +329,7 @@
 }
 
 .system-control-btn.primary {
-  background: #dc2626;
+  background: #a81313;
   color: white;
   box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
 }
@@ -353,12 +353,12 @@
 
 .system-control-btn.outline {
   background: transparent;
-  color: #dc2626;
-  border-color: #dc2626;
+  color: #a81313;
+  border-color: #a81313;
 }
 
 .system-control-btn.outline:hover {
-  background: #dc2626;
+  background: #a81313;
   color: white;
   transform: translateY(-2px);
 }

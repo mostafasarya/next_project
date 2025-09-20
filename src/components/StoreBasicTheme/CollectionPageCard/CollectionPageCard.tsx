@@ -413,7 +413,7 @@ const CollectionPageCard: React.FC<CollectionPageCardProps> = ({
           >
             <svg viewBox="0 0 24 24" fill="currentColor">
               <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2"/>
-              <circle cx="8" cy="8" r="2" fill="#ef4444"/>
+              <circle cx="8" cy="8" r="2" fill="#a81313"/>
               <circle cx="16" cy="8" r="2" fill="#3b82f6"/>
               <circle cx="8" cy="16" r="2" fill="#10b981"/>
               <circle cx="16" cy="16" r="2" fill="#f59e0b"/>

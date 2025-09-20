@@ -133,7 +133,7 @@ const StyleQuantityCounterEditor: React.FC<StyleQuantityCounterEditorProps> = ({
               updateStyles({
                 theme: 'outlined',
                 buttonColor: 'transparent',
-                buttonTextColor: '#ef4444',
+                buttonTextColor: '#a81313',
                 textColor: '#374151',
                 borderRadius: 8,
                 buttonSize: 40
@@ -152,7 +152,7 @@ const StyleQuantityCounterEditor: React.FC<StyleQuantityCounterEditorProps> = ({
               e.stopPropagation();
               updateStyles({
                 theme: 'compact',
-                buttonColor: '#ef4444',
+                buttonColor: '#a81313',
                 buttonTextColor: '#ffffff',
                 textColor: '#374151',
                 borderRadius: 6,

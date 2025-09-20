@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { GlobalDrawerProvider } from "../components/EditorControls/PropertiesManagement/GlobalDrawerProvider";
+import { VariantsProvider } from "../components/EditorControls/PagesManagementComponents/VariantsContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,9 +29,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <GlobalDrawerProvider>
-          {children}
-        </GlobalDrawerProvider>
+        <VariantsProvider>
+          <GlobalDrawerProvider>
+            {children}
+          </GlobalDrawerProvider>
+        </VariantsProvider>
       </body>
     </html>
   );

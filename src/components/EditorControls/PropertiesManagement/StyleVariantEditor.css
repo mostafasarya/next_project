@@ -37,7 +37,7 @@
 
 .variant-tab.active {
   background: #ffffff;
-  color: #ef4444;
+  color: #a81313;
   border-color: #e5e7eb;
   position: relative;
 }
@@ -49,5 +49,5 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: #ef4444;
+  background: #a81313;
 }

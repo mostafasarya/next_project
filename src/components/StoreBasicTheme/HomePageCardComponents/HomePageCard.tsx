@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { HiSparkles, HiLightBulb } from 'react-icons/hi';
+import { HiSparkles, HiLightBulb, HiEye } from 'react-icons/hi';
+import { useViewMode } from '../../ViewModeContext';
+import { FaEye } from 'react-icons/fa';
 import SystemDrawer from '../../EditorControls/PropertiesManagement/SystemDrawer';
 import '../../EditorControls/PropertiesManagement/SystemControlIcons.css';
 import CompContactFormDesign from './CompContactFormDesign';
@@ -47,6 +49,7 @@ interface HomePageCardProps {
   placeholderTitle?: string;
   placeholderDescription?: string;
   showDesignSystem?: boolean; // New prop to control design system visibility
+  isCustomerView?: boolean; // New prop to control customer view mode
 }
 
 const HomePageCard: React.FC<HomePageCardProps> = ({
@@ -60,16 +63,22 @@ const HomePageCard: React.FC<HomePageCardProps> = ({
   showPlaceholder = false,
   placeholderTitle = 'Homepage Content',
   placeholderDescription = 'This white card extends from the store bar to the footer with the same layout structure.',
-  showDesignSystem = true // Default to true to show design system
+  showDesignSystem = true, // Default to true to show design system
+  isCustomerView = false
 }) => {
+  // Get view mode context
+  const { toggleViewMode, isCustomerView: contextIsCustomerView } = useViewMode();
+  
   // Design components state
   const [showDesignDrawer, setShowDesignDrawer] = useState(false);
   const [pageComponents, setPageComponents] = useState<{ id: string; component: React.ReactNode }[]>([]);
   const [drawerWidth, setDrawerWidth] = useState(400);
+  const [newlyAddedComponentId, setNewlyAddedComponentId] = useState<string | null>(null);
+  const [hasInitializedDefaults, setHasInitializedDefaults] = useState(false);
 
-  // Initialize with all components on first load
+  // Initialize with all components on first load only
   React.useEffect(() => {
-    if (pageComponents.length === 0) {
+    if (!hasInitializedDefaults) {
       const defaultComponents = [
         { id: 'sliding-banner-1', component: <CompSlidingBannerComp key="sliding-banner-1" /> },
         { id: 'product-display-1', component: <CompProductDisplayDesign key="product-display-1" /> },
@@ -85,8 +94,32 @@ const HomePageCard: React.FC<HomePageCardProps> = ({
         { id: 'contact-form-1', component: <CompContactFormDesign key="contact-form-1" /> }
       ];
       setPageComponents(defaultComponents);
+      setHasInitializedDefaults(true); // Mark as initialized
     }
-  }, [pageComponents.length]);
+  }, [hasInitializedDefaults]);
+
+  // Handle scroll and highlight for newly added components
+  React.useEffect(() => {
+    if (newlyAddedComponentId) {
+      // Small delay to ensure DOM is updated
+      setTimeout(() => {
+        const element = document.getElementById(`component-${newlyAddedComponentId}`);
+        if (element) {
+          // Scroll to the component with smooth behavior
+          element.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center',
+            inline: 'nearest'
+          });
+          
+          // Remove highlight after 3 seconds
+          setTimeout(() => {
+            setNewlyAddedComponentId(null);
+          }, 3000);
+        }
+      }, 100);
+    }
+  }, [newlyAddedComponentId]);
 
   // Set drawer width to full screen on component mount
   React.useEffect(() => {
@@ -161,6 +194,7 @@ const HomePageCard: React.FC<HomePageCardProps> = ({
     }
     
     setPageComponents(prev => [...prev, { id: componentId, component: newComponent }]);
+    setNewlyAddedComponentId(componentId); // Set the newly added component ID for scroll and highlight
     setShowDesignDrawer(false);
   };
 
@@ -170,7 +204,6 @@ const HomePageCard: React.FC<HomePageCardProps> = ({
   };
 
   const cardStyle: React.CSSProperties = {
-    marginTop: `${120 + (verticalPadding * 2)}px`, // Increased to clear the store bar completely
     marginLeft: showLogoSettings ? '300px' : '0',
     transition: 'margin-left 0.3s ease',
     backgroundColor: '#ffffff',
@@ -191,54 +224,49 @@ const HomePageCard: React.FC<HomePageCardProps> = ({
       <div className="homepage-card-content">
           {showDesignSystem && (
             <>
-              {/* ADD Design Button - Always visible */}
-              <div style={{ 
-                textAlign: 'center', 
-                marginTop: '20px',
-                marginBottom: '30px',
-                padding: '20px',
-                backgroundColor: '#f0f9ff',
-                borderRadius: '12px',
-                border: '2px solid #3b82f6'
-              }}>
-                <h3 style={{ 
-                  margin: '0 0 15px 0', 
-                  color: '#1e40af', 
-                  fontSize: '18px',
-                  fontWeight: '600'
-                }}>
-                  <HiSparkles /> Design Your Page
-                </h3>
-                <button
-                  onClick={() => setShowDesignDrawer(true)}
-                  style={{
-                    backgroundColor: '#3b82f6',
-                    color: 'white',
-                    border: 'none',
-                    padding: '15px 30px',
-                    fontSize: '18px',
-                    fontWeight: '700',
-                    borderRadius: '10px',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    boxShadow: '0 4px 8px rgba(59, 130, 246, 0.3)',
-                    textTransform: 'uppercase',
-                    letterSpacing: '1px'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#2563eb';
-                    e.currentTarget.style.transform = 'translateY(-1px)';
-                    e.currentTarget.style.boxShadow = '0 4px 8px rgba(59, 130, 246, 0.3)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = '#3b82f6';
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 2px 4px rgba(59, 130, 246, 0.2)';
-                  }}
-                >
-                  ADD Design
-                </button>
-              </div>
+              {/* Fixed Add Design Button - Left Side */}
+              <button
+                onClick={() => setShowDesignDrawer(true)}
+                style={{
+                  position: 'fixed',
+                  top: '60%',
+                  left: '20px',
+                  transform: 'translateY(-50%)',
+                  zIndex: 1000,
+                  backgroundColor: '#3b82f6',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 12px',
+                  fontSize: '12px',
+                  fontWeight: '700',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                 /* width: '120px',*/
+                  justifyContent: 'center',
+                  whiteSpace: 'nowrap'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#2563eb';
+                  e.currentTarget.style.transform = 'translateY(-50%) scale(1.05)';
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#3b82f6';
+                  e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(59, 130, 246, 0.3)';
+                }}
+              >
+                <span style={{ fontSize: '18px', color: 'white', display: 'inline-block', marginRight: '8px', fontWeight: 'bold' }}>✨</span>
+                Add Design
+              </button>
+
 
               {/* Show placeholder text when no components added */}
               {pageComponents.length === 0 && (
@@ -267,48 +295,58 @@ const HomePageCard: React.FC<HomePageCardProps> = ({
                 width: '100%'
               }}>
                 {pageComponents.map((item) => (
-                  <div key={item.id} style={{
-                    width: '100%',
-                    margin: '0',
-                    position: 'relative'
-                  }}>
-                    {/* Delete Button */}
-                    <button
-                      onClick={() => deleteComponent(item.id)}
-                      style={{
-                        position: 'absolute',
-                        top: '10px',
-                        right: '10px',
-                        width: '32px',
-                        height: '32px',
-                        backgroundColor: '#ef4444',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '50%',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '16px',
-                        fontWeight: 'bold',
-                        zIndex: 10,
-                        transition: 'all 0.2s ease',
-                        boxShadow: '0 2px 4px rgba(239, 68, 68, 0.3)'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#dc2626';
-                        e.currentTarget.style.transform = 'scale(1.1)';
-                        e.currentTarget.style.boxShadow = '0 4px 8px rgba(239, 68, 68, 0.4)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = '#ef4444';
-                        e.currentTarget.style.transform = 'scale(1)';
-                        e.currentTarget.style.boxShadow = '0 2px 4px rgba(239, 68, 68, 0.3)';
-                      }}
-                      title="Delete component"
-                    >
-                      ×
-                    </button>
+                  <div 
+                    key={item.id} 
+                    id={`component-${item.id}`}
+                    style={{
+                      width: '100%',
+                      margin: '0',
+                      position: 'relative',
+                      border: newlyAddedComponentId === item.id ? '3px solid #3b82f6' : 'none',
+                      borderRadius: newlyAddedComponentId === item.id ? '8px' : '0',
+                      boxShadow: newlyAddedComponentId === item.id ? '0 0 20px rgba(59, 130, 246, 0.5)' : 'none',
+                      transition: 'all 0.3s ease',
+                      animation: newlyAddedComponentId === item.id ? 'highlightPulse 2s ease-in-out' : 'none'
+                    }}>
+                    {/* Delete Button - Hidden in customer view */}
+                    {!contextIsCustomerView && (
+                      <button
+                        onClick={() => deleteComponent(item.id)}
+                        style={{
+                          position: 'absolute',
+                          top: '10px',
+                          right: '10px',
+                          width: '32px',
+                          height: '32px',
+                          backgroundColor: '#a81313',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '50%',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '16px',
+                          fontWeight: 'bold',
+                          zIndex: 10,
+                          transition: 'all 0.2s ease',
+                          boxShadow: '0 2px 4px rgba(239, 68, 68, 0.3)'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#a81313';
+                          e.currentTarget.style.transform = 'scale(1.1)';
+                          e.currentTarget.style.boxShadow = '0 4px 8px rgba(239, 68, 68, 0.4)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = '#a81313';
+                          e.currentTarget.style.transform = 'scale(1)';
+                          e.currentTarget.style.boxShadow = '0 2px 4px rgba(239, 68, 68, 0.3)';
+                        }}
+                        title="Delete component"
+                      >
+                        ×
+                      </button>
+                    )}
                     
                     {/* Component */}
                     {item.component}
@@ -317,6 +355,74 @@ const HomePageCard: React.FC<HomePageCardProps> = ({
               </div>
             </>
           )}
+
+          {/* Components rendered in customer view (without design system) */}
+          {!showDesignSystem && pageComponents.length > 0 && (
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%'
+            }}>
+              {pageComponents.map((item) => (
+                <div 
+                  key={item.id} 
+                  style={{
+                    width: '100%',
+                    margin: '0',
+                    position: 'relative'
+                  }}>
+                  {/* Component content only - no controls */}
+                  {item.component}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* View As Button - Always visible */}
+          <button
+            onClick={toggleViewMode}
+            style={{
+              position: 'fixed',
+              top: '60%',
+              left: '20px',
+              transform: 'translateY(-50%)',
+              marginTop: contextIsCustomerView ? '0px' : '50px',
+              zIndex: 1000,
+              backgroundColor: contextIsCustomerView ? '#dc2626' : '#10b981',
+              color: 'white',
+              border: 'none',
+              padding: '8px 12px',
+              fontSize: '12px',
+              fontWeight: '700',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              boxShadow: contextIsCustomerView ? '0 2px 8px rgba(220, 38, 38, 0.3)' : '0 2px 8px rgba(16, 185, 129, 0.3)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              width: '120px',
+              justifyContent: 'center',
+              whiteSpace: 'nowrap'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = contextIsCustomerView ? '#b91c1c' : '#059669';
+              e.currentTarget.style.transform = 'translateY(-50%) scale(1.05)';
+              e.currentTarget.style.boxShadow = contextIsCustomerView ? '0 4px 12px rgba(220, 38, 38, 0.4)' : '0 4px 12px rgba(16, 185, 129, 0.4)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = contextIsCustomerView ? '#dc2626' : '#10b981';
+              e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
+              e.currentTarget.style.boxShadow = contextIsCustomerView ? '0 2px 8px rgba(220, 38, 38, 0.3)' : '0 2px 8px rgba(16, 185, 129, 0.3)';
+            }}
+          >
+            <FaEye style={{ fontSize: '18px', color: 'white', display: 'inline-block', marginRight: '8px' }} />
+            {contextIsCustomerView ? 'Exit View' : 'View As'}
+          </button>
 
           {/* Custom children content */}
         {children ? (

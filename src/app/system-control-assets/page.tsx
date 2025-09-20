@@ -117,7 +117,7 @@ const SystemControlAssets: React.FC = () => {
 
   // Color Palette State - Controls color theme across the application
   const [selectedColorTheme, setSelectedColorTheme] = useState('red');      // Selected color theme
-  const [customColor, setCustomColor] = useState('#ef4444');               // Custom color picker value
+  const [customColor, setCustomColor] = useState('#a81313');               // Custom color picker value
   const [colorPaletteOpen, setColorPaletteOpen] = useState(false);          // Color palette drawer state
   
   // Simple Text Control state
@@ -144,7 +144,7 @@ const SystemControlAssets: React.FC = () => {
 
   // Color Palette Definitions - Predefined color themes
   const colorThemes = {
-    red: { primary: '#ef4444', light: '#fef2f2', dark: '#dc2626', name: 'Red' },
+    red: { primary: '#a81313', light: '#fef2f2', dark: '#dc2626', name: 'Red' },
     blue: { primary: '#3b82f6', light: '#eff6ff', dark: '#1d4ed8', name: 'Blue' },
     green: { primary: '#10b981', light: '#ecfdf5', dark: '#059669', name: 'Green' },
     purple: { primary: '#8b5cf6', light: '#f3e8ff', dark: '#7c3aed', name: 'Purple' },
@@ -345,191 +345,227 @@ const SystemControlAssets: React.FC = () => {
           {/* Camera Icon - Used for image uploads and photo capture */}
           <div className="icon-item">
             <div className="icon-container">
-              <button className="system-control-icon camera">
-                <HiCamera />
+              <button className="system-control-icon-rectangle camera">
+                <div className="icon-text-container">
+                  <HiCamera />
+                  <span className="icon-text">Upload Image</span>
+                </div>
               </button>
             </div>
-            <span className="icon-label">Camera</span>
           </div>
 
           {/* Add Icon */}
           <div className="icon-item">
             <div className="icon-container">
-              <button className="system-control-icon add">
-                <HiPlus />
+              <button className="system-control-icon-rectangle add">
+                <div className="icon-text-container">
+                  <HiPlus />
+                  <span className="icon-text">Create New</span>
+                </div>
               </button>
             </div>
-            <span className="icon-label">Add</span>
           </div>
 
           {/* Delete Icon */}
           <div className="icon-item">
             <div className="icon-container">
-              <button className="system-control-icon delete">
-                <HiX />
+              <button className="system-control-icon-rectangle delete">
+                <div className="icon-text-container">
+                  <HiX />
+                  <span className="icon-text">Remove Item</span>
+                </div>
               </button>
             </div>
-            <span className="icon-label">Delete</span>
           </div>
 
           {/* Settings Icon */}
           <div className="icon-item">
             <div className="icon-container">
-              <button className="system-control-icon settings">
-                <HiCog />
+              <button className="system-control-icon-rectangle settings">
+                <div className="icon-text-container">
+                  <HiCog />
+                  <span className="icon-text">Configure</span>
+                </div>
               </button>
             </div>
-            <span className="icon-label">Settings</span>
           </div>
 
           {/* Edit Icon */}
           <div className="icon-item">
             <div className="icon-container">
-              <button className="system-control-icon edit">
-                <HiPencil />
+              <button className="system-control-icon-rectangle edit">
+                <div className="icon-text-container">
+                  <HiPencil />
+                  <span className="icon-text">Modify Content</span>
+                </div>
               </button>
             </div>
-            <span className="icon-label">Edit</span>
           </div>
 
           {/* Layout Icon */}
           <div className="icon-item">
             <div className="icon-container">
-              <button className="system-control-icon layout">
-                <HiViewGrid />
+              <button className="system-control-icon-rectangle layout">
+                <div className="icon-text-container">
+                  <HiViewGrid />
+                  <span className="icon-text">Grid View</span>
+                </div>
               </button>
             </div>
-            <span className="icon-label">Layout</span>
           </div>
 
           {/* Add Text Icon */}
           <div className="icon-item">
             <div className="icon-container">
-              <button className="system-control-icon add-text">
-                <HiDocumentText />
+              <button className="system-control-icon-rectangle add-text">
+                <div className="icon-text-container">
+                  <HiDocumentText />
+                  <span className="icon-text">Insert Text</span>
+                </div>
               </button>
             </div>
-            <span className="icon-label">Add Text</span>
           </div>
 
           {/* Add Button Icon */}
           <div className="icon-item">
             <div className="icon-container">
-              <button className="system-control-icon add-button">
-                <TbCircleLetterB />
+              <button className="system-control-icon-rectangle add-button">
+                <div className="icon-text-container">
+                  <TbCircleLetterB />
+                  <span className="icon-text">Add Button</span>
+                </div>
               </button>
             </div>
-            <span className="icon-label">Add Button</span>
           </div>
 
           {/* Drag and Drop Icon */}
           <div className="icon-item">
             <div className="icon-container">
-              <button className="system-control-icon drag-drop">
-                <HiSelector />
+              <button className="system-control-icon-rectangle drag-drop">
+                <div className="icon-text-container">
+                  <HiSelector />
+                  <span className="icon-text">Move Item</span>
+                </div>
               </button>
             </div>
-            <span className="icon-label">Drag & Drop</span>
           </div>
 
           {/* Link Icon */}
           <div className="icon-item">
             <div className="icon-container">
-              <button className="system-control-icon link">
-                <HiLink />
+              <button className="system-control-icon-rectangle link">
+                <div className="icon-text-container">
+                  <HiLink />
+                  <span className="icon-text">Create Link</span>
+                </div>
               </button>
             </div>
-            <span className="icon-label">Link</span>
           </div>
 
           {/* Trash Icon */}
           <div className="icon-item">
             <div className="icon-container">
-              <button className="system-control-icon trash">
-                <HiOutlineTrash />
+              <button className="system-control-icon-rectangle trash">
+                <div className="icon-text-container">
+                  <HiOutlineTrash />
+                  <span className="icon-text">Delete Item</span>
+                </div>
               </button>
             </div>
-            <span className="icon-label">Trash</span>
           </div>
 
           {/* Flip Icon */}
           <div className="icon-item">
             <div className="icon-container">
-              <button className="system-control-icon flip">
-                <HiRefresh />
+              <button className="system-control-icon-rectangle flip">
+                <div className="icon-text-container">
+                  <HiRefresh />
+                  <span className="icon-text">Rotate Item</span>
+                </div>
               </button>
             </div>
-            <span className="icon-label">Flip</span>
           </div>
 
           {/* Dimensions Icon - Controls sizing and dimensions */}
           <div className="icon-item">
             <div className="icon-container">
-              <button className="system-control-icon dimensions">
-                <HiArrowsExpand />
+              <button className="system-control-icon-rectangle dimensions">
+                <div className="icon-text-container">
+                  <HiArrowsExpand />
+                  <span className="icon-text">Resize Item</span>
+                </div>
               </button>
             </div>
-            <span className="icon-label">Dimensions</span>
           </div>
 
           {/* Color Control Icon - Controls colors and themes */}
           <div className="icon-item">
             <div className="icon-container">
-              <button className="system-control-icon color-control">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  {/* Color palette circle */}
-                  <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2"/>
-                  {/* Color dots/swatches */}
-                  <circle cx="8" cy="8" r="2" fill="#ef4444"/>
-                  <circle cx="16" cy="8" r="2" fill="#3b82f6"/>
-                  <circle cx="8" cy="16" r="2" fill="#10b981"/>
-                  <circle cx="16" cy="16" r="2" fill="#f59e0b"/>
-                  {/* Center color picker indicator */}
-                  <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
-                </svg>
+              <button className="system-control-icon-rectangle color-control">
+                <div className="icon-text-container">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    {/* Color palette circle */}
+                    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2"/>
+                    {/* Color dots/swatches */}
+                    <circle cx="8" cy="8" r="2" fill="#a81313"/>
+                    <circle cx="16" cy="8" r="2" fill="#3b82f6"/>
+                    <circle cx="8" cy="16" r="2" fill="#10b981"/>
+                    <circle cx="16" cy="16" r="2" fill="#f59e0b"/>
+                    {/* Center color picker indicator */}
+                    <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+                  </svg>
+                  <span className="icon-text">Change Colors</span>
+                </div>
               </button>
             </div>
-            <span className="icon-label">Color Control</span>
           </div>
 
           {/* Visibility Control Icon - Controls what to show and hide */}
           <div className="icon-item">
             <div className="icon-container">
-              <button className="system-control-icon visibility">
-                <HiEye />
+              <button className="system-control-icon-rectangle visibility">
+                <div className="icon-text-container">
+                  <HiEye />
+                  <span className="icon-text">Show/Hide</span>
+                </div>
               </button>
             </div>
-            <span className="icon-label">Visibility</span>
           </div>
 
           {/* Card Control Icon - Controls card layouts and arrangements */}
           <div className="icon-item">
             <div className="icon-container">
-              <button className="system-control-icon card-control">
-                <HiViewBoards />
+              <button className="system-control-icon-rectangle card-control">
+                <div className="icon-text-container">
+                  <HiViewBoards />
+                  <span className="icon-text">Card Layout</span>
+                </div>
               </button>
             </div>
-            <span className="icon-label">Card Control</span>
           </div>
 
           {/* Left Arrow Icon - Navigation and back functionality */}
           <div className="icon-item">
             <div className="icon-container">
-              <button className="system-control-icon left-arrow">
-                <HiArrowLeft />
+              <button className="system-control-icon-rectangle left-arrow">
+                <div className="icon-text-container">
+                  <HiArrowLeft />
+                  <span className="icon-text">Go Back</span>
+                </div>
               </button>
             </div>
-            <span className="icon-label">Left Arrow</span>
           </div>
 
           {/* Right Arrow Icon - Navigation and forward functionality */}
           <div className="icon-item">
             <div className="icon-container">
-              <button className="system-control-icon right-arrow">
-                <HiArrowRight />
+              <button className="system-control-icon-rectangle right-arrow">
+                <div className="icon-text-container">
+                  <HiArrowRight />
+                  <span className="icon-text">Go Forward</span>
+                </div>
               </button>
             </div>
-            <span className="icon-label">Right Arrow</span>
           </div>
         </div>
       </div>
@@ -867,7 +903,7 @@ const SystemControlAssets: React.FC = () => {
                    value={customColor}
                    onChange={(e) => handleCustomColorChange(e.target.value)}
                    className="color-hex-input"
-                   placeholder="#ef4444"
+                   placeholder="#a81313"
                    maxLength={7}
                  />
                </div>
@@ -1119,7 +1155,7 @@ const [customStyles, setCustomStyles] = useState<ButtonStyles>(
             <h4>Clean Design</h4>
             <p>All system controls use a clean, minimal design with subtle colors and smooth interactions.</p>
             <div className="color-palette">
-              <div className="color-swatch primary-red" title="Primary: #ef4444"></div>
+              <div className="color-swatch primary-red" title="Primary: #a81313"></div>
               <div className="color-swatch light-red" title="Light: #fef2f2"></div>
               <div className="color-swatch dark-red" title="Dark: #dc2626"></div>
             </div>

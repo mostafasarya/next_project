@@ -461,6 +461,7 @@ const TabsStoreBar: React.FC<TabsStoreBarProps> = ({
     <div 
       className={`tabs-store-bar ${isMobile ? 'mobile-view' : ''} ${layoutMode}`}
       style={{
+        position: 'relative',
         fontSize: `${appliedStyles.fontSize}px`,
         fontFamily: appliedStyles.fontFamily,
         color: appliedStyles.color,
@@ -470,13 +471,23 @@ const TabsStoreBar: React.FC<TabsStoreBarProps> = ({
           ? solidColor 
           : `linear-gradient(135deg, ${gradientStart} 0%, ${gradientEnd} 100%)`,
         borderRadius: '8px',
-        padding: '8px 12px',
+        padding: '12px 16px',
         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-        border: '1px solid rgba(255, 255, 255, 0.2)'
+        border: '1px solid rgba(168, 19, 19, 0.2)', // Faint reddish border
+        minHeight: '48px'
       }}
     >
+      {/* Control Icons - Positioned at top right */}
       {!isMobile && (
-        <div className="tabs-controls">
+        <div 
+          className="tabs-controls"
+          style={{
+            position: 'absolute',
+            top: '8px',
+            right: '8px',
+            zIndex: 10
+          }}
+        >
           <button 
             className="system-control-icon settings"
             onClick={openSettingsDrawer}

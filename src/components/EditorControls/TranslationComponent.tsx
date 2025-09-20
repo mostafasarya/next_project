@@ -68,8 +68,8 @@ export const translations = {
     'start_return_exchange': 'Start A Return or Exchange',
     'add_product': 'Product',
     'add_collection': 'Collection',
-    'create_catalog': 'Create Catalog',
-    'create_page': 'Create Page',
+    'create_catalog': 'Catalog',
+    'create_page': 'G. Page',
     'mobile': 'Mobile',
     'publish': 'Publish'
   },

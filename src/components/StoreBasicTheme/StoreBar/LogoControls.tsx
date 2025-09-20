@@ -41,6 +41,7 @@ export const useLogoControls = (): LogoControlsState & {
   handleUpdateSettings: () => void;
   handleSettingsClick: () => void;
   setStoreLogo: (logo: string | null) => void;
+  setShowLogoSettings: (show: boolean) => void;
 } => {
   const [storeLogo, setStoreLogo] = useState<string | null>(null);
   const [showLogoSettings, setShowLogoSettings] = useState(false);
@@ -124,6 +125,7 @@ export const useLogoControls = (): LogoControlsState & {
     handleUpdateSettings,
     handleSettingsClick,
     setStoreLogo,
+    setShowLogoSettings,
   };
 };
 

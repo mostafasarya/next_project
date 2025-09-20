@@ -17,7 +17,7 @@
   background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
   width: 100%;
   max-width: 800px;
-  height: calc(100vh - 180px); /* Reach to store bar (top: 120px + store bar height: ~60px) */
+  height: calc(100vh - 60px); /* Full height minus some padding for relative positioning */
   overflow: hidden;
   box-shadow: 0 -10px 30px rgba(233, 30, 99, 0.3);
   border-top: 2px solid rgba(255, 255, 255, 0.2);

@@ -12,11 +12,13 @@ import HomePageCard from './StoreBasicTheme/HomePageCardComponents/HomePageCard'
 import { useLogoControls } from './StoreBasicTheme/StoreBar/LogoControls';
 import { useCart } from './StoreBasicTheme/StoreBar/Cart';
 import { useTranslation } from './EditorControls/TranslationComponent';
+import { ViewModeProvider, useViewMode } from './ViewModeContext';
 import './StoreHomePage.css';
 import './EditorControls/PropertiesManagement/SystemControlIcons.css';
 
 
-const StoreHomePage: React.FC = () => {
+const StoreHomePageContent: React.FC = () => {
+  const { isCustomerView } = useViewMode();
   const router = useRouter();
   const [isMobileMode, setIsMobileMode] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -39,6 +41,7 @@ const StoreHomePage: React.FC = () => {
     handleUpdateSettings,
     handleSettingsClick,
     setStoreLogo,
+    setShowLogoSettings,
   } = useLogoControls();
   const [backgroundType, setBackgroundType] = useState<'solid' | 'gradient'>('solid');
   const [solidColor, setSolidColor] = useState('#ffffff');
@@ -1235,12 +1238,12 @@ const StoreHomePage: React.FC = () => {
 
   return (
     <StoreBarElementsPositionsProvider>
-      <div className="design-store-page">
-      {/* Top App Bar */}
-      <PlatformBar />
+      <div className={`design-store-page ${isCustomerView ? 'customer-view' : ''}`}>
+      {/* Top App Bar - Hidden in customer view */}
+      {!isCustomerView && <PlatformBar />}
 
-      {/* Editor Bar and Drawer Component */}
-      <EditorBarDrawer
+      {/* Editor Bar and Drawer Component - Hidden in customer view */}
+      {!isCustomerView && <EditorBarDrawer
         key={currentLanguage}
         sidebarOpen={sidebarOpen}
         onToggleSidebar={toggleSidebar}
@@ -1264,6 +1267,7 @@ const StoreHomePage: React.FC = () => {
         onGradientStartChange={setGradientStart}
         onGradientEndChange={setGradientEnd}
         showLogoSettings={showLogoSettings}
+        onOpenLogoSettings={() => setShowLogoSettings(true)}
         onCloseLogoSettings={handleCloseSettings}
         onUpdateLogoSettings={handleUpdateSettings}
         showLanguageSettings={showLanguageSettings}
@@ -1274,7 +1278,7 @@ const StoreHomePage: React.FC = () => {
         currentLanguage={currentLanguage}
         onOpenMobileSimulator={() => setShowMobileSimulator(true)}
         t={t}
-      />
+      />}
 
       {/* Store Bar Component */}
       <StoreBar
@@ -1332,6 +1336,7 @@ const StoreHomePage: React.FC = () => {
         t={t}
         activeTab={activeTab}
         onTabChange={handleTabChange}
+        isCustomerView={isCustomerView}
       />
 
 
@@ -1343,22 +1348,25 @@ const StoreHomePage: React.FC = () => {
         verticalPadding={verticalPadding}
         horizontalPadding={horizontalPadding}
         showLogoSettings={showLogoSettings}
-        showDesignSystem={true}
+        showDesignSystem={!isCustomerView}
         placeholderTitle="Store Homepage Content"
         placeholderDescription="This white card extends from the store bar to the footer with the same layout structure."
+        isCustomerView={isCustomerView}
       />
 
 
 
-      {/* Mobile Simulator */}
-      <MobileSimulator 
-        isOpen={showMobileSimulator} 
-        onClose={() => setShowMobileSimulator(false)}
-        storeLogo={storeLogo || undefined}
-        currentLanguage={currentLanguage}
-        translations={translations}
-        storeName={storeName}
-      />
+      {/* Mobile Simulator - Hidden in customer view */}
+      {!isCustomerView && (
+        <MobileSimulator 
+          isOpen={showMobileSimulator} 
+          onClose={() => setShowMobileSimulator(false)}
+          storeLogo={storeLogo || undefined}
+          currentLanguage={currentLanguage}
+          translations={translations}
+          storeName={storeName}
+        />
+      )}
 
       {/* Footer Component */}
       <Footer 
@@ -1370,6 +1378,14 @@ const StoreHomePage: React.FC = () => {
 
       </div>
     </StoreBarElementsPositionsProvider>
+  );
+};
+
+const StoreHomePage: React.FC = () => {
+  return (
+    <ViewModeProvider>
+      <StoreHomePageContent />
+    </ViewModeProvider>
   );
 };
 

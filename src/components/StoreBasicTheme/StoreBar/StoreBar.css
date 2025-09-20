@@ -1,9 +1,7 @@
 /* Store Bar - White with logo upload */
 .store-bar {
-  position: fixed;
-  top: 120px;
-  left: 0;
-  right: 0;
+  position: relative;
+  width: 100%;
   background: white;
   border-bottom: 1px solid #e1e5e9;
   z-index: 998;
@@ -91,7 +89,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #dc2626;
+  color: #a81313;
   box-shadow: 0 4px 16px rgba(220, 38, 38, 0.15);
   position: relative;
   overflow: hidden;
@@ -102,18 +100,18 @@
 .logo-control-btn:hover {
   background: #fef2f2;
   color: #b91c1c;
-  border-color: #dc2626;
+  border-color: #a81313;
   transform: translateY(-2px) scale(1.05);
   box-shadow: 0 6px 24px rgba(220, 38, 38, 0.25);
 }
 
 /* Specific icon variations */
 .upload-btn {
-  color: #dc2626;
+  color: #a81313;
 }
 
 .settings-btn {
-  color: #dc2626;
+  color: #a81313;
 }
 
 .control-icon-svg {
@@ -588,6 +586,12 @@
     display: flex;
   }
   
+  .layout-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+    right: 8px;
+  }
   
   .store-bar {
     padding: 0 10px;
@@ -2212,6 +2216,36 @@
   cursor: not-allowed;
 }
 
+/* Layout Settings Button */
+.layout-btn {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #e5e7eb;
+  color: #374151;
+  font-size: 18px;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.layout-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  border-color: #a81313;
+  color: #a81313;
+  transform: translateY(-50%) scale(1.05);
+  box-shadow: 0 4px 16px rgba(168, 19, 19, 0.2);
+}
+
+.layout-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
 /* Tab System Wrapper - Transparent with Red Border */
 .tab-system-wrapper {
   position: relative;
@@ -2305,7 +2339,7 @@
   appearance: none;
   width: 18px;
   height: 18px;
-  background: #dc2626;
+  background: #a81313;
   border-radius: 50%;
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -2314,7 +2348,7 @@
 .drawer-range::-moz-range-thumb {
   width: 18px;
   height: 18px;
-  background: #dc2626;
+  background: #a81313;
   border-radius: 50%;
   cursor: pointer;
   border: none;
@@ -2339,7 +2373,7 @@
 }
 
 .drawer-select:focus {
-  border-color: #dc2626;
+  border-color: #a81313;
   box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
 }
 
@@ -2365,7 +2399,7 @@
 }
 
 .drawer-text-input:focus {
-  border-color: #dc2626;
+  border-color: #a81313;
   box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
 }
 
@@ -2393,8 +2427,8 @@
 }
 
 .drawer-btn.active {
-  background: #dc2626;
-  border-color: #dc2626;
+  background: #a81313;
+  border-color: #a81313;
   color: white;
 }
 
@@ -2419,7 +2453,7 @@
 .drawer-action-btn.reset {
   background: #fef2f2;
   border-color: #fecaca;
-  color: #dc2626;
+  color: #a81313;
 }
 
 .drawer-action-btn.reset:hover {
@@ -2615,7 +2649,7 @@
 
 .editor-actions .delete-btn {
   background: #fee2e2;
-  color: #dc2626;
+  color: #a81313;
   border: 1px solid #fecaca;
   padding: 10px 20px;
   border-radius: 6px;
@@ -2881,7 +2915,7 @@
 
 .delete-tab-btn {
   background: #fee2e2;
-  color: #dc2626;
+  color: #a81313;
   border: 1px solid #fecaca;
   padding: 12px 20px;
   border-radius: 6px;

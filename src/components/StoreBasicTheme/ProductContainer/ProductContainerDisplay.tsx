@@ -225,10 +225,10 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
     optionBackgroundColor: '#ffffff',
     optionBorderColor: '#e5e7eb',
     optionTextColor: '#374151',
-    selectedBackgroundColor: '#ef4444',
-    selectedBorderColor: '#ef4444',
+    selectedBackgroundColor: '#a81313',
+    selectedBorderColor: '#a81313',
     selectedTextColor: '#ffffff',
-    hoverBorderColor: '#ef4444',
+    hoverBorderColor: '#a81313',
     hoverBackgroundColor: '#ffffff',
     layout: 'horizontal',
     sectionSpacing: 8,
@@ -263,7 +263,8 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
     description2: true,
     sizeVariants: true,
     quantity: true,
-    addToCartButton: true
+    addToCartButton: true,
+    badges: true
   });
 
   // Card control state
@@ -287,6 +288,18 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
   // Image dimension control state
   const [imageHeight, setImageHeight] = useState(457);
   const [imageWidth, setImageWidth] = useState(cardSettings.width);
+
+  // Badge settings state
+  const [badgeSettings, setBadgeSettings] = useState({
+    showBadges: true,
+    badges: [
+      { id: '1', text: 'NEW', type: 'new', color: '#ffffff', backgroundColor: '#10b981', position: 'top-right' }
+    ],
+    fontSize: 12,
+    fontWeight: '600',
+    borderRadius: 4,
+    padding: '4px 8px'
+  });
 
   // Handlers
   const handleQuantityChange = (change: number) => {
@@ -370,7 +383,7 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
       opacity: draggedItem === elementType ? 0.5 : 1,
       transform: dragOverItem === elementType ? 'scale(1.01)' : 'scale(1)',
       transition: 'all 0.2s ease',
-      border: dragOverItem === elementType ? '2px dashed #ef4444' : '2px solid transparent',
+      border: dragOverItem === elementType ? '2px dashed #a81313' : '2px solid transparent',
       borderRadius: '4px',
       position: 'relative' as const,
       padding: '2px',
@@ -957,7 +970,7 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
     if (!colorName) return null;
     const colorMap: { [key: string]: string } = {
       // Basic colors
-      'red': '#ef4444',
+      'red': '#a81313',
       'blue': '#3b82f6',
       'green': '#10b981',
       'yellow': '#f59e0b',
@@ -1234,8 +1247,147 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
               </>
             )}
           </div>
+
+          {/* Badge Settings Section */}
+          <div className="drawer-section">
+            <h4 className="drawer-section-title">Product Badges</h4>
+            
+            <div className="drawer-form-group">
+              <label className="drawer-form-label">Show Badges</label>
+              <div className="drawer-toggle-container">
+                <label className="drawer-toggle">
+                  <input
+                    type="checkbox"
+                    checked={badgeSettings.showBadges}
+                    onChange={(e) => setBadgeSettings(prev => ({ ...prev, showBadges: e.target.checked }))}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+                <span className={`toggle-label ${badgeSettings.showBadges ? 'active' : ''}`}>
+                  {badgeSettings.showBadges ? 'Enabled' : 'Disabled'}
+                </span>
+              </div>
+            </div>
+
+            {badgeSettings.showBadges && (
+              <>
+                <div className="drawer-form-group">
+                  <label className="drawer-form-label">Font Size</label>
+                  <div className="drawer-range-container">
+                    <input
+                      type="range"
+                      min="8" max="20"
+                      value={badgeSettings.fontSize}
+                      onChange={(e) => setBadgeSettings(prev => ({ ...prev, fontSize: Number(e.target.value) }))}
+                      className="drawer-range"
+                    />
+                    <span className="drawer-range-value">{badgeSettings.fontSize}px</span>
+                  </div>
+                </div>
+
+                <div className="drawer-form-group">
+                  <label className="drawer-form-label">Font Weight</label>
+                  <select
+                    value={badgeSettings.fontWeight}
+                    onChange={(e) => setBadgeSettings(prev => ({ ...prev, fontWeight: e.target.value }))}
+                    className="drawer-select"
+                  >
+                    <option value="400">Normal</option>
+                    <option value="500">Medium</option>
+                    <option value="600">Semi Bold</option>
+                    <option value="700">Bold</option>
+                  </select>
+                </div>
+
+                <div className="drawer-form-group">
+                  <label className="drawer-form-label">Border Radius</label>
+                  <div className="drawer-range-container">
+                    <input
+                      type="range"
+                      min="0" max="20"
+                      value={badgeSettings.borderRadius}
+                      onChange={(e) => setBadgeSettings(prev => ({ ...prev, borderRadius: Number(e.target.value) }))}
+                      className="drawer-range"
+                    />
+                    <span className="drawer-range-value">{badgeSettings.borderRadius}px</span>
+                  </div>
+                </div>
+
+                {/* Badge List */}
+                <div className="drawer-form-group">
+                  <label className="drawer-form-label">Badge List</label>
+                  <div className="badge-list">
+                    {badgeSettings.badges.map((badge, index) => (
+                      <div key={badge.id} className="badge-item">
+                        <div className="badge-preview" style={{
+                          backgroundColor: badge.backgroundColor,
+                          color: badge.color,
+                          fontSize: `${badgeSettings.fontSize}px`,
+                          fontWeight: badgeSettings.fontWeight,
+                          borderRadius: `${badgeSettings.borderRadius}px`,
+                          padding: badgeSettings.padding
+                        }}>
+                          {badge.text}
+                        </div>
+                        <div className="badge-controls">
+                          <input
+                            type="text"
+                            value={badge.text}
+                            onChange={(e) => {
+                              const newBadges = [...badgeSettings.badges];
+                              newBadges[index].text = e.target.value;
+                              setBadgeSettings(prev => ({ ...prev, badges: newBadges }));
+                            }}
+                            className="drawer-form-input"
+                            placeholder="Badge text"
+                          />
+                          <input
+                            type="color"
+                            value={badge.backgroundColor}
+                            onChange={(e) => {
+                              const newBadges = [...badgeSettings.badges];
+                              newBadges[index].backgroundColor = e.target.value;
+                              setBadgeSettings(prev => ({ ...prev, badges: newBadges }));
+                            }}
+                            className="drawer-form-input"
+                            style={{ width: '40px', height: '32px' }}
+                          />
+                          <input
+                            type="color"
+                            value={badge.color}
+                            onChange={(e) => {
+                              const newBadges = [...badgeSettings.badges];
+                              newBadges[index].color = e.target.value;
+                              setBadgeSettings(prev => ({ ...prev, badges: newBadges }));
+                            }}
+                            className="drawer-form-input"
+                            style={{ width: '40px', height: '32px' }}
+                          />
+                          <select
+                            value={badge.position}
+                            onChange={(e) => {
+                              const newBadges = [...badgeSettings.badges];
+                              newBadges[index].position = e.target.value as any;
+                              setBadgeSettings(prev => ({ ...prev, badges: newBadges }));
+                            }}
+                            className="drawer-select"
+                            style={{ fontSize: '12px' }}
+                          >
+                            <option value="top-left">Top Left</option>
+                            <option value="top-right">Top Right</option>
+                            <option value="bottom-left">Bottom Left</option>
+                            <option value="bottom-right">Bottom Right</option>
+                          </select>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
             </div>,
-            400
+            450
           )}
           type="button"
           title="Control Card Settings"
@@ -1370,21 +1522,49 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
             </button>
         </div>
 
-          <img 
-            src={product.imageUrl} 
-            alt={product.name}
-            className="product-image"
-            style={{
-              width: `${imageWidth}px`,
-              height: '100%',
-              objectFit: 'cover',
-              maxWidth: '100%'
-            }}
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.src = 'https://via.placeholder.com/457x457/f3f4f6/9ca3af?text=Product+Image';
-            }}
-          />
+          <div className="product-image-wrapper" style={{ position: 'relative', width: '100%', height: '100%' }}>
+            <img 
+              src={product.imageUrl} 
+              alt={product.name}
+              className="product-image"
+              style={{
+                width: `${imageWidth}px`,
+                height: '100%',
+                objectFit: 'cover',
+                maxWidth: '100%'
+              }}
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = 'https://via.placeholder.com/457x457/f3f4f6/9ca3af?text=Product+Image';
+              }}
+            />
+            
+            {/* Product Badges */}
+            {elementVisibility.badges && badgeSettings.showBadges && badgeSettings.badges.map((badge) => (
+              <div
+                key={badge.id}
+                className={`product-badge badge-${badge.position}`}
+                style={{
+                  position: 'absolute',
+                  backgroundColor: badge.backgroundColor,
+                  color: badge.color,
+                  fontSize: `${badgeSettings.fontSize}px`,
+                  fontWeight: badgeSettings.fontWeight,
+                  borderRadius: `${badgeSettings.borderRadius}px`,
+                  padding: badgeSettings.padding,
+                  border: '1px solid rgba(0,0,0,0.1)',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                  zIndex: 10,
+                  ...(badge.position === 'top-left' && { top: '8px', left: '8px' }),
+                  ...(badge.position === 'top-right' && { top: '8px', right: '8px' }),
+                  ...(badge.position === 'bottom-left' && { bottom: '8px', left: '8px' }),
+                  ...(badge.position === 'bottom-right' && { bottom: '8px', right: '8px' })
+                }}
+              >
+                {badge.text}
+              </div>
+            ))}
+          </div>
           
           {/* Visibility Control Section */}
           <div className="visibility-control-section">
@@ -1510,6 +1690,23 @@ const ProductContainerDisplay: React.FC<ProductContainerDisplayProps> = ({
                 </label>
                 <span className={`toggle-label ${elementVisibility.addToCartButton ? 'active' : ''}`}>
                   {elementVisibility.addToCartButton ? 'Visible' : 'Hidden'}
+                </span>
+              </div>
+            </div>
+
+            <div className="drawer-form-group">
+              <label className="drawer-form-label">Product Badges</label>
+              <div className="drawer-toggle-container">
+                <label className="drawer-toggle">
+                  <input
+                    type="checkbox"
+                    checked={elementVisibility.badges}
+                    onChange={() => toggleElementVisibility('badges')}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+                <span className={`toggle-label ${elementVisibility.badges ? 'active' : ''}`}>
+                  {elementVisibility.badges ? 'Visible' : 'Hidden'}
                 </span>
               </div>
             </div>

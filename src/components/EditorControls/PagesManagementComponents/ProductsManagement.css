@@ -95,6 +95,7 @@
 }
 
 .add-section-btn,
+.variants-table-btn,
 .add-product-btn {
   display: flex;
   align-items: center;
@@ -117,6 +118,15 @@
   background: #e5e7eb;
 }
 
+.variants-table-btn {
+  background: #28a745;
+  color: white;
+}
+
+.variants-table-btn:hover {
+  background: #1e7e34;
+}
+
 .add-product-btn {
   background: #3b82f6;
   color: white;
@@ -137,7 +147,7 @@
 
 .table-header {
   display: grid;
-  grid-template-columns: 40px 2fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 40px 2fr 60px 1fr 1fr 1fr 1fr 1fr 1fr;
   gap: 12px;
   padding: 12px 16px;
   background: #f8f9fa;
@@ -200,7 +210,7 @@
 /* Product Rows - Odoo Style */
 .product-row {
   display: grid;
-  grid-template-columns: 40px 2fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 40px 2fr 60px 1fr 1fr 1fr 1fr 1fr 1fr;
   gap: 12px;
   padding: 8px 16px;
   border-bottom: 1px solid #f1f3f4;
@@ -629,7 +639,7 @@
 /* Variant Row Styling - Odoo Style */
 .variant-row {
   display: grid;
-  grid-template-columns: 40px 2fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 40px 2fr 1fr 1fr 1fr 1fr 1fr 1fr;
   gap: 12px;
   padding: 6px 16px 6px 40px;
   border-bottom: 1px solid #f1f3f4;
@@ -879,10 +889,40 @@
   border-radius: 2px;
 }
 
+/* Badge Cell Styling */
+.badge-cell {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.badge-input {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 13px;
+  background: white;
+  color: #000000;
+  transition: all 0.2s ease;
+}
+
+.badge-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.badge-input::placeholder {
+  color: #9ca3af;
+  font-style: italic;
+}
+
 /* Focus states for accessibility */
 .edit-count-input:focus,
 .product-row-checkbox input:focus,
-.header-checkbox input:focus {
+.header-checkbox input:focus,
+.badge-input:focus {
   outline: 2px solid #007bff;
   outline-offset: 1px;
 }
@@ -1113,4 +1153,47 @@
   .section-input {
     font-size: 16px; /* Prevents zoom on iOS */
   }
+}
+
+/* Design Column Styles */
+.design-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
+
+.design-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+}
+
+.design-btn:hover {
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+}
+
+.design-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+}
+
+/* Header styling for design column */
+.header-cell.design-col {
+  justify-content: center;
+  font-weight: 600;
+  color: #667eea;
 }

@@ -48,7 +48,7 @@
 }
 
 .system-control-icon:hover {
-  border-color: #ef4444;
+  border-color: #a81313;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
 }
@@ -56,7 +56,7 @@
 .system-control-icon svg {
   width: 20px;
   height: 20px;
-  color: #ef4444;
+  color: #a81313;
 }
 
 .system-control-icon.dimensions svg {
@@ -124,7 +124,7 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #ef4444;
+  background: #a81313;
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -133,7 +133,7 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #ef4444;
+  background: #a81313;
   cursor: pointer;
   border: none;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -150,7 +150,7 @@
 
 .control-group input[type="color"]:focus {
   outline: none;
-  border-color: #ef4444;
+  border-color: #a81313;
 }
 
 /* Visibility Control Styles */
@@ -939,7 +939,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #ef4444;
+  background: #a81313;
   color: white;
   border: none;
   border-radius: 8px;
@@ -953,7 +953,7 @@
 }
 
 .add-products-btn:hover {
-  background: #dc2626;
+  background: #a81313;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
@@ -1166,7 +1166,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #dc2626;
+  color: #a81313;
   transition: all 0.2s ease;
 }
 
@@ -1228,7 +1228,7 @@
 
 .apply-selection-btn {
   padding: 8px 16px;
-  background: #ef4444;
+  background: #a81313;
   color: white;
   border: none;
   border-radius: 6px;
@@ -1239,7 +1239,7 @@
 }
 
 .apply-selection-btn:hover:not(:disabled) {
-  background: #dc2626;
+  background: #a81313;
 }
 
 .apply-selection-btn:disabled {

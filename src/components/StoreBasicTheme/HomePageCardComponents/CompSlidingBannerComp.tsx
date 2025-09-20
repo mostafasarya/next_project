@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { HiPlus, HiCamera, HiCog, HiTrash, HiLink, HiSelector } from 'react-icons/hi';
 import { HiViewfinderCircle } from 'react-icons/hi2';
 import SystemDrawer from '../../EditorControls/PropertiesManagement/SystemDrawer';
+import CreateLink, { LinkData } from '../../EditorControls/PropertiesManagement/CreateLink';
 import './CompSlidingBannerComp.css';
 import '../../EditorControls/PropertiesManagement/SystemControlIcons.css';
 
@@ -11,7 +12,7 @@ interface BannerImage {
   id: string;
   image: string | null;
   link?: string;
-  linkType: 'product' | 'collection' | 'page' | 'external';
+  linkType: 'collection' | 'catalog' | 'page' | 'external';
   linkTarget?: string;
   title?: string;
 }
@@ -42,9 +43,10 @@ const CompSlidingBannerComp: React.FC<CompSlidingBannerCompProps> = ({
   const [currentSlide, setCurrentSlide] = useState(0);
   const [editingImageId, setEditingImageId] = useState<string | null>(null);
   const [isAutoSliding, setIsAutoSliding] = useState(true);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   
   const [settings, setSettings] = useState<BannerSettings>({
-    height: 800,
+    height: 600,
     width: 100, // Set to full width (100% of screen width)
     borderRadius: 12,
     autoSlide: true,
@@ -56,23 +58,46 @@ const CompSlidingBannerComp: React.FC<CompSlidingBannerCompProps> = ({
   const [bannerImages, setBannerImages] = useState<BannerImage[]>([
     {
       id: '1',
-      image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-      linkType: 'product',
-      title: 'Delicious Food Collection'
+      image: null, // No default image
+      linkType: 'collection',
+      title: 'Banner 1'
     }
   ]);
 
-  const [linkData, setLinkData] = useState({
-    linkType: 'product' as 'product' | 'collection' | 'page' | 'external',
+  const [linkData, setLinkData] = useState<LinkData>({
+    linkType: 'collection',
     linkTarget: ''
   });
+
+  // Mock data for available pages
+  const availablePages = {
+    collection: [
+      { id: '1', name: 'Summer Collection', slug: 'summer-collection' },
+      { id: '2', name: 'Winter Collection', slug: 'winter-collection' },
+      { id: '3', name: 'Spring Collection', slug: 'spring-collection' },
+      { id: '4', name: 'Fall Collection', slug: 'fall-collection' }
+    ],
+    catalog: [
+      { id: '1', name: 'Electronics Catalog', slug: 'electronics' },
+      { id: '2', name: 'Fashion Catalog', slug: 'fashion' },
+      { id: '3', name: 'Home & Garden Catalog', slug: 'home-garden' },
+      { id: '4', name: 'Sports Catalog', slug: 'sports' }
+    ],
+    page: [
+      { id: '1', name: 'About Us', slug: 'about' },
+      { id: '2', name: 'Contact Page', slug: 'contact' },
+      { id: '3', name: 'Privacy Policy', slug: 'privacy' },
+      { id: '4', name: 'Terms of Service', slug: 'terms' },
+      { id: '5', name: 'FAQ Page', slug: 'faq' }
+    ]
+  };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const autoSlideRef = useRef<NodeJS.Timeout | null>(null);
 
   // Auto-slide functionality
   useEffect(() => {
-    if (settings.autoSlide && isAutoSliding && bannerImages.some(img => img.image)) {
+    if (settings.autoSlide && isAutoSliding && bannerImages.some(img => img.image) && !editingImageId) {
       autoSlideRef.current = setInterval(() => {
         setCurrentSlide(prev => (prev + 1) % bannerImages.length);
       }, settings.slideInterval * 1000);
@@ -83,7 +108,26 @@ const CompSlidingBannerComp: React.FC<CompSlidingBannerCompProps> = ({
         clearInterval(autoSlideRef.current);
       }
     };
-  }, [settings.autoSlide, settings.slideInterval, isAutoSliding, bannerImages.length]);
+  }, [settings.autoSlide, settings.slideInterval, isAutoSliding, bannerImages.length, editingImageId]);
+
+  // Handle file dialog cancellation
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (editingImageId && fileInputRef.current && !fileInputRef.current.contains(e.target as Node)) {
+        // Check if the file input dialog was cancelled
+        setTimeout(() => {
+          if (editingImageId && !fileInputRef.current?.files?.length) {
+            setEditingImageId(null);
+          }
+        }, 100);
+      }
+    };
+
+    if (editingImageId) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [editingImageId]);
 
   const updateSetting = (key: keyof BannerSettings, value: any) => {
     setSettings(prev => ({ ...prev, [key]: value }));
@@ -95,6 +139,18 @@ const CompSlidingBannerComp: React.FC<CompSlidingBannerCompProps> = ({
       setBannerImages(prev => prev.map(img => 
         img.id === imageId ? { ...img, image: e.target?.result as string } : img
       ));
+      
+      // Slide to the newly added image
+      const newImageIndex = bannerImages.findIndex(banner => banner.id === imageId);
+      if (newImageIndex !== -1) {
+        setCurrentSlide(newImageIndex);
+      }
+      
+      // Show success message
+      setShowSuccessMessage(true);
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+      }, 3000); // Hide after 3 seconds
     };
     reader.readAsDataURL(file);
   };
@@ -105,6 +161,8 @@ const CompSlidingBannerComp: React.FC<CompSlidingBannerCompProps> = ({
       handleImageUpload(editingImageId, file);
       setEditingImageId(null);
     }
+    // Clear the input value so the same file can be selected again
+    e.target.value = '';
   };
 
   const addNewBanner = () => {
@@ -112,7 +170,7 @@ const CompSlidingBannerComp: React.FC<CompSlidingBannerCompProps> = ({
     const newBanner: BannerImage = {
       id: newId,
       image: null,
-      linkType: 'product',
+      linkType: 'collection',
       title: `Banner ${newId}`
     };
     
@@ -131,6 +189,10 @@ const CompSlidingBannerComp: React.FC<CompSlidingBannerCompProps> = ({
     fileInputRef.current?.click();
   };
 
+  const cancelEditing = () => {
+    setEditingImageId(null);
+  };
+
   const openLinkEditor = () => {
     const currentBanner = bannerImages[currentSlide];
     setLinkData({
@@ -140,13 +202,20 @@ const CompSlidingBannerComp: React.FC<CompSlidingBannerCompProps> = ({
     setShowLinkDrawer(true);
   };
 
-  const saveLinkData = () => {
+  const saveLinkData = (linkData: LinkData) => {
     setBannerImages(prev => prev.map(img => 
       img.id === bannerImages[currentSlide].id 
         ? { ...img, linkType: linkData.linkType, linkTarget: linkData.linkTarget }
         : img
     ));
-    setShowLinkDrawer(false);
+  };
+
+  const removeLinkData = () => {
+    setBannerImages(prev => prev.map(img => 
+      img.id === bannerImages[currentSlide].id 
+        ? { ...img, linkTarget: '', linkType: 'collection' }
+        : img
+    ));
   };
 
   const deleteBanner = (imageId: string) => {
@@ -194,8 +263,32 @@ const CompSlidingBannerComp: React.FC<CompSlidingBannerCompProps> = ({
   const handleBannerClick = () => {
     const currentBanner = bannerImages[currentSlide];
     if (currentBanner.linkTarget) {
-      // In a real app, this would handle navigation
-      console.log(`Navigate to: ${currentBanner.linkType} - ${currentBanner.linkTarget}`);
+      let targetUrl = '';
+      
+      switch (currentBanner.linkType) {
+        case 'collection':
+          targetUrl = `/collection/${currentBanner.linkTarget}`;
+          break;
+        case 'catalog':
+          targetUrl = `/catalog/${currentBanner.linkTarget}`;
+          break;
+        case 'page':
+          targetUrl = `/custom-page/${currentBanner.linkTarget}`;
+          break;
+        case 'external':
+          targetUrl = currentBanner.linkTarget;
+          // Open external links in new tab
+          window.open(targetUrl, '_blank');
+          return;
+        default:
+          console.log(`Unknown link type: ${currentBanner.linkType}`);
+          return;
+      }
+      
+      // Navigate to internal pages
+      if (targetUrl) {
+        window.location.href = targetUrl;
+      }
     }
   };
 
@@ -228,6 +321,28 @@ const CompSlidingBannerComp: React.FC<CompSlidingBannerCompProps> = ({
         position: 'relative'
       }}
     >
+      {/* Success Message */}
+      {showSuccessMessage && (
+        <div 
+          className="success-message"
+          style={{
+            position: 'absolute',
+            top: '20px',
+            right: '20px',
+            backgroundColor: '#10b981',
+            color: 'white',
+            padding: '12px 20px',
+            borderRadius: '8px',
+            fontSize: '14px',
+            fontWeight: '600',
+            zIndex: 1000,
+            boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
+            animation: 'slideInRight 0.3s ease-out'
+          }}
+        >
+          ✅ Image added successfully!
+        </div>
+      )}
       {/* Drag Handle - Top Left */}
       <button
         className="system-control-icon drag small"
@@ -262,45 +377,62 @@ const CompSlidingBannerComp: React.FC<CompSlidingBannerCompProps> = ({
           border: '1px solid rgba(255, 255, 255, 0.1)'
         }}
       >
-        <button
-          onClick={() => setShowSettings(!showSettings)}
-          className="system-control-icon settings small"
-          title="Dimensions & settings"
-        >
-          <HiCog />
-        </button>
+        {!bannerImages.some(banner => !banner.image) && (
+          <button
+            onClick={addNewBanner}
+            className="system-control-icon-rectangle add small"
+            title="Add new banner"
+          >
+            <div className="icon-text-container">
+              <HiPlus />
+              <span className="icon-text">New image</span>
+            </div>
+          </button>
+        )}
         <button
           onClick={editCurrentImage}
-          className="system-control-icon camera small"
+          className="system-control-icon-rectangle camera small"
           title="Edit current image"
           disabled={!bannerImages[currentSlide]?.image}
         >
-          <HiCamera />
+          <div className="icon-text-container">
+            <HiCamera />
+            <span className="icon-text">Edit image</span>
+          </div>
         </button>
         <button
-          onClick={openLinkEditor}
-          className="system-control-icon link small"
-          title="Add/edit link"
-          disabled={!bannerImages[currentSlide]?.image}
+          onClick={() => setShowSettings(!showSettings)}
+          className="system-control-icon-rectangle settings small"
+          title="Dimensions & settings"
         >
-          <HiLink />
-        </button>
-        <button
-          onClick={addNewBanner}
-          className="system-control-icon add small"
-          title="Add new banner"
-        >
-          <HiPlus />
+          <div className="icon-text-container">
+            <HiCog />
+            <span className="icon-text">Settings</span>
+          </div>
         </button>
         {bannerImages.length > 1 && (
           <button
             onClick={() => deleteBanner(bannerImages[currentSlide].id)}
-            className="system-control-icon delete small"
+            className="system-control-icon-rectangle delete small"
             title="Delete current banner"
           >
-            <HiTrash />
+            <div className="icon-text-container">
+              <HiTrash />
+              <span className="icon-text">Remove</span>
+            </div>
           </button>
         )}
+        <button
+          onClick={openLinkEditor}
+          className="system-control-icon-rectangle link small"
+          title="Add/edit link"
+          disabled={!bannerImages[currentSlide]?.image}
+        >
+          <div className="icon-text-container">
+            <HiLink />
+            <span className="icon-text">Create link</span>
+          </div>
+        </button>
       </div>
 
       {/* Banner Container */}
@@ -350,8 +482,7 @@ const CompSlidingBannerComp: React.FC<CompSlidingBannerCompProps> = ({
                     <div className="upload-icon">
                       <HiCamera />
                     </div>
-                    <div className="upload-text">Press camera icon to upload image</div>
-                    <div className="upload-subtext">Banner {index + 1}</div>
+                    <div className="upload-text">Click to Add your first Photo</div>
                   </div>
                 </div>
               )}
@@ -529,73 +660,18 @@ const CompSlidingBannerComp: React.FC<CompSlidingBannerCompProps> = ({
       </SystemDrawer>
 
       {/* Link Editor Drawer */}
-      <SystemDrawer
+      <CreateLink
         isOpen={showLinkDrawer}
         onClose={() => setShowLinkDrawer(false)}
         title="Add Link to Banner"
+        initialLinkData={linkData}
+        onSave={saveLinkData}
+        onRemove={removeLinkData}
+        availablePages={availablePages}
         width={350}
         position="right"
         pushContent={true}
-      >
-        <div className="drawer-section" onClick={(e) => e.stopPropagation()}>
-          <h4 className="drawer-section-title">Link Type</h4>
-          <div className="drawer-form-group">
-            <select
-              value={linkData.linkType}
-              onChange={(e) => setLinkData(prev => ({ ...prev, linkType: e.target.value as any }))}
-              className="drawer-select"
-            >
-              <option value="product">Product Page</option>
-              <option value="collection">Collection Page</option>
-              <option value="page">Custom Page</option>
-              <option value="external">External URL</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="drawer-section" onClick={(e) => e.stopPropagation()}>
-          <h4 className="drawer-section-title">Link Target</h4>
-          <div className="drawer-form-group">
-            <input
-              type="text"
-              value={linkData.linkTarget}
-              onChange={(e) => setLinkData(prev => ({ ...prev, linkTarget: e.target.value }))}
-              placeholder={
-                linkData.linkType === 'product' ? 'Product ID or slug' :
-                linkData.linkType === 'collection' ? 'Collection ID or slug' :
-                linkData.linkType === 'page' ? 'Page path' :
-                'Full URL'
-              }
-              className="drawer-input"
-            />
-          </div>
-        </div>
-
-        <div className="drawer-section" onClick={(e) => e.stopPropagation()}>
-          <div className="drawer-form-group">
-            <button
-              onClick={saveLinkData}
-              className="save-link-btn"
-            >
-              Save Link
-            </button>
-            <button
-              onClick={() => {
-                setLinkData({ linkType: 'product', linkTarget: '' });
-                setBannerImages(prev => prev.map(img => 
-                  img.id === bannerImages[currentSlide].id 
-                    ? { ...img, linkTarget: '', linkType: 'product' }
-                    : img
-                ));
-                setShowLinkDrawer(false);
-              }}
-              className="remove-link-btn"
-            >
-              Remove Link
-            </button>
-          </div>
-        </div>
-      </SystemDrawer>
+      />
     </div>
   );
 };

@@ -28,6 +28,7 @@ interface EditorBarDrawerProps {
   onGradientStartChange: (color: string) => void;
   onGradientEndChange: (color: string) => void;
   showLogoSettings: boolean;
+  onOpenLogoSettings: () => void;
   onCloseLogoSettings: () => void;
   onUpdateLogoSettings: () => void;
   showLanguageSettings: boolean;
@@ -63,6 +64,7 @@ const EditorBarDrawer: React.FC<EditorBarDrawerProps> = ({
   onGradientStartChange,
   onGradientEndChange,
   showLogoSettings,
+  onOpenLogoSettings,
   onCloseLogoSettings,
   onUpdateLogoSettings,
   showLanguageSettings,
@@ -76,6 +78,7 @@ const EditorBarDrawer: React.FC<EditorBarDrawerProps> = ({
 }) => {
   const router = useRouter();
   const { openLayoutControls, isOpen } = useStoreBarElementsPositions();
+  const [activeLogoTab, setActiveLogoTab] = useState<'logo' | 'layout'>('logo');
 
   return (
     <>
@@ -83,10 +86,6 @@ const EditorBarDrawer: React.FC<EditorBarDrawerProps> = ({
       <div className="editor-bar">
         <div className="editor-bar-content">
           <div className="editor-left">
-            <button className={`editor-btn layout-controls-btn ${isOpen ? 'active' : ''}`} onClick={openLayoutControls}>
-              <span className="editor-icon">🎨</span>
-              <span className="editor-text">Layout Controls</span>
-            </button>
             <button className={`editor-btn ${sidebarOpen ? 'active' : ''}`} onClick={onToggleSidebar}>
               <span className="editor-icon">☰</span>
               <span className="editor-text">{t('store_pages')}</span>
@@ -109,16 +108,11 @@ const EditorBarDrawer: React.FC<EditorBarDrawerProps> = ({
               <span className="editor-icon">📄</span>
               <span className="editor-text">{t('create_page')}</span>
             </button>
-            <button className="editor-btn" onClick={onOpenMobileSimulator}>
+            <button className="editor-btn mobile-only-icon" onClick={onOpenMobileSimulator}>
               <span className="editor-icon">📱</span>
-              <span className="editor-text">{t('mobile')}</span>
             </button>
           </div>
           <div className="editor-right">
-            <button className="editor-btn publish-btn">
-              <span className="editor-icon">⬆️</span>
-              <span className="editor-text">{t('publish')}</span>
-            </button>
           </div>
         </div>
       </div>
@@ -195,13 +189,35 @@ const EditorBarDrawer: React.FC<EditorBarDrawerProps> = ({
             <div className="settings-header">
               <h3 className="settings-title">
                 <span className="settings-icon">🎨</span>
-                Logo Settings
+                Logo & Layout Settings
               </h3>
               <button className="close-btn" onClick={onCloseLogoSettings}>✕</button>
             </div>
+            
+            {/* Tab Navigation */}
+            <div className="settings-tabs">
+              <button 
+                className={`tab-btn ${activeLogoTab === 'logo' ? 'active' : ''}`}
+                onClick={() => setActiveLogoTab('logo')}
+              >
+                <span className="tab-icon">🖼️</span>
+                Logo
+              </button>
+              <button 
+                className={`tab-btn ${activeLogoTab === 'layout' ? 'active' : ''}`}
+                onClick={() => setActiveLogoTab('layout')}
+              >
+                <span className="tab-icon">🎨</span>
+                Layout
+              </button>
+            </div>
+            
             <div className="settings-content">
-              <div className="setting-section">
-                <label className="setting-label">Logo Shape</label>
+              {/* Logo Tab Content */}
+              {activeLogoTab === 'logo' && (
+                <>
+                  <div className="setting-section">
+                    <label className="setting-label">Logo Shape</label>
                 <div className="shape-options">
                   <button 
                     className={`shape-btn ${logoShape === 'circle' ? 'active' : ''}`}
@@ -419,6 +435,106 @@ const EditorBarDrawer: React.FC<EditorBarDrawerProps> = ({
                       ></div>
                     </div>
                   </div>
+                </>
+              )}
+                </>
+              )}
+              
+              {/* Layout Tab Content */}
+              {activeLogoTab === 'layout' && (
+                <>
+                  {/* Store Bar Background Settings */}
+                  <div className="setting-section">
+                    <label className="setting-label">🎨 Store Bar Background</label>
+                    <div className="background-type-options">
+                      <button 
+                        className={`background-type-btn ${backgroundType === 'solid' ? 'active' : ''}`}
+                        onClick={() => onBackgroundTypeChange('solid')}
+                      >
+                        <span className="type-icon">🎯</span>
+                        Solid Color
+                      </button>
+                      <button 
+                        className={`background-type-btn ${backgroundType === 'gradient' ? 'active' : ''}`}
+                        onClick={() => onBackgroundTypeChange('gradient')}
+                      >
+                        <span className="type-icon">🌈</span>
+                        Gradient
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Solid Color Settings */}
+                  {backgroundType === 'solid' && (
+                    <div className="setting-section">
+                      <label className="setting-label">Background Color</label>
+                      <div className="color-input-container">
+                        <input
+                          type="color"
+                          value={solidColor}
+                          onChange={(e) => onSolidColorChange(e.target.value)}
+                          className="color-picker"
+                        />
+                        <input
+                          type="text"
+                          value={solidColor}
+                          onChange={(e) => onSolidColorChange(e.target.value)}
+                          className="color-text-input"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Gradient Settings */}
+                  {backgroundType === 'gradient' && (
+                    <>
+                      <div className="setting-section">
+                        <label className="setting-label">Gradient Start Color</label>
+                        <div className="color-input-container">
+                          <input
+                            type="color"
+                            value={gradientStart}
+                            onChange={(e) => onGradientStartChange(e.target.value)}
+                            className="color-picker"
+                          />
+                          <input
+                            type="text"
+                            value={gradientStart}
+                            onChange={(e) => onGradientStartChange(e.target.value)}
+                            className="color-text-input"
+                          />
+                        </div>
+                      </div>
+                      <div className="setting-section">
+                        <label className="setting-label">Gradient End Color</label>
+                        <div className="color-input-container">
+                          <input
+                            type="color"
+                            value={gradientEnd}
+                            onChange={(e) => onGradientEndChange(e.target.value)}
+                            className="color-picker"
+                          />
+                          <input
+                            type="text"
+                            value={gradientEnd}
+                            onChange={(e) => onGradientEndChange(e.target.value)}
+                            className="color-text-input"
+                          />
+                        </div>
+                      </div>
+                      <div className="setting-section">
+                        <div className="gradient-preview">
+                          <label className="setting-label">Preview</label>
+                          <div 
+                            className="gradient-preview-box"
+                            style={{
+                              background: `linear-gradient(135deg, ${gradientStart} 0%, ${gradientEnd} 100%)`
+                            }}
+                          ></div>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </>
               )}
             </div>
